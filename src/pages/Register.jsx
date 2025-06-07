@@ -17,7 +17,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('https://liquidwaterproofingacademy.com/api/register', form);
+      const res = await axios.post('https://api.liquidwaterproofingacademy.com/api/register', form);
       alert(res.data.message); // o navegar al login
     } catch (err) {
       alert(err.response?.data?.message || 'Error al registrar');

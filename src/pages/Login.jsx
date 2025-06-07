@@ -11,7 +11,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('https://liquidwaterproofingacademy.com/api/login', form);
+      const res = await axios.post('https://api.liquidwaterproofingacademy.com/api/login', form);
       
       // Guardar en localStorage
       localStorage.setItem('token', res.data.token);
