@@ -110,15 +110,33 @@ const RapidRoof = () => {
     />
   </Grid>
   <Grid item xs={12} sm={6} sx={{ flexGrow: 1 }}>
-    <TextField
-      fullWidth
-      label="Roof size (m²)"
-      name="roofSize"
-      value={formData.roofSize}
-      onChange={(e) => setFormData({ ...formData, roofSize: e.target.value + " m²" })}
-      size="small"
-      margin="normal"
-    />
+  <TextField
+  fullWidth
+  label="Roof size (m²)"
+  name="roofSize"
+  value={formData.roofSize}
+  onChange={(e) => {
+    // Solo guarda el texto crudo mientras se escribe
+    setFormData({ ...formData, roofSize: e.target.value });
+  }}
+  onBlur={(e) => {
+    const raw = e.target.value;
+
+    const formatted = raw
+      .replace(/m²/g, "") // elimina cualquier "m²" previo
+      .split(",")
+      .map((item) => item.trim())
+      .filter((item) => item.length > 0)
+      .map((num) => `${num} m²`)
+      .join(", ");
+
+    setFormData({ ...formData, roofSize: formatted });
+  }}
+  size="small"
+  margin="normal"
+/>
+
+
   </Grid>
 </Grid>
 
