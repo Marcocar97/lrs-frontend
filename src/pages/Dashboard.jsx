@@ -34,15 +34,15 @@ const Dashboard = () => {
 
   return (
     <Box
-      sx={{
-        pt: '70px', 
-        p: isMobile ? 2 : 4,
-        backgroundColor: '#f9f9f9',
-        height: '100vh',
-        boxSizing: 'border-box',
-        overflow: 'hidden',
-      }}
-    >
+  sx={{
+    pt: '100px',
+    px: isMobile ? 2 : 4,
+    pb: 4,
+    backgroundColor: '#f9f9f9',
+    minHeight: '100vh',
+    boxSizing: 'border-box',
+  }}
+>
     <Typography variant="h4" fontWeight="bold" mb={1}>
   Hi {userName}, welcome to your LRS Toolkit
 </Typography>
