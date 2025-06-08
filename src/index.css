@@ -2,15 +2,28 @@
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  background-color: #f6f6f6;
+  font-family: 'Roboto', sans-serif;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+/* 🧱 Asegura que todos los elementos hijos respeten box-sizing */
+*, *::before, *::after {
+  box-sizing: inherit;
 }
 
 a {
@@ -18,18 +31,10 @@ a {
   color: #646cff;
   text-decoration: inherit;
 }
+
 a:hover {
   color: #535bf2;
 }
-/* styles.css */
-body {
-  margin: 0;
-  padding: 0;
-  background-color: #f6f6f6;
-  font-family: 'Roboto', sans-serif;
-  overflow-x: hidden; /* ✅ Esto elimina scroll horizontal */
-}
-
 
 h1 {
   font-size: 3.2em;
@@ -47,22 +52,27 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button:hover {
   border-color: #646cff;
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+/* ☀️ Modo claro (cuando el navegador lo permite) */
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
     background-color: #ffffff;
   }
+
   a:hover {
     color: #747bff;
   }
+
   button {
     background-color: #f9f9f9;
   }

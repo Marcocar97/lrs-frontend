@@ -16,7 +16,7 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    navigate('/login');
+    navigate('/');
   };
 
   return (
@@ -31,16 +31,16 @@ const Navbar = () => {
             onClick={() => navigate('/dashboard')}
           />
           <Typography variant="h6" color="primary" sx={{ fontWeight: 'bold' }}>
-            LRS Tools
+            Toolkit
           </Typography>
         </Box>
 
         {/* PRODUCTOS */}
         <Box sx={{ display: 'flex', gap: 2 }}>
-          <Button color="primary" onClick={() => navigate('/product1')}>RapidRoof</Button>
-          <Button color="primary" onClick={() => navigate('/product2')}>ProFlex</Button>
-          <Button color="primary" onClick={() => navigate('/product3')}>ElastoSeal</Button>
-          <Button color="primary" onClick={() => navigate('/product4')}>LiquidCoat</Button>
+          <Button color="primary" onClick={() => navigate('/rapidroof')}>RapidRoof</Button>
+          <Button color="primary" onClick={() => navigate('/fastcoat')}>Fastcoat</Button>
+          <Button color="primary" onClick={() => navigate('/elasto-kote')}>Elasto-Kote</Button>
+          <Button color="primary" onClick={() => navigate('/karnak')}>Karnak</Button>
         </Box>
 
         {/* HELP + LOGOUT */}
