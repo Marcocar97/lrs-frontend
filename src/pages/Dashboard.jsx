@@ -35,6 +35,7 @@ const Dashboard = () => {
   return (
     <Box
       sx={{
+        pt: '70px', 
         p: isMobile ? 2 : 4,
         backgroundColor: '#f9f9f9',
         height: '100vh',
