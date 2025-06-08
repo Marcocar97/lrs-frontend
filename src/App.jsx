@@ -3,7 +3,7 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Navbar from './components/Navbar';
-import RapidRoof from './pages/Rapidroof';
+import RapidRoof from './pages/RapidRoof';
 
 function App() {
   return (
