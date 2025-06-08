@@ -1,6 +1,12 @@
-// src/components/Navbar.jsx
 import React from 'react';
-import { AppBar, Toolbar, Typography, Button, Box, IconButton } from '@mui/material';
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  Box,
+  IconButton,
+} from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -10,7 +16,6 @@ const Navbar = () => {
   const location = useLocation();
   const isLoggedIn = Boolean(localStorage.getItem('token'));
 
-  // Ocultar navbar en login/register
   if (!isLoggedIn || ['/login', '/register'].includes(location.pathname)) return null;
 
   const handleLogout = () => {
@@ -20,9 +25,18 @@ const Navbar = () => {
   };
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: '#fff', boxShadow: 1 }}>
-      <Toolbar sx={{ justifyContent: 'space-between' }}>
-        {/* LOGO */}
+    <AppBar
+      position="fixed"
+      elevation={1}
+      sx={{
+        backgroundColor: '#fff',
+        color: '#000',
+        zIndex: 1300,
+        borderBottom: '1px solid #e0e0e0',
+      }}
+    >
+      <Toolbar sx={{ justifyContent: 'space-between', px: 2 }}>
+        {/* LOGO + NOMBRE MARCA */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <img
             src="/lrs-logo1.png"
@@ -30,25 +44,35 @@ const Navbar = () => {
             style={{ height: 40, cursor: 'pointer' }}
             onClick={() => navigate('/dashboard')}
           />
-          <Typography variant="h6" color="primary" sx={{ fontWeight: 'bold' }}>
-            Toolkit
+          <Typography
+            sx={{
+              fontFamily: `'Arial Black', 'sans-serif'`,
+              fontWeight: 700,
+              fontStyle: 'italic',
+              color: '#222',
+              fontSize: '1.1rem',
+              textTransform: 'uppercase',
+              letterSpacing: '0.5px',
+            }}
+          >
+            Liquid Roofing Systems
           </Typography>
         </Box>
 
-        {/* PRODUCTOS */}
+        {/* NAV LINKS */}
         <Box sx={{ display: 'flex', gap: 2 }}>
-          <Button color="primary" onClick={() => navigate('/rapidroof')}>RapidRoof</Button>
-          <Button color="primary" onClick={() => navigate('/fastcoat')}>Fastcoat</Button>
-          <Button color="primary" onClick={() => navigate('/elasto-kote')}>Elasto-Kote</Button>
-          <Button color="primary" onClick={() => navigate('/karnak')}>Karnak</Button>
+          <Button sx={{ color: '#005BAC', fontWeight: 'bold' }} onClick={() => navigate('/rapidroof')}>RAPIDROOF</Button>
+          <Button sx={{ color: '#005BAC', fontWeight: 'bold' }} onClick={() => navigate('/fastcoat')}>FASTCOAT</Button>
+          <Button sx={{ color: '#005BAC', fontWeight: 'bold' }} onClick={() => navigate('/elasto-kote')}>ELASTO-KOTE</Button>
+          <Button sx={{ color: '#005BAC', fontWeight: 'bold' }} onClick={() => navigate('/karnak')}>KARNAK</Button>
         </Box>
 
-        {/* HELP + LOGOUT */}
+        {/* ICONS */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <IconButton color="primary" onClick={() => navigate('/help')}>
+          <IconButton sx={{ color: '#005BAC' }} onClick={() => navigate('/help')}>
             <HelpOutlineIcon />
           </IconButton>
-          <IconButton color="primary" onClick={handleLogout}>
+          <IconButton sx={{ color: '#005BAC' }} onClick={handleLogout}>
             <LogoutIcon />
           </IconButton>
         </Box>
