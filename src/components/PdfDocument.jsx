@@ -94,7 +94,14 @@ const getGuaranteeText = (guarantee) => {
     guarantee,
     surface,
     image,
-    lrsReference
+    lrsReference,
+    roofType,
+  uValue,
+  outlets,
+  skylights,
+  acUnits,
+  existingCoatings,
+  pondingWater
   }) => {
     const guaranteeText = getGuaranteeText(guarantee);
     const surfaceText = surfaceTexts[surface] || '';
@@ -672,6 +679,86 @@ const getGuaranteeText = (guarantee) => {
     <PdfFooter guarantee={guarantee} />
   </Page>
 )}
+
+
+{/* pagina 11 */}
+
+<Page size="A4" style={styles.page}>
+  <PdfHeader reference={reference} />
+
+  <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 14 }}>
+    The Roof Build-Up
+  </Text>
+
+  <Text style={{ fontSize: 12, marginBottom: 20 }}>
+    With the information and images provided this specification is for <Text style={{ fontWeight: 'bold' }}>{reference || '________'}</Text>, which is approx. <Text style={{ fontWeight: 'bold' }}>{roofSize || '________'}</Text> and is a <Text style={{ fontWeight: 'bold' }}>{roofType || '________'}</Text>.
+  </Text>
+
+  {/* Tabla tipo rows visuales */}
+  <View style={{ borderTopWidth: 1, borderColor: '#ccc' }}>
+    {/* Project Reference */}
+    <View style={{ flexDirection: 'row', paddingVertical: 6 }}>
+      <Text style={{ width: '40%', fontWeight: 'bold', fontSize: 12 }}>Project Reference</Text>
+      <Text style={{ fontSize: 12 }}>{reference || '________'}</Text>
+    </View>
+    <View style={{ flexDirection: 'row', paddingVertical: 6 }}>
+      <Text style={{ width: '40%', fontWeight: 'bold', fontSize: 12 }}>Roof Size</Text>
+      <Text style={{ fontSize: 12 }}>{roofSize || '________'}</Text>
+    </View>
+    <View style={{ flexDirection: 'row', paddingVertical: 6 }}>
+      <Text style={{ width: '40%', fontWeight: 'bold', fontSize: 12 }}>Roof Type</Text>
+      <Text style={{ fontSize: 12 }}>{roofType || '________'}</Text>
+    </View>
+
+    {/* Build Up */}
+    <View style={{ flexDirection: 'row', paddingVertical: 6 }}>
+      <Text style={{ width: '40%', fontWeight: 'bold', fontSize: 12 }}>
+        {roofType === 'Warm Roof' && 'Warm Roof Build Up'}
+        {roofType === 'Inverted Roof' && 'Inverted Roof Build Up'}
+      </Text>
+      <View>
+        {roofType === 'Warm Roof' && [
+          'Existing Substrate',
+          'Elotene VCL',
+          'Insulation',
+          'Elotene Foil Faced Carrier',
+          'RapidRoof Pro Waterproof',
+        ].map((item, i) => (
+          <Text key={i} style={{ fontSize: 12 }}>{item}</Text>
+        ))}
+
+        {roofType === 'Inverted Roof' && [
+          'Existing Substrate',
+          'RapidRoof Pro Waterproof',
+          'XPS Insulation',
+          'WFRL',
+          'Slabs / Ballast',
+        ].map((item, i) => (
+          <Text key={i} style={{ fontSize: 12 }}>{item}</Text>
+        ))}
+
+      </View>
+    </View>
+
+    {/* Campos adicionales */}
+    {[
+         ...(roofType === 'Warm Roof' ? [['U Value Needed', uValue]] : []),
+      ['Outlets', outlets],
+      ['Skylights', skylights],
+      ['AC Units', acUnits],
+      ['Existing Coatings', existingCoatings],
+      ['Ponding Water', pondingWater],
+    ].map(([label, value], i) => (
+      <View key={i} style={{ flexDirection: 'row', paddingVertical: 6 }}>
+        <Text style={{ width: '40%', fontWeight: 'bold', fontSize: 12 }}>{label}</Text>
+        <Text style={{ fontSize: 12 }}>{value || '________'}</Text>
+      </View>
+    ))}
+  </View>
+
+  <PdfFooter guarantee={guarantee} />
+</Page>
+
 
 
 

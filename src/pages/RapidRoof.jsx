@@ -261,6 +261,173 @@ const RapidRoof = () => {
   </Grid>
 </Grid>
 
+{/* Fila: Roof Type y U Value (incluso si no aplica, se mantiene el espacio para no romper el layout) */}
+<Grid container spacing={2} sx={{ mb: 1 }}>
+  <Grid item xs={12} sm={6} sx={{ flexGrow: 1 }}>
+    <TextField
+      fullWidth
+      select
+      label="Roof Type"
+      name="roofType"
+      value={formData.roofType || ""}
+      onChange={(e) => {
+        const value = e.target.value;
+        setFormData({
+          ...formData,
+          roofType: value,
+          uValue: value === "Warm Roof" ? formData.uValue : "", // limpiar si no aplica
+        });
+      }}
+      size="small"
+      margin="normal"
+    >
+      {["Existing Overlay", "Warm Roof", "Inverted Roof"].map((option) => (
+        <MenuItem key={option} value={option}>
+          {option}
+        </MenuItem>
+      ))}
+    </TextField>
+  </Grid>
+
+  <Grid item xs={12} sm={6} sx={{ flexGrow: 1 }}>
+    <TextField
+      fullWidth
+      select
+      label="U Value Needed"
+      name="uValue"
+      value={formData.uValue || ""}
+      onChange={(e) =>
+        setFormData({ ...formData, uValue: e.target.value })
+      }
+      size="small"
+      margin="normal"
+      disabled={formData.roofType !== "Warm Roof"}
+    >
+      {[
+        "0.11W/m²K",
+        "0.15Wm²K",
+        "0.16W/m²K",
+        "0.18W/m²K",
+      ].map((option) => (
+        <MenuItem key={option} value={option}>
+          {option}
+        </MenuItem>
+      ))}
+    </TextField>
+  </Grid>
+</Grid>
+
+{/* Fila: Outlets y Skylights */}
+<Grid container spacing={2} sx={{ mb: 1 }}>
+  <Grid item xs={12} sm={6} sx={{ flexGrow: 1 }}>
+    <TextField
+      fullWidth
+      select
+      label="Outlets"
+      name="outlets"
+      value={formData.outlets || ""}
+      onChange={handleChange}
+      size="small"
+      margin="normal"
+    >
+      {["TBC", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10+"].map(
+        (option) => (
+          <MenuItem key={option} value={option}>
+            {option}
+          </MenuItem>
+        )
+      )}
+    </TextField>
+  </Grid>
+
+  <Grid item xs={12} sm={6} sx={{ flexGrow: 1 }}>
+    <TextField
+      fullWidth
+      select
+      label="Skylights"
+      name="skylights"
+      value={formData.skylights || ""}
+      onChange={handleChange}
+      size="small"
+      margin="normal"
+    >
+      {["TBC", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10+"].map(
+        (option) => (
+          <MenuItem key={option} value={option}>
+            {option}
+          </MenuItem>
+        )
+      )}
+    </TextField>
+  </Grid>
+</Grid>
+
+{/* Fila: AC Units y Existing Coatings */}
+<Grid container spacing={2} sx={{ mb: 1 }}>
+  <Grid item xs={12} sm={6} sx={{ flexGrow: 1 }}>
+    <TextField
+      fullWidth
+      select
+      label="AC Units"
+      name="acUnits"
+      value={formData.acUnits || ""}
+      onChange={handleChange}
+      size="small"
+      margin="normal"
+    >
+      {["TBC", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10+"].map(
+        (option) => (
+          <MenuItem key={option} value={option}>
+            {option}
+          </MenuItem>
+        )
+      )}
+    </TextField>
+  </Grid>
+
+  <Grid item xs={12} sm={6} sx={{ flexGrow: 1 }}>
+    <TextField
+      fullWidth
+      select
+      label="Existing Coatings"
+      name="existingCoatings"
+      value={formData.existingCoatings || ""}
+      onChange={handleChange}
+      size="small"
+      margin="normal"
+    >
+      {["Yes", "No"].map((option) => (
+        <MenuItem key={option} value={option}>
+          {option}
+        </MenuItem>
+      ))}
+    </TextField>
+  </Grid>
+</Grid>
+
+{/* Fila: Ponding Water */}
+<Grid container spacing={2} sx={{ mb: 1 }}>
+  <Grid item xs={12} sm={6} sx={{ flexGrow: 1 }}>
+    <TextField
+      fullWidth
+      select
+      label="Ponding Water"
+      name="pondingWater"
+      value={formData.pondingWater || ""}
+      onChange={handleChange}
+      size="small"
+      margin="normal"
+    >
+      {["Yes", "No"].map((option) => (
+        <MenuItem key={option} value={option}>
+          {option}
+        </MenuItem>
+      ))}
+    </TextField>
+  </Grid>
+</Grid>
+
+
 
           {/* Botón generar PDF */}
           <Button
