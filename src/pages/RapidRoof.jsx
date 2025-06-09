@@ -35,6 +35,14 @@ const RapidRoof = () => {
     setSubmitted(true);
   };
 
+  const handleDownload = () => {
+    // Esperar un poco para que el PDF comience a generarse
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
+  };
+  
+
   return (
     <Container disableGutters sx={{ width: '100%', px: { xs: 2, sm: 4 } }}>
     <Paper elevation={3} sx={{ mt: 8, p: { xs: 3, sm: 5 }, borderRadius: 3, width: '100%' }}>
@@ -277,18 +285,20 @@ const RapidRoof = () => {
                 style={{ textDecoration: "none" }}
               >
                 {({ loading }) => (
-                  <Button
-                    variant="contained"
-                    fullWidth
-                    disabled={loading}
-                    sx={{
-                      mt: 2,
-                      backgroundColor: "#0072ce",
-                      "&:hover": { backgroundColor: "#005bb5" },
-                    }}
-                  >
-                    {loading ? "Generating PDF..." : "Download PDF"}
-                  </Button>
+                 <Button
+                 variant="contained"
+                 fullWidth
+                 disabled={loading}
+                 onClick={handleDownload}
+                 sx={{
+                   mt: 2,
+                   backgroundColor: "#0072ce",
+                   "&:hover": { backgroundColor: "#005bb5" },
+                 }}
+               >
+                 {loading ? "Generating PDF..." : "Download PDF"}
+               </Button>
+               
                 )}
               </PDFDownloadLink>
             </Box>

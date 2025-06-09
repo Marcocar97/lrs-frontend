@@ -44,7 +44,6 @@ const Register = () => {
         email,
         password
       });
-      alert(res.data.message);
       navigate('/');
     } catch (err) {
       alert(err.response?.data?.message || 'Registration failed');

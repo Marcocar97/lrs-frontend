@@ -24,7 +24,6 @@ const Login = () => {
       const res = await axios.post('https://api.liquidwaterproofingacademy.com/api/login', form);
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('user', JSON.stringify(res.data.user));
-      alert('Login successful');
       navigate('/dashboard');
     } catch (err) {
       alert(err.response?.data?.message || 'Login failed');

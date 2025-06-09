@@ -85,80 +85,80 @@ const getGuaranteeText = (guarantee) => {
   };
   
   
-const PdfDocument = ({
-  reference,
-  date,
-  roofSize,
-  attention,
-  preparedBy,
-  guarantee,
-  surface,
-  image,
-  lrsReference
-}) => {
-  const guaranteeText = getGuaranteeText(guarantee);
-  const surfaceText = surfaceTexts[surface] || '';
-
-  const PdfHeader = ({ reference }) => (
-    <>
-      <View style={{
-        marginHorizontal: -40,
-        marginTop: -40,
-        paddingHorizontal: 40,
-        paddingTop: 30,
-        marginBottom: 20,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-      }}>
-        <Text style={{ fontSize: 26, fontWeight: 'bold', color: '#4a84b5' }}>
-          {reference || 'Project Name Here'}
-        </Text>
+  const PdfDocument = ({
+    reference,
+    date,
+    roofSize,
+    attention,
+    preparedBy,
+    guarantee,
+    surface,
+    image,
+    lrsReference
+  }) => {
+    const guaranteeText = getGuaranteeText(guarantee);
+    const surfaceText = surfaceTexts[surface] || '';
   
-        <View style={{ flexDirection: 'row' }}>
-          <View style={{ width: 14, height: 14, borderRadius: 7, backgroundColor: '#ef4136', marginHorizontal: 5 }} />
-          <View style={{ width: 14, height: 14, borderRadius: 7, backgroundColor: '#f7931e', marginHorizontal: 5 }} />
-          <View style={{ width: 14, height: 14, borderRadius: 7, backgroundColor: '#39b54a', marginHorizontal: 5 }} />
+    const PdfHeader = ({ reference }) => (
+      <>
+        <View style={{
+          marginHorizontal: -40,
+          marginTop: -40,
+          paddingHorizontal: 40,
+          paddingTop: 30,
+          marginBottom: 20,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}>
+          <Text style={{ fontSize: 26, fontWeight: 'bold', color: '#4a84b5' }}>
+            {reference || 'Project Name Here'}
+          </Text>
+    
+          <View style={{ flexDirection: 'row' }}>
+            <View style={{ width: 14, height: 14, borderRadius: 7, backgroundColor: '#ef4136', marginHorizontal: 5 }} />
+            <View style={{ width: 14, height: 14, borderRadius: 7, backgroundColor: '#f7931e', marginHorizontal: 5 }} />
+            <View style={{ width: 14, height: 14, borderRadius: 7, backgroundColor: '#39b54a', marginHorizontal: 5 }} />
+          </View>
         </View>
-      </View>
-  
-      <View style={{ height: 1, backgroundColor: '#000', marginBottom: 20, width: '100%' }} />
-    </>
-  );
-  
-  const PdfFooter = ({ guarantee }) => (
-    <>
-      <View style={{
-        height: 1,
-        backgroundColor: '#000',
-        position: 'absolute',
-        bottom: 130,
-        left: 0,
-        right: 0
-      }} />
-  
-      <View style={{
-        position: 'absolute',
-        bottom: 0,
-        left: 40,
-        right: 40,
-        paddingVertical: 10,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-      }}>
-        <Image src="https://i.postimg.cc/WhWy9YdP/lrs-1.png" style={{ width: 160 }} />
-        <Image
-          src={
-            guarantee === '20-year'
-              ? "https://i.postimg.cc/SnnvHL9Y/20y-1.png"
-              : "https://i.postimg.cc/yD2bKJhQ/10y-1.png"
-          }
-          style={{ width: 160 }}
-        />
-      </View>
-    </>
-  );
+    
+        <View style={{ height: 1, backgroundColor: '#000', marginBottom: 20, width: '100%' }} />
+      </>
+    );
+    
+    const PdfFooter = ({ guarantee }) => (
+      <>
+        <View style={{
+          height: 1,
+          backgroundColor: '#000',
+          position: 'absolute',
+          bottom: 130,
+          left: 0,
+          right: 0
+        }} />
+    
+        <View style={{
+          position: 'absolute',
+          bottom: 0,
+          left: 40,
+          right: 40,
+          paddingVertical: 10,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}>
+          <Image src="https://i.postimg.cc/WhWy9YdP/lrs-1.png" style={{ width: 160 }} />
+          <Image
+            src={
+              guarantee === '20-year'
+                ? "https://i.postimg.cc/SnnvHL9Y/20y-1.png"
+                : "https://i.postimg.cc/yD2bKJhQ/10y-1.png"
+            }
+            style={{ width: 160 }}
+          />
+        </View>
+      </>
+    );
 
 
   return (
@@ -341,10 +341,10 @@ const PdfDocument = ({
 
 
 
-      {/* Página 4: Preliminaries and General Conditions (on 10 years) */}
-      {guarantee === '10-year' || guarantee === '20-year' ? (
+{/* Página 4: Preliminaries and General Conditions (10 years only) */}
+{guarantee === '10-year' && (
   <Page size="A4" style={styles.page}>
-     <PdfHeader reference={reference} />
+    <PdfHeader reference={reference} />
 
     {/* Título */}
     <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 16 }}>
@@ -381,10 +381,11 @@ const PdfDocument = ({
       <Text style={{ fontWeight: 'bold' }}>Waterproofing Only:</Text>{' '}
       This specification is based on a waterproofing only overlay of an existing roof covering and does not include thermal insulation.
     </Text>
- {/* Pie de página */}
- <PdfFooter guarantee={guarantee} />
+
+    <PdfFooter guarantee={guarantee} />
   </Page>
-) : null}
+)}
+
 
 {/* Página 5 */}
 
