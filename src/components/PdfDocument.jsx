@@ -759,6 +759,506 @@ const getGuaranteeText = (guarantee) => {
   <PdfFooter guarantee={guarantee} />
 </Page>
 
+{/* Página 12 - Preparation */}
+<Page size="A4" style={styles.page}>
+  <PdfHeader reference={reference} />
+
+  <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#000', marginBottom: 16 }}>
+    Preparation
+  </Text>
+
+  <View style={{ gap: 12 }}>
+    {[
+      "The contractor is to carry out their own inspection to satisfy themselves with regards to the extent of the works involved in the preparation of the existing roof coverings and substrate.",
+      "No claims arising from failure to do so will be considered by LRS.",
+      "Once the roof has been sufficiently prepared, the whole roof area requiring waterproofing should remain clean. Sweep away any dust etc between coats.",
+      "The surface must be dry before and during application.",
+      "Any blisters will need to be checked before over coating with RapidRoof.",
+      "Blisters within the surface normally indicates moisture under the surface.",
+      "Any moisture present will need to be dried out before applying any RapidRoof.",
+      "All mechanical damage will need to be made good where necessary.",
+      "FastCoat Pro PU Joint Sealer should be used in replacement where existing mastic exists."
+    ].map((line, idx) => (
+      <Text key={idx} style={{ fontSize: 12, color: '#000' }}>{line}</Text>
+    ))}
+  </View>
+
+  <PdfFooter guarantee={guarantee} />
+</Page>
+
+{/* Página 13 - Cleaning (Parte 1) */}
+<Page size="A4" style={styles.page}>
+  <PdfHeader reference={reference} />
+
+  <Text style={{ fontSize: 14, fontWeight: 'bold', marginBottom: 16 }}>
+    Cleaning
+  </Text>
+
+  <Text style={{ fontSize: 12, fontWeight: 'bold', marginBottom: 8 }}>
+    Guide to Cleaning a Roof for {guarantee === '20-year' ? 'RapidRoof Pro Waterproof' : 'RapidRoof Waterproof'} Application
+  </Text>
+
+  <Text style={{ fontSize: 12, marginBottom: 14 }}>
+    Objective: Ensure the roof surface is properly prepared for the application of {guarantee === '20-year' ? 'RapidRoof Pro Waterproof' : 'RapidRoof Waterproof'} to achieve optimal adhesion and performance.
+  </Text>
+
+  <Text style={{ fontSize: 12, fontWeight: 'bold', marginBottom: 6 }}>Materials Needed:</Text>
+  {[
+    "Safety equipment (gloves, goggles, non-slip shoes)",
+    "Broom or leaf blower",
+    "Scraper or putty knife",
+    "2000psi Pressure washer",
+    "799 Wash N Prep",
+    "Stiff-bristle brush",
+    "Clean water",
+    "Bucket",
+    "Ladder or scaffolding (if necessary)",
+    "Tarpaulin (to protect landscaping)",
+    "Rapid Pro Detailer (for minor repairs)"
+  ].map((item, i) => (
+    <Text key={i} style={{ fontSize: 12 }}>• {item}</Text>
+  ))}
+
+  <Text style={{ fontSize: 12, fontWeight: 'bold', marginTop: 14, marginBottom: 6 }}>Safety Precautions:</Text>
+  {[
+    "Weather Check - ensure weather conditions are dry. Avoid cleaning on windy or rainy days.",
+    "Safety Gear - wear appropriate safety gear including gloves, goggles, and non-slip shoes.",
+    "Fall Protection - use a harness or secure ladder and scaffolding if working on a steep or high roof.",
+    "Electrical Hazards - be aware of overhead power lines."
+  ].map((item, i) => (
+    <Text key={i} style={{ fontSize: 12 }}>• {item}</Text>
+  ))}
+
+  <Text style={{ fontSize: 12, fontWeight: 'bold', marginTop: 14, marginBottom: 6 }}>Cleaning Steps:</Text>
+  {[
+    "Clear Debris - use a broom or leaf blower to remove loose debris such as leaves, twigs, and dirt. Check for and remove any nesting materials or other obstructions.",
+    "Scrape Off Moss and Lichen - use a scraper or putty knife to gently remove moss, lichen, or any stubborn debris. Be careful not to damage the " + (guarantee === '20-year' ? "roofing material." : "existing roofing substrate."),
+    "Pressure Washing - use a 2000psi pressure washer to thoroughly wash the roof. Start from the top and work your way down. Maintain a safe distance to avoid damaging the roofing material with excessive pressure.",
+    "Apply Cleaning Solution - mix 799 Wash N Prep roof cleaner with water according to the product instructions. Apply the cleaning solution to the roof using a stiff-bristle brush. Scrub gently to remove grime, algae, and mildew. Mixing Ratio is 1 part 799 and 16 parts water.",
+  ].map((item, i) => (
+    <Text key={i} style={{ fontSize: 12 }}>{`• ${item}`}</Text>
+  ))}
+
+  <PdfFooter guarantee={guarantee} />
+</Page>
+
+{/* Página 14 - Cleaning (Parte 2) */}
+<Page size="A4" style={styles.page}>
+  <PdfHeader reference={reference} />
+
+  {[
+    "For stubborn stains or mould, mix 1 part 799 and 8 parts water and apply it to the affected areas. Let it sit for 15–20 minutes before rinsing.",
+    "Rinse Thoroughly - rinse the roof thoroughly with clean water to remove all soap and cleaning solution residues. Ensure no cleaner is left behind as it can affect the adhesion of " + (guarantee === '20-year' ? "RapidRoof Pro Waterproof." : "RapidRoof Waterproof."),
+    "Inspect and Repair - inspect the roof for any damage, such as cracks, loose shingles, or holes. Repair minor issues with RapidRoof Pro Detailer. Ensure the roof surface is smooth and intact.",
+    "Drying - allow the roof to dry completely before applying RapidRoof Primer. This may take several hours to a full day, depending on weather conditions.",
+  ].map((item, i) => (
+    <Text key={i} style={{ fontSize: 12 }}>{`• ${item}`}</Text>
+  ))}
+
+  <Text style={{ fontSize: 12, fontWeight: 'bold', marginTop: 14, marginBottom: 6 }}>Final Steps:</Text>
+  {[
+    "Protection - cover any landscaping or structures near the roof with tarpaulin to protect them from cleaning runoff.",
+    "Documentation - take photos before and after cleaning to document the condition of the roof."
+  ].map((item, i) => (
+    <Text key={i} style={{ fontSize: 12 }}>{`• ${item}`}</Text>
+  ))}
+
+  {/* TV Aerials */}
+  <Text style={{ fontSize: 12, fontWeight: 'bold', marginTop: 14, marginBottom: 6 }}>
+    TV Aerials and Satellite Dish Arrays
+  </Text>
+  <Text style={{ fontSize: 12, marginBottom: 8 }}>
+    Any TV aerials or satellite arrays that will impede the roofing works will need to be temporarily removed or raised to facilitate the works.
+  </Text>
+  <Text style={{ fontSize: 12, marginBottom: 8 }}>
+    The contractor must liaise with the client directly in relation to how to best serve the property so that minimal disturbance of service is achieved throughout the roof works.
+  </Text>
+
+  {/* Cables */}
+  <Text style={{ fontSize: 12, fontWeight: 'bold', marginTop: 10, marginBottom: 6 }}>
+    Cables
+  </Text>
+  <Text style={{ fontSize: 12 }}>
+    If a cable tray is not currently in situ, consideration should be made to keep the cables from direct contact with the membrane.
+  </Text>
+
+  <PdfFooter guarantee={guarantee} />
+</Page>
+
+{/* Página 15 - Outlets (Parte 1) */}
+<Page size="A4" style={styles.page}>
+  <PdfHeader reference={reference} />
+
+  <Text style={{ fontSize: 14, fontWeight: 'bold', marginBottom: 16 }}>
+    Outlets
+  </Text>
+
+  <Text style={{ fontSize: 12, fontWeight: 'bold', marginBottom: 8 }}>
+    Guide to Applying {guarantee === '20-year' ? 'RapidRoof Pro' : 'RapidRoof'} into Roof Outlets
+  </Text>
+
+  <Text style={{ fontSize: 12, marginBottom: 14 }}>
+    Objective: Properly apply {guarantee === '20-year' ? 'RapidRoof Pro' : 'RapidRoof'} into roof outlets, ensuring the waterproofing extends as far into the outlet as possible and creating a durable, watertight seal.
+  </Text>
+
+  <Text style={{ fontSize: 12, fontWeight: 'bold', marginBottom: 6 }}>Materials Needed:</Text>
+  {[
+    "Safety equipment (gloves, goggles, non-slip shoes)",
+    `${guarantee === '20-year' ? 'RapidRoof Pro' : 'RapidRoof'} products (Primer, BaseCoat, Reinforcement Matting, TopCoat)`,
+    "Mixing stick or drill with a mixing attachment",
+    "Measuring tools (scale for measuring product, tape measure for area calculation)",
+    "Application tools (roller or brush)",
+    "Clean cloth or brush",
+    "Scraper or putty knife",
+    "Ladder or scaffolding (if necessary)",
+    "Tarpaulin (to protect landscaping and nearby structures)",
+    "Masking tape (for neat edges)",
+    `${guarantee === '20-year' ? 'RapidRoof Pro' : 'RapidRoof'} Detailer (if required for minor repairs)`,
+    "Outlet grates (to be removed before application)"
+  ].map((item, idx) => (
+    <Text key={idx} style={{ fontSize: 12 }}>• {item}</Text>
+  ))}
+
+  <Text style={{ fontSize: 12, fontWeight: 'bold', marginTop: 14, marginBottom: 6 }}>Safety Precautions:</Text>
+  {[
+    "Weather Check - ensure weather conditions are dry and the temperature is within the manufacturer's recommended range. Avoid working on windy or rainy days.",
+    "Safety Gear - wear appropriate safety gear including gloves, goggles, and non-slip shoes.",
+    "Fall Protection - use a harness or secure ladder and scaffolding if working on a steep or high roof.",
+    "Electrical Hazards - be aware of overhead power lines and ensure all power tools are used safely."
+  ].map((item, idx) => (
+    <Text key={idx} style={{ fontSize: 12 }}>• {item}</Text>
+  ))}
+
+  <PdfFooter guarantee={guarantee} />
+</Page>
+
+{/* Página 16 - Outlets (Parte 2) */}
+<Page size="A4" style={styles.page}>
+  <PdfHeader reference={reference} />
+
+  <Text style={{ fontSize: 12, fontWeight: 'bold', marginBottom: 6 }}>Preparation Steps:</Text>
+  {[
+    "Remove Outlet Grates - carefully remove all outlet grates to allow access to the interior of the outlets.",
+    "Clean the Roof and Outlets - ensure the roof surface and outlets are clean, dry, and free from debris, dust, and any loose material. Use a brush or cloth to clean inside the outlets thoroughly.",
+    "Inspect for Damage - inspect the outlets for any cracks, splits, or damages that need repair. Use " + (guarantee === '20-year' ? 'RapidRoof Pro Detailer' : 'RapidRoof Detailer') + " to repair minor damages. Allow repairs to cure fully."
+  ].map((item, idx) => (
+    <Text key={idx} style={{ fontSize: 12 }}>• {item}</Text>
+  ))}
+
+  <Text style={{ fontSize: 12, fontWeight: 'bold', marginTop: 14, marginBottom: 6 }}>Application Steps:</Text>
+
+  <Text style={{ fontSize: 12, fontWeight: 'bold', marginBottom: 4 }}>Apply Primer:</Text>
+  {[
+    "Mix and Apply - thoroughly mix " + (guarantee === '20-year' ? 'RapidRoof Pro Primer' : 'RapidRoof Primer') + " according to the manufacturer’s instructions.",
+    "Apply a layer of primer at a coverage rate of 0.3kg per m² to the roof area around the outlets and inside the outlets as far as possible using a brush. Ensure even coverage.",
+    "Drying - allow the primer to dry completely."
+  ].map((item, idx) => (
+    <Text key={idx} style={{ fontSize: 12 }}>• {item}</Text>
+  ))}
+
+  <Text style={{ fontSize: 12, fontWeight: 'bold', marginTop: 10, marginBottom: 4 }}>Prepare BaseCoat:</Text>
+  <Text style={{ fontSize: 12 }}>• Mix BaseCoat: Thoroughly mix {guarantee === '20-year' ? 'RapidRoof Pro' : 'RapidRoof'} BaseCoat according to the LRS instructions.</Text>
+
+  <Text style={{ fontSize: 12, fontWeight: 'bold', marginTop: 10, marginBottom: 4 }}>Apply BaseCoat:</Text>
+  {[
+    "Application: Apply the BaseCoat at a coverage rate of 1.25kg per m² to the roof area around the outlets, ensuring it extends into the outlets as far as possible. Use a brush or small roller to work the BaseCoat into the outlet, ensuring complete coverage.",
+    "Reinforcement Matting: For additional strength, especially at transitions and critical points, embed 150gsm reinforcement matting into the wet BaseCoat. Smooth out with a roller or brush to remove air pockets and ensure proper adhesion."
+  ].map((item, idx) => (
+    <Text key={idx} style={{ fontSize: 12 }}>• {item}</Text>
+  ))}
+
+  <PdfFooter guarantee={guarantee} />
+</Page>
+
+{/* Página 17 - Outlets (Parte 3) */}
+<Page size="A4" style={styles.page}>
+  <PdfHeader reference={reference} />
+
+  <Text style={{ fontSize: 12, fontWeight: 'bold', marginBottom: 4 }}>Apply TopCoat:</Text>
+  {[
+    "Mix TopCoat: Thoroughly mix " + (guarantee === '20-year' ? 'RapidRoof Pro TopCoat' : 'RapidRoof TopCoat') + " according to the LRS instructions.",
+    "Application: Apply a layer of TopCoat at a coverage rate of 0.75kg per m² to the detailed areas, ensuring it extends into the outlets as far as possible. Ensure even coverage and smooth application."
+  ].map((item, idx) => (
+    <Text key={idx} style={{ fontSize: 12 }}>• {item}</Text>
+  ))}
+
+  <Text style={{ fontSize: 12, fontWeight: 'bold', marginTop: 14, marginBottom: 4 }}>Final Steps:</Text>
+  {[
+    "Inspect and Smooth: Inspect the applied coatings for any bubbles, wrinkles, or uncovered areas. Smooth out any imperfections and ensure the surface is even.",
+    "Allow to Dry: Allow all applied " + (guarantee === '20-year' ? 'RapidRoof Pro' : 'RapidRoof') + " products to dry completely, typically 20 minutes. Full cure time may vary based on environmental conditions.",
+    "Reinstall Outlet Grates: Once the TopCoat has fully cured, reinstall the outlet grates carefully."
+  ].map((item, idx) => (
+    <Text key={idx} style={{ fontSize: 12 }}>• {item}</Text>
+  ))}
+
+  <Text style={{ fontSize: 12, fontWeight: 'bold', marginTop: 14, marginBottom: 4 }}>Final Inspection and Protection:</Text>
+  {[
+    "Inspect the Application: Ensure that the waterproofing extends as far into the outlets as possible and that the application is uniform and free from defects.",
+    "Clean Up: Clean all tools and equipment immediately after use. Dispose of any waste materials following local regulations.",
+    "Document the Process: Take photos before, during, and after the application to document the condition of the roof and the work completed."
+  ].map((item, idx) => (
+    <Text key={idx} style={{ fontSize: 12 }}>• {item}</Text>
+  ))}
+
+  <Text style={{ fontSize: 12, marginTop: 14 }}>
+    By following these steps, you ensure that the {guarantee === '20-year' ? 'RapidRoof Pro' : 'RapidRoof'} is properly applied into roof outlets, creating a durable and watertight seal that extends as far into the outlets as possible, protecting against water ingress and ensuring a long-lasting roof system.
+  </Text>
+
+  <PdfFooter guarantee={guarantee} />
+</Page>
+
+{/* Página 18 - Ponding Water / Cracks (Parte 1) */}
+<Page size="A4" style={styles.page}>
+  <PdfHeader reference={reference} />
+
+  <Text style={{ fontSize: 14, fontWeight: 'bold', marginBottom: 16 }}>
+    Ponding Water / Filling Cracks and Joints
+  </Text>
+
+  <Text style={{ fontSize: 12, fontWeight: 'bold', marginBottom: 8 }}>
+    Guide to Using Multi-Purpose Filler for Roofing
+  </Text>
+
+  <Text style={{ fontSize: 12, marginBottom: 14 }}>
+    Objective: Properly use the Multi-Purpose Filler (resin and aggregate) to fill ponding areas on a roof, ensuring a level surface that promotes proper drainage and prevents water accumulation. Also used for filling large cracks or splits within the existing surface.
+  </Text>
+
+  <Text style={{ fontSize: 12, fontWeight: 'bold', marginBottom: 6 }}>Materials Needed:</Text>
+  {[
+    "Safety equipment (gloves, goggles, non-slip shoes)",
+    "Multi-Purpose Filler Kit components (Resin and Aggregate)",
+    "Mixing stick or drill with a mixing attachment",
+    "Scale (for accurate measurement)",
+    "Clean mixing container",
+    "Application tools (trowel)",
+    "Cleaning tools (brush, cloth)",
+    "Measuring tools (tape measure, level)",
+    "Ladder or scaffolding (if necessary)",
+    "Tarpaulin (to protect landscaping and nearby structures)",
+    "Masking tape (for neat edges)",
+    "RapidRoof Pro Detailer (if required for minor repairs)"
+  ].map((item, i) => (
+    <Text key={i} style={{ fontSize: 12 }}>• {item}</Text>
+  ))}
+
+  <Text style={{ fontSize: 12, fontWeight: 'bold', marginTop: 14, marginBottom: 6 }}>Safety Precautions:</Text>
+  {[
+    "Wear appropriate safety gear including gloves, goggles, and non-slip shoes to protect against splashes and fumes.",
+    "Ensure good ventilation when mixing and applying the product.",
+    "Handle all components with care as they can be hazardous. Follow the LRS safety guidelines."
+  ].map((item, i) => (
+    <Text key={i} style={{ fontSize: 12 }}>• {item}</Text>
+  ))}
+
+  <PdfFooter guarantee={guarantee} />
+</Page>
+
+{/* Página 19 - Ponding Water / Cracks (Parte 2) */}
+<Page size="A4" style={styles.page}>
+  <PdfHeader reference={reference} />
+
+  <Text style={{ fontSize: 12, fontWeight: 'bold', marginBottom: 6 }}>Preparation Steps:</Text>
+  {[
+    "Identify Ponding Areas, Cracks or Splits: Locate all areas on the roof where water ponds or has cracks and splits. Measure the size and depth of these areas to determine the amount of Multi-Purpose Filler needed.",
+    "Clean the Roof: Ensure the roof surface is clean, dry, and free from debris, dust, and any loose material.",
+    "Inspect for Damage: Repair any minor cracks or splits using RapidRoof Pro Detailer. Allow repairs to cure fully."
+  ].map((item, i) => (
+    <Text key={i} style={{ fontSize: 12 }}>• {item}</Text>
+  ))}
+
+  <Text style={{ fontSize: 12, fontWeight: 'bold', marginTop: 12, marginBottom: 6 }}>Mixing Steps:</Text>
+  {[
+    `${guarantee === '20-year' ? 'RapidRoof Pro' : 'RapidRoof'} Primer should be applied before the application of the Multi-Purpose Filler, at 0.3kg per m².`,
+    "Prepare the Components: Resin (binding component) and Aggregate (filler material).",
+    "Determine the Mixing Ratio: Follow LRS instructions (typically by weight or volume).",
+    "Measure and Mix: Measure resin into a clean container, then gradually add the premixed aggregate (which includes catalyst) while mixing continuously until texture is uniform."
+  ].map((item, i) => (
+    <Text key={i} style={{ fontSize: 12 }}>• {item}</Text>
+  ))}
+
+  <Text style={{ fontSize: 12, fontWeight: 'bold', marginTop: 12, marginBottom: 6 }}>Application Steps:</Text>
+  {[
+    `Apply the Multi-Purpose Filler: Use a trowel to apply the mixed filler to the ponding areas, cracks, or splits. Primer must be applied beforehand.`,
+    "Ensure the filler is pressed firmly into the area and remove air pockets.",
+    "Level the Surface: Use a level to match surrounding roof profile. Smooth and remove excess filler.",
+    "Allow to Dry: Typically 20 minutes. May vary with temperature and humidity."
+  ].map((item, i) => (
+    <Text key={i} style={{ fontSize: 12 }}>• {item}</Text>
+  ))}
+
+  <PdfFooter guarantee={guarantee} />
+</Page>
+
+{/* Página 20 - Ponding Water / Cracks (Parte 3) */}
+<Page size="A4" style={styles.page}>
+  <PdfHeader reference={reference} />
+
+  <Text style={{ fontSize: 12, fontWeight: 'bold', marginBottom: 6 }}>Final Inspection and Protection:</Text>
+  {[
+    "Inspect the Filled Area: Look for shrinkage, cracking or imperfections. Apply more filler if necessary.",
+    "Clean Up: Clean tools and equipment immediately after use.",
+    "Document the Repair: Take photos before, during, and after the application."
+  ].map((item, i) => (
+    <Text key={i} style={{ fontSize: 12 }}>• {item}</Text>
+  ))}
+
+  <Text style={{ fontSize: 12, fontWeight: 'bold', marginTop: 14, marginBottom: 6 }}>Maintenance:</Text>
+  {[
+    "Regular Inspection: Periodically inspect the roof to check that filled areas remain intact and no new ponding areas or cracks have developed.",
+    "Proper Drainage: Keep roof drains, gutters, and downspouts clear and functional to prevent future water accumulation."
+  ].map((item, i) => (
+    <Text key={i} style={{ fontSize: 12 }}>• {item}</Text>
+  ))}
+
+  <Text style={{ fontSize: 12, marginTop: 14 }}>
+    By following these steps, you ensure that ponding areas, cracks, and splits on the roof are properly filled using a Multi-Purpose Filler, resulting in a level surface that promotes proper drainage and prevents water accumulation. This helps maintain the integrity of the roofing system and prolongs its lifespan.
+  </Text>
+
+  <PdfFooter guarantee={guarantee} />
+</Page>
+
+{/* Página 21 - Waterproof Coverings */}
+<Page size="A4" style={styles.page}>
+  <PdfHeader reference={reference} />
+
+  <Text style={{ fontSize: 14, fontWeight: 'bold', marginBottom: 16 }}>
+    Waterproof Coverings
+  </Text>
+
+  <Text style={{ fontSize: 12, fontWeight: 'bold', marginBottom: 6 }}>
+    20-Minute Curing Time – Timing Considerations
+  </Text>
+
+  {[
+    `Work Quickly: Due to the 20-minute cure time, work in small, manageable sections. Mix only the amount of ${guarantee === '20-year' ? 'RapidRoof Pro' : 'RapidRoof'} that can be applied within this timeframe.`,
+    "Monitor Conditions: Monitor the weather conditions and temperature closely. Higher temperatures can accelerate the curing process, reducing the working time.",
+    "Inspect Application: Immediately after application, inspect for any bubbles, wrinkles, or uncoated areas and smooth out as necessary.",
+    `Allow to Cure: Within 20 minutes, the ${guarantee === '20-year' ? 'RapidRoof Pro' : 'RapidRoof'} will begin to cure. Ensure no traffic or disturbance occurs during this time.`
+  ].map((text, i) => (
+    <Text key={i} style={{ fontSize: 12, marginBottom: 6 }}>• {text}</Text>
+  ))}
+
+  <Text style={{ fontSize: 12, fontWeight: 'bold', marginTop: 12, marginBottom: 6 }}>
+    Final Inspection and Protection:
+  </Text>
+
+  {[
+    "Inspect and Smooth: Inspect the applied coatings for any imperfections. Smooth out any areas if necessary before the product fully cures.",
+    `Allow to Cure Completely: Allow all applied ${guarantee === '20-year' ? 'RapidRoof Pro' : 'RapidRoof'} products to cure completely before overcoating (recommended: leave 1 hour).`,
+    "Protection: Cover any landscaping or structures near the roof with tarpaulin to protect them during the application process.",
+    "Documentation: Take photos before, during, and after the application to document the condition of the roof and the work completed."
+  ].map((text, i) => (
+    <Text key={i} style={{ fontSize: 12, marginBottom: 6 }}>• {text}</Text>
+  ))}
+
+  <Text style={{ fontSize: 12, marginTop: 12 }}>
+    By following these steps and considering the 20-minute cure time of {guarantee === '20-year' ? 'RapidRoof Pro' : 'RapidRoof'}, you ensure that the application is properly executed, creating a durable and waterproof surface that will protect the roof for years to come.
+  </Text>
+
+  <PdfFooter guarantee={guarantee} />
+</Page>
+
+{/* Página 22 - Catalyst Ratio (Parte 1) */}
+<Page size="A4" style={styles.page}>
+  <PdfHeader reference={reference} />
+
+  <Text style={{ fontSize: 14, fontWeight: 'bold', marginBottom: 16 }}>
+    Catalyst Ratio
+  </Text>
+
+  <Text style={{ fontSize: 12, fontWeight: 'bold', marginBottom: 8 }}>
+    Guide to Adjusting Catalyst Ratio for {guarantee === '20-year' ? 'RapidRoof Pro' : 'RapidRoof'}
+  </Text>
+
+  <Text style={{ fontSize: 12, marginBottom: 10 }}>
+    Objective: Properly mix {guarantee === '20-year' ? 'RapidRoof Pro' : 'RapidRoof'} with the correct catalyst ratio to ensure optimal curing times and performance.
+  </Text>
+
+  <Text style={{ fontSize: 12, fontWeight: 'bold', marginBottom: 6 }}>Materials Needed:</Text>
+  {[
+    "Safety equipment (gloves, goggles, non-slip shoes)",
+    `${guarantee === '20-year' ? 'RapidRoof Pro' : 'RapidRoof'} product (Primer, BaseCoat, TopCoat, Pro Detailer${guarantee === '10-year' ? ' and Anti-Skid' : ''})`,
+    "Catalyst",
+    "Mixing stick or drill with a mixing attachment",
+    "Scale (for accurate measurement)",
+    "Clean mixing container",
+    "Measuring tools (for catalyst and product)",
+    "Application tools (roller or brush)"
+  ].map((item, i) => (
+    <Text key={i} style={{ fontSize: 12 }}>• {item}</Text>
+  ))}
+
+  <Text style={{ fontSize: 12, fontWeight: 'bold', marginTop: 12, marginBottom: 6 }}>Safety Precautions:</Text>
+  {[
+    "Wear appropriate safety gear to protect against splashes and fumes.",
+    "Ensure good ventilation when mixing and applying the product.",
+    "Handle the catalyst with care as it can be hazardous. Follow the MSDS safety guidelines."
+  ].map((item, i) => (
+    <Text key={i} style={{ fontSize: 12 }}>• {item}</Text>
+  ))}
+
+  <Text style={{ fontSize: 12, fontWeight: 'bold', marginTop: 12, marginBottom: 6 }}>Catalyst Ratio:</Text>
+  {[
+    "Standard Ratio: 20g of catalyst per 1kg of product (2%)",
+    "Adjustable Range: 1% to 4%, depending on temperature and desired cure time"
+  ].map((item, i) => (
+    <Text key={i} style={{ fontSize: 12 }}>• {item}</Text>
+  ))}
+
+  <Text style={{ fontSize: 12, fontWeight: 'bold', marginTop: 12, marginBottom: 6 }}>Example Calculations:</Text>
+  {[
+    "1kg of product: 10g (1%), 20g (2%), 30g (3%), 40g (4%)",
+    "5kg of product: 50g, 100g, 150g, 200g for 1–4% ratios"
+  ].map((item, i) => (
+    <Text key={i} style={{ fontSize: 12 }}>• {item}</Text>
+  ))}
+
+  <PdfFooter guarantee={guarantee} />
+</Page>
+
+{/* Página 23 - Catalyst Ratio (Parte 2) */}
+<Page size="A4" style={styles.page}>
+  <PdfHeader reference={reference} />
+
+  <Text style={{ fontSize: 12, fontWeight: 'bold', marginBottom: 6 }}>Mixing Steps:</Text>
+  {[
+    "Measure the Product: Use a scale to weigh the required amount.",
+    "Measure the Catalyst: Calculate the appropriate weight based on the selected ratio.",
+    "Mix: Combine the product and catalyst in a clean container. Use a mixing stick or drill with attachment. Mix thoroughly until uniform."
+  ].map((item, i) => (
+    <Text key={i} style={{ fontSize: 12 }}>• {item}</Text>
+  ))}
+
+  <Text style={{ fontSize: 12, fontWeight: 'bold', marginTop: 10, marginBottom: 6 }}>Application:</Text>
+  {[
+    "Apply immediately after mixing. The curing process starts once the catalyst is added.",
+    "Work in manageable sections to prevent premature curing."
+  ].map((item, i) => (
+    <Text key={i} style={{ fontSize: 12 }}>• {item}</Text>
+  ))}
+
+  <Text style={{ fontSize: 12, fontWeight: 'bold', marginTop: 10, marginBottom: 6 }}>Environmental Considerations:</Text>
+  {[
+    "High temperatures → lower catalyst ratio to slow down curing.",
+    "Low temperatures → higher catalyst ratio to speed up curing."
+  ].map((item, i) => (
+    <Text key={i} style={{ fontSize: 12 }}>• {item}</Text>
+  ))}
+
+  <Text style={{ fontSize: 12, fontWeight: 'bold', marginTop: 10, marginBottom: 6 }}>Final Inspection and Documentation:</Text>
+  {[
+    "Inspect the mixture: Ensure a uniform blend with no unmixed product or catalyst.",
+    "Cure and Document: Apply, allow to cure, and take photos before, during, and after application to document work completed."
+  ].map((item, i) => (
+    <Text key={i} style={{ fontSize: 12 }}>• {item}</Text>
+  ))}
+
+  <Text style={{ fontSize: 12, marginTop: 12 }}>
+    By adjusting the catalyst ratio within the 1–4% range, you can control the curing time of {guarantee === '20-year' ? 'RapidRoof Pro' : 'RapidRoof'} to suit the environmental conditions and your application needs.
+  </Text>
+
+  <PdfFooter guarantee={guarantee} />
+</Page>
 
 
 
