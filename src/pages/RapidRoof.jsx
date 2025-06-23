@@ -23,6 +23,9 @@ const RapidRoof = () => {
     guarantee: "10-year",
     surface: "Timber",
     image: null,
+    antiSkid: "",
+    photos: [],
+
   });
 
   const [submitted, setSubmitted] = useState(false);
@@ -426,6 +429,114 @@ const RapidRoof = () => {
     </TextField>
   </Grid>
 </Grid>
+
+{/* Fila: Anti-Skid Required */}
+<Grid container spacing={2} sx={{ mb: 1 }}>
+  <Grid item xs={12} sm={6} sx={{ flexGrow: 1 }}>
+    <TextField
+      fullWidth
+      select
+      label="Anti-Skid Required"
+      name="antiSkid"
+      value={formData.antiSkid || ""}
+      onChange={handleChange}
+      size="small"
+      margin="normal"
+    >
+      {["Yes", "No"].map((option) => (
+        <MenuItem key={option} value={option}>
+          {option}
+        </MenuItem>
+      ))}
+    </TextField>
+  </Grid>
+</Grid>
+
+{/* Subida de fotografías adicionales (máx. 4) */}
+<Grid container sx={{ mt: 2 }}>
+  <Grid item xs={12}>
+    <Button component="label" fullWidth variant="outlined">
+      Add Photographs (Max 4)
+      <input
+        type="file"
+        hidden
+        accept="image/*"
+        multiple
+        onChange={(e) => {
+          const newFiles = Array.from(e.target.files);
+          const existing = formData.photos || [];
+
+          const readers = newFiles.map(
+            (file) =>
+              new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.readAsDataURL(file);
+              })
+          );
+
+          Promise.all(readers).then((newImages) => {
+            const combined = [...existing, ...newImages].slice(0, 4);
+            setFormData((prev) => ({ ...prev, photos: combined }));
+          });
+        }}
+      />
+    </Button>
+
+    {formData.photos?.length > 0 && (
+      <Grid container spacing={2} sx={{ mt: 2 }}>
+        {formData.photos.map((img, idx) => (
+          <Grid item xs={12} sm={6} md={3} key={idx} sx={{ position: "relative" }}>
+            <Box
+              sx={{
+                border: "1px solid #ccc",
+                borderRadius: 2,
+                overflow: "hidden",
+                height: 140,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                position: "relative",
+              }}
+            >
+              <img
+                src={img}
+                alt={`Photo ${idx + 1}`}
+                style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }}
+              />
+              <Button
+                size="small"
+                sx={{
+                  position: "absolute",
+                  top: 4,
+                  right: 4,
+                  minWidth: "24px",
+                  padding: 0,
+                  fontSize: "1rem",
+                  lineHeight: 1,
+                  backgroundColor: "#fff",
+                  border: "1px solid #ccc",
+                  borderRadius: "50%",
+                  width: 28,
+                  height: 28,
+                  minHeight: 0,
+                }}
+                onClick={() => {
+                  const updated = formData.photos.filter((_, i) => i !== idx);
+                  setFormData((prev) => ({ ...prev, photos: updated }));
+                }}
+              >
+                ×
+              </Button>
+            </Box>
+          </Grid>
+        ))}
+      </Grid>
+    )}
+  </Grid>
+</Grid>
+
+
 
 
 
