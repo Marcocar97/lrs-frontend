@@ -36,7 +36,6 @@ const Navbar = () => {
     { label: 'RAPIDROOF', path: '/rapidroof' },
     { label: 'FASTCOAT', path: '/fastcoat' },
     { label: 'ELASTO-KOTE', path: '/elasto-kote' },
-    { label: 'KARNAK', path: '/karnak' },
   ];
 
   return (

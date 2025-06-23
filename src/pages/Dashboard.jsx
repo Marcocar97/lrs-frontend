@@ -16,10 +16,6 @@ const products = [
     name: 'Elasto-Kote',
     comingSoon: true,
   },
-  {
-    name: 'Karnak',
-    comingSoon: true,
-  },
 ];
 
 const Dashboard = () => {

@@ -2670,6 +2670,85 @@ const getGuaranteeText = (guarantee) => {
   </Page>
 )}
 
+{/* Página 51 - Guarantee */}
+<Page size="A4" style={styles.page}>
+  <PdfHeader reference={reference} />
+
+  <Text style={styles.sectionTitle}>Guarantee</Text>
+  <Text style={[styles.text, { marginBottom: 12 }]}>
+    Materials only. The following guaranteed specification is covered by LRS product
+    guarantee for the period of {guarantee === '20-year' ? '20-years' : '10-years'} from the date of practical completion.
+  </Text>
+
+  <Text style={[styles.text, { marginBottom: 12 }]}>
+    Please Note: Only products supplied by LRS will be covered in this guarantee.
+    We are unable to guarantee patches or repairs.
+  </Text>
+
+  <Text style={styles.text}>Regards</Text>
+  <Text style={styles.text}>Paul Jones</Text>
+  <Text style={styles.text}>Technical Manager</Text>
+  <Text style={styles.text}>T: 01948 841 877</Text>
+  <Text style={styles.text}>E: paul.jones@lrs-systems.co.uk</Text>
+
+  <PdfFooter guarantee={guarantee} />
+</Page>
+
+
+{/* Página final - estilo profesional como la imagen 2 */}
+
+<Page size="A4" style={{ padding: 0, margin: 0 }}>
+  {/* Imagen superior */}
+  <Image src="/last.png" style={{ width: '100%' }} />
+
+  {/* Contenido inferior, compactado */}
+  <View
+    style={{
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'flex-start',
+      paddingHorizontal: 60,
+      paddingTop: 30,
+      paddingBottom: 40, // usamos el espacio inferior útil
+      height: 'auto',
+    }}
+  >
+    {/* Columna izquierda */}
+    <View style={{ flex: 1 }}>
+      <Text
+        style={{
+          fontSize: 14,
+          fontWeight: 'bold',
+          color: '#f5a623',
+          marginBottom: 10,
+        }}
+      >
+        LIQUID ROOFING SYSTEMS
+      </Text>
+
+      <Text style={{ fontSize: 12, marginBottom: 3 }}>
+        Roofing House, Prees Green, Whitchurch, SY13 2BN
+      </Text>
+      <Text style={{ fontSize: 12, marginBottom: 3 }}>
+        01948 841 877
+      </Text>
+      <Text style={{ fontSize: 12, marginBottom: 3 }}>
+        enquiries@lrs-systems.co.uk
+      </Text>
+      <Text style={{ fontSize: 12, color: '#f5a623' }}>
+        www.lrs-systems.co.uk
+      </Text>
+    </View>
+
+    {/* Columna derecha: logo alineado con el texto */}
+    <Image
+      src="https://i.postimg.cc/WhWy9YdP/lrs-1.png"
+      style={{ width: 110, marginTop: 6 }}
+    />
+  </View>
+</Page>
+
+
 
     </Document>
   );
