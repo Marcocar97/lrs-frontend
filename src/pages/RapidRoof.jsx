@@ -25,6 +25,7 @@ const RapidRoof = () => {
     image: null,
     antiSkid: "",
     photos: [],
+    roofBuildUp: "",
 
   });
 
@@ -319,6 +320,24 @@ const RapidRoof = () => {
     </TextField>
   </Grid>
 </Grid>
+
+{/* Campo: Roof Build Up (texto libre) */}
+<Grid container spacing={2} sx={{ mb: 1 }}>
+  <Grid item xs={12} sm={6} sx={{ flexGrow: 1 }}>
+    <TextField
+      fullWidth
+      label="Roof Build Up"
+      name="roofBuildUp"
+      value={formData.roofBuildUp || ""}
+      onChange={handleChange}
+      multiline
+      minRows={3}
+      size="small"
+      margin="normal"
+    />
+  </Grid>
+</Grid>
+
 
 {/* Fila: Outlets y Skylights */}
 <Grid container spacing={2} sx={{ mb: 1 }}>

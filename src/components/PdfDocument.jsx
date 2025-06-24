@@ -106,6 +106,7 @@ const getGuaranteeText = (guarantee) => {
   pondingWater,
   antiSkid,
   photos,
+  roofBuildUp,
   }) => {
     const guaranteeText = getGuaranteeText(guarantee);
     const surfaceText = surfaceTexts[surface] || '';
@@ -144,45 +145,109 @@ const getGuaranteeText = (guarantee) => {
       </>
     );
     
-    const PdfFooter = ({ guarantee }) => (
+    const PdfFooter = ({ guarantee, pageNumber }) => (
       <>
-        <View style={{
-          height: 1,
-          backgroundColor: '#000',
-          position: 'absolute',
-          bottom: 130,
-          left: 0,
-          right: 0
-        }} />
     
-        <View style={{
-          position: 'absolute',
-          bottom: 0,
-          left: 40,
-          right: 40,
-          paddingVertical: 10,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center'
-        }}>
-          <Image src="https://i.postimg.cc/WhWy9YdP/lrs-1.png" style={{ width: 160 }} />
-          <Image
-            src={
-              guarantee === '20-year'
-                ? "https://i.postimg.cc/SnnvHL9Y/20y-1.png"
-                : "https://i.postimg.cc/yD2bKJhQ/10y-1.png"
-            }
-            style={{ width: 160 }}
-          />
+        <View
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 40,
+            right: 40,
+            paddingVertical: 10,
+            alignItems: 'center',
+          }}
+        >
+          {/* Logos en una fila */}
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              width: '100%',
+            }}
+          >
+            <Image
+              src="https://i.postimg.cc/WhWy9YdP/lrs-1.png"
+              style={{ width: 160 }}
+            />
+            <Image
+              src={
+                guarantee === '20-year'
+                  ? 'https://i.postimg.cc/SnnvHL9Y/20y-1.png'
+                  : 'https://i.postimg.cc/yD2bKJhQ/10y-1.png'
+              }
+              style={{ width: 160 }}
+            />
+          </View>
+    
+          {/* Número de página centrado debajo */}
+          <Text style={{ fontSize: 12, fontWeight: 'bold', marginTop: 6 }}>
+            Page {pageNumber}
+          </Text>
         </View>
       </>
     );
-
+    
+    
+    const getWaterproofPagesCount = ({ guarantee, surface, antiSkid }) => {
+      const isFullyPrimed = fullyPrimedSurfaces.includes(surface);
+      let count = 21;
+      const includesPrimer = guarantee === '20-year' || (guarantee === '10-year' && isFullyPrimed);
+      if (!includesPrimer) count -= 2;
+      if (antiSkid !== 'Yes') count -= 2;
+      return count;
+    };
+    
+    const waterproofPageCount = getWaterproofPagesCount({ guarantee, surface, antiSkid });
+    
+    const baseSections = [
+      { title: 'Project details', pages: 1 },
+      { title: 'Preliminaries & general conditions', pages: 1 },
+      { title: 'Existing falls, change in scope of works', pages: 1 },
+      { title: 'Existing roof condition', pages: 1 },
+      { title: 'Natural growth', pages: 1 },
+      { title: 'Adhesion test, compliance with building regulations', pages: 1 },
+      { title: 'Flat roof detailing guidance & CDM', pages: 1 },
+      { title: 'Roof specification', pages: 1 },
+      { title: 'The roof build-up and preparation', pages: 2 },
+      { title: 'Cleaning, TV, satellite arrays, cables', pages: 2 },
+      { title: 'Outlets', pages: 3 },
+      { title: 'Multi-Purpose Filler', pages: 3 },
+      { title: 'Waterproof coverings', pages: waterproofPageCount },
+      { title: 'Schedule of products', pages: 2 },
+      { title: 'Additional information', pages: 2 },
+      { title: 'General guidance and requirements', pages: 2 },
+      { title: 'Safety Advice for Usinf RapidRoof PMMA', pages: 2 },
+      { title: 'Photographs', pages: 1 },
+      { title: 'Guarantee', pages: 1 },
+    ];
+    
+    const generatePageIndex = ({ guarantee, surface, antiSkid }) => {
+      const pages = [];
+      let currentPage = 3;
+    
+      for (const section of baseSections) {
+        pages.push({ title: section.title, page: currentPage });
+        currentPage += section.pages;
+  
+      }
+    
+      return pages;
+    };
+    
+    const pageIndex = generatePageIndex({ guarantee, surface, antiSkid });
+    
+    const getPageNumber = (title) =>
+      pageIndex.find((p) => p.title === title)?.page || '—';
+    
+    
+let waterproofPageIndex = 0;
 
   return (
     <Document>
 
            {/* Página 1: Portada */}
+
 
            <Page size="A4" style={{ padding: 0, margin: 0 }}>
   {/* Imagen superior (sin padding) */}
@@ -223,39 +288,19 @@ const getGuaranteeText = (guarantee) => {
 </Page>
 
        {/* Página 2: Content */}
-
        <Page size="A4" style={styles.page}>
-       <PdfHeader reference={reference} />
+  <PdfHeader reference={reference} />
 
-  {/* Título */}
   <Text style={styles.sectionTitle}>Contents</Text>
 
-  {/* Tabla de contenidos */}
-  {[
-    ['Project details', '3'],
-    ['Preliminaries & general conditions', '4'],
-    ['Existing falls, change in scope of works, existing roof condition', '5'],
-    ['Natural growth, adhesion test, compliance with building regulations', '6'],
-    ['Flat roof detailing guidance & CDM', '7'],
-    ['Roof specification', '8'],
-    ['The roof build-up and preparation', '9'],
-    ['Cleaning, TV, satellite arrays, cables', '10'],
-    ['Crack & joint filler, cables and ponding filler', '11–12'],
-    ['Waterproof coverings', '13–18'],
-    ['Schedule of products', '19'],
-    ['Additional information', '20'],
-    ['General guidance and requirements', '21–23'],
-    ['Photographs', '24'],
-    ['Materials and guarantee', '25'],
-  ].map(([label, page], idx) => (
+  {pageIndex.map(({ title, page }, idx) => (
     <View key={idx} style={styles.tableRow}>
-      <Text>{label}</Text>
+      <Text>{title}</Text>
       <Text>{page}</Text>
     </View>
   ))}
 
-   {/* Pie de página */}
-   <PdfFooter guarantee={guarantee} />
+  <PdfFooter guarantee={guarantee} />
 </Page>
 
 
@@ -302,7 +347,8 @@ const getGuaranteeText = (guarantee) => {
 
 
  {/* Pie de página */}
- <PdfFooter guarantee={guarantee} />
+ {/* Project details */}
+<PdfFooter guarantee={guarantee} pageNumber={getPageNumber('Project details')} />
 </Page>
 
 
@@ -353,7 +399,8 @@ const getGuaranteeText = (guarantee) => {
     This specification is based on a waterproofing-only overlay of an existing roof covering and does not include thermal insulation.
   </Text>
 
-  <PdfFooter guarantee={guarantee} />
+  {/* Preliminaries & general conditions */}
+<PdfFooter guarantee={guarantee} pageNumber={getPageNumber('Preliminaries & general conditions')} />
 </Page>
 
 
@@ -409,7 +456,8 @@ const getGuaranteeText = (guarantee) => {
     </View>
 
      {/* Pie de página */}
-     <PdfFooter guarantee={guarantee} />
+    {/* Existing falls, change in scope of works */}
+<PdfFooter guarantee={guarantee} pageNumber={getPageNumber('Existing falls, change in scope of works')} />
   </Page>
 )}
 
@@ -442,7 +490,8 @@ const getGuaranteeText = (guarantee) => {
   </Text>
 
   {/* Pie de página */}
-  <PdfFooter guarantee={guarantee} />
+  {/* Existing roof condition */}
+<PdfFooter guarantee={guarantee} pageNumber={getPageNumber('Existing roof condition')} />
 
 </Page>
 
@@ -489,7 +538,8 @@ const getGuaranteeText = (guarantee) => {
     </Text>
   </View>
 
-  <PdfFooter guarantee={guarantee} />
+  {/* Natural growth */}
+<PdfFooter guarantee={guarantee} pageNumber={getPageNumber('Natural growth')} />
 </Page>
 
 {/* Página 8 - Adhesion Test */}
@@ -545,7 +595,8 @@ const getGuaranteeText = (guarantee) => {
     </Text>
   </View>
 
-  <PdfFooter guarantee={guarantee} />
+  {/* Adhesion test, compliance with building regulations */}
+<PdfFooter guarantee={guarantee} pageNumber={getPageNumber('Adhesion test, compliance with building regulations')} />
 </Page>
 
 {/* Página 9 - Flat Roof Detailing */}
@@ -616,7 +667,8 @@ const getGuaranteeText = (guarantee) => {
     </Text>
   </View>
 
-  <PdfFooter guarantee={guarantee} />
+{/* Flat roof detailing guidance & CDM */}
+<PdfFooter guarantee={guarantee} pageNumber={getPageNumber('Flat roof detailing guidance & CDM')} />
 </Page>
 
 
@@ -639,7 +691,8 @@ const getGuaranteeText = (guarantee) => {
     {/* IMAGEN DEL PROYECTO */}
     <Image src={image} style={{ width: '100%', height: 'auto', marginBottom: 30 }} />
 
-    <PdfFooter guarantee={guarantee} />
+    {/* Roof specification */}
+<PdfFooter guarantee={guarantee} pageNumber={getPageNumber('Roof specification')} />
   </Page>
 )}
 
@@ -655,6 +708,7 @@ const getGuaranteeText = (guarantee) => {
 
   <Text style={{ fontSize: 12, marginBottom: 20 }}>
     With the information and images provided this specification is for <Text style={{ fontWeight: 'bold' }}>{reference || '________'}</Text>, which is approx. <Text style={{ fontWeight: 'bold' }}>{roofSize || '________'}</Text> and is a <Text style={{ fontWeight: 'bold' }}>{roofType || '________'}</Text>.
+    <Text style={{ fontStyle: 'italic' }}>{roofBuildUp || ''}</Text>
   </Text>
 
   {/* Tabla tipo rows visuales */}
@@ -719,7 +773,7 @@ const getGuaranteeText = (guarantee) => {
     ))}
   </View>
 
-  <PdfFooter guarantee={guarantee} />
+  <PdfFooter guarantee={guarantee} pageNumber={getPageNumber('The roof build-up and preparation')} />
 </Page>
 
 {/* Página 12 - Preparation */}
@@ -746,7 +800,7 @@ const getGuaranteeText = (guarantee) => {
     ))}
   </View>
 
-  <PdfFooter guarantee={guarantee} />
+  <PdfFooter guarantee={guarantee} pageNumber={getPageNumber('The roof build-up and preparation') + 1} />
 </Page>
 
 {/* Página 13 - Cleaning (Parte 1) */}
@@ -802,7 +856,8 @@ const getGuaranteeText = (guarantee) => {
     <Text key={i} style={{ fontSize: 12 }}>{`• ${item}`}</Text>
   ))}
 
-  <PdfFooter guarantee={guarantee} />
+  {/* Cleaning, TV, satellite arrays, cables (2 pages) */}
+<PdfFooter guarantee={guarantee} pageNumber={getPageNumber('Cleaning, TV, satellite arrays, cables')} />
 </Page>
 
 {/* Página 14 - Cleaning (Parte 2) */}
@@ -845,7 +900,7 @@ const getGuaranteeText = (guarantee) => {
     If a cable tray is not currently in situ, consideration should be made to keep the cables from direct contact with the membrane.
   </Text>
 
-  <PdfFooter guarantee={guarantee} />
+  <PdfFooter guarantee={guarantee} pageNumber={getPageNumber('Cleaning, TV, satellite arrays, cables') + 1} />
 </Page>
 
 {/* Página 15 - Outlets (Parte 1) */}
@@ -883,7 +938,7 @@ const getGuaranteeText = (guarantee) => {
     <Text key={idx} style={{ fontSize: 12 }}>• {item}</Text>
   ))}
 
-  <PdfFooter guarantee={guarantee} />
+<PdfFooter guarantee={guarantee} pageNumber={getPageNumber('Outlets')} />
 </Page>
 
 {/* Página 16 - Outlets (Parte 2) */}
@@ -922,7 +977,7 @@ const getGuaranteeText = (guarantee) => {
     <Text key={idx} style={{ fontSize: 12 }}>• {item}</Text>
   ))}
 
-  <PdfFooter guarantee={guarantee} />
+<PdfFooter guarantee={guarantee} pageNumber={getPageNumber('Outlets') + 1} />
 </Page>
 
 {/* Página 17 - Outlets (Parte 3) */}
@@ -950,7 +1005,7 @@ const getGuaranteeText = (guarantee) => {
     <Text key={idx} style={{ fontSize: 12 }}>• {item}</Text>
   ))}
 
-  <PdfFooter guarantee={guarantee} />
+<PdfFooter guarantee={guarantee} pageNumber={getPageNumber('Outlets') + 2} />
 </Page>
 
 
@@ -997,7 +1052,7 @@ const getGuaranteeText = (guarantee) => {
     <Text key={i} style={{ fontSize: 12 }}>• {item}</Text>
   ))}
 
-  <PdfFooter guarantee={guarantee} />
+<PdfFooter guarantee={guarantee} pageNumber={getPageNumber('Multi-Purpose Filler')} />
 </Page>
 
 {/* Página 19  Ponding Water  2/3*/}
@@ -1036,7 +1091,7 @@ const getGuaranteeText = (guarantee) => {
     <Text key={i} style={{ fontSize: 12 }}>{item}</Text>
   ))}
 
-  <PdfFooter guarantee={guarantee} />
+<PdfFooter guarantee={guarantee} pageNumber={getPageNumber('Multi-Purpose Filler') + 1} />
 </Page>
 
 {/* Página 20  Ponding Water  3/3 */}
@@ -1080,7 +1135,7 @@ const getGuaranteeText = (guarantee) => {
     By following these steps, you ensure that ponding areas, cracks and splits on the roof are properly filled using a Multi-Purpose Filler, resulting in a level surface that promotes proper drainage and prevents water accumulation. This helps maintain the integrity of the roofing system and prolongs its lifespan.
   </Text>
 
-  <PdfFooter guarantee={guarantee} />
+  <PdfFooter guarantee={guarantee} pageNumber={getPageNumber('Multi-Purpose Filler') + 2} />
 </Page>
 
 
@@ -1144,7 +1199,11 @@ const getGuaranteeText = (guarantee) => {
     By following these steps and considering the 20-minute cure time of {guarantee === '20-year' ? 'RapidRoof Pro' : 'RapidRoof'}, you ensure that the application is properly executed, creating a durable and waterproof surface that will protect the roof for years to come.
   </Text>
 
-  <PdfFooter guarantee={guarantee} />
+  <PdfFooter
+  guarantee={guarantee}
+  pageNumber={getPageNumber('Waterproof coverings') + waterproofPageIndex++}
+/>
+
 </Page>
 
 
@@ -1197,7 +1256,11 @@ const getGuaranteeText = (guarantee) => {
     <Text style={{ fontSize: 12, marginLeft: 12 }}>o 3% Catalyst Ratio: 30g of catalyst per 1kg of product</Text>
     <Text style={{ fontSize: 12, marginLeft: 12 }}>o 4% Catalyst Ratio: 40g of catalyst per 1kg of product</Text>
 
-    <PdfFooter guarantee={guarantee} />
+    <PdfFooter
+  guarantee={guarantee}
+  pageNumber={getPageNumber('Waterproof coverings') + waterproofPageIndex++}
+/>
+
   </Page>
 )}
 
@@ -1250,7 +1313,11 @@ const getGuaranteeText = (guarantee) => {
       By adjusting the catalyst ratio within the 1–4% range, you can control the curing time of {guarantee === '20-year' ? 'RapidRoof Pro' : 'RapidRoof'} to suit the environmental conditions and your application needs.
     </Text>
 
-    <PdfFooter guarantee={guarantee} />
+    <PdfFooter
+  guarantee={guarantee}
+  pageNumber={getPageNumber('Waterproof coverings') + waterproofPageIndex++}
+/>
+
   </Page>
 )}
 
@@ -1304,7 +1371,11 @@ const getGuaranteeText = (guarantee) => {
   <Text style={styles.listItem}>• Weather Check: Ensure weather conditions are dry and the temperature is between 0°c to 35°c recommended range. Avoid working on windy or rainy days.</Text>
 
 
-  <PdfFooter guarantee={guarantee} />
+  <PdfFooter
+  guarantee={guarantee}
+  pageNumber={getPageNumber('Waterproof coverings') + waterproofPageIndex++}
+/>
+
 </Page>
 
 
@@ -1390,7 +1461,10 @@ const getGuaranteeText = (guarantee) => {
     </Text>
   )}
 
-  <PdfFooter guarantee={guarantee} />
+<PdfFooter
+  guarantee={guarantee}
+  pageNumber={getPageNumber('Waterproof coverings') + waterproofPageIndex++}
+/>
 </Page>
 
 {/* Página 26 - Parte 3 */}
@@ -1443,7 +1517,11 @@ const getGuaranteeText = (guarantee) => {
     By following these steps, you ensure that all existing details, terminations, and upstands on the roof are properly treated and waterproofed to a minimum height of 150mm, providing a durable and effective waterproofing solution.
   </Text>
 
-  <PdfFooter guarantee={guarantee} />
+  <PdfFooter
+  guarantee={guarantee}
+  pageNumber={getPageNumber('Waterproof coverings') + waterproofPageIndex++}
+/>
+
 </Page> 
 
 {/* Página 27 - Guide to Waterproofing into a Chase (Parte 1) */}
@@ -1494,7 +1572,11 @@ const getGuaranteeText = (guarantee) => {
   <Text style={styles.listItem}>• Fall Protection: Use a harness or secure ladder and scaffolding if working on a steep or high roof.</Text>
   <Text style={styles.listItem}>• Electrical Hazards: Be aware of overhead power lines and ensure all power tools are used safely.</Text>
 
-  <PdfFooter guarantee={guarantee} />
+  <PdfFooter
+  guarantee={guarantee}
+  pageNumber={getPageNumber('Waterproof coverings') + waterproofPageIndex++}
+/>
+
 </Page>
 
 {/* Página 28 - Parte 2 */}
@@ -1586,7 +1668,11 @@ const getGuaranteeText = (guarantee) => {
     </>
   )}
 
-<PdfFooter guarantee={guarantee} />
+<PdfFooter
+  guarantee={guarantee}
+  pageNumber={getPageNumber('Waterproof coverings') + waterproofPageIndex++}
+/>
+
 </Page>
 
 {/* Página 29 - Parte 3 */}
@@ -1638,7 +1724,11 @@ const getGuaranteeText = (guarantee) => {
     By following these steps, you ensure that the waterproofing into a chase is properly executed, creating a durable and watertight seal that will protect against water ingress at junctions between roof surfaces and vertical structures.
   </Text>
 
-  <PdfFooter guarantee={guarantee} />
+  <PdfFooter
+  guarantee={guarantee}
+  pageNumber={getPageNumber('Waterproof coverings') + waterproofPageIndex++}
+/>
+
 </Page>
 
 {(guarantee === '20-year' || (guarantee === '10-year' && fullyPrimedSurfaces.includes(surface))) && (
@@ -1695,7 +1785,11 @@ const getGuaranteeText = (guarantee) => {
         Check for any remaining cracks, splits, or damages that need repair. Ensure all repairs are completed and fully cured before applying the primer.
       </Text>
 
-      <PdfFooter guarantee={guarantee} />
+      <PdfFooter
+  guarantee={guarantee}
+  pageNumber={getPageNumber('Waterproof coverings') + waterproofPageIndex++}
+/>
+
     </Page>
 
     {/* Página 31 */}
@@ -1763,7 +1857,11 @@ const getGuaranteeText = (guarantee) => {
         By following these steps, you ensure that the RapidRoof Primer is properly applied, creating a suitable base for the subsequent application of RapidRoof BaseCoat, TopCoat, or other layers as required.
       </Text>
 
-      <PdfFooter guarantee={guarantee} />
+      <PdfFooter
+  guarantee={guarantee}
+  pageNumber={getPageNumber('Waterproof coverings') + waterproofPageIndex++}
+/>
+
     </Page>
   </>
 )}
@@ -1825,7 +1923,11 @@ const getGuaranteeText = (guarantee) => {
   </Text>
 
 
-  <PdfFooter guarantee={guarantee} />
+  <PdfFooter
+  guarantee={guarantee}
+  pageNumber={getPageNumber('Waterproof coverings') + waterproofPageIndex++}
+/>
+
 </Page>
 
 {/* Página 33 - RapidRoof BaseCoat (parte 2/2) */}
@@ -1914,7 +2016,11 @@ const getGuaranteeText = (guarantee) => {
     By following these steps, you ensure that the RapidRoof BaseCoat{guarantee === '20-year' ? ' with 150gsm reinforcement matting' : ''} is properly applied, creating a durable and waterproof surface ready for further layers or final finishes as needed.
   </Text>
 
-  <PdfFooter guarantee={guarantee} />
+  <PdfFooter
+  guarantee={guarantee}
+  pageNumber={getPageNumber('Waterproof coverings') + waterproofPageIndex++}
+/>
+
 </Page>
 
 
@@ -1973,7 +2079,11 @@ const getGuaranteeText = (guarantee) => {
     Overlaps: Check overlaps where different sections meet to ensure they are seamless and properly bonded.
   </Text>
 
-  <PdfFooter guarantee={guarantee} />
+  <PdfFooter
+  guarantee={guarantee}
+  pageNumber={getPageNumber('Waterproof coverings') + waterproofPageIndex++}
+/>
+
 </Page>
 
 {/* Página 35 - RapidRoof BaseCoat – Inspect (parte 2/2) */}
@@ -2015,7 +2125,11 @@ const getGuaranteeText = (guarantee) => {
     By following these steps, you ensure that the RapidRoof BaseCoat is applied correctly, achieving the required coverage rate, and providing a uniform, pinhole-free, and completely coated roof surface. This thorough inspection and correction process helps maintain the integrity and longevity of the roofing system.
   </Text>
 
-  <PdfFooter guarantee={guarantee} />
+  <PdfFooter
+  guarantee={guarantee}
+  pageNumber={getPageNumber('Waterproof coverings') + waterproofPageIndex++}
+/>
+
 </Page>
 
 {/* Página 36 - RapidRoof TopCoat (parte 1/2) */}
@@ -2070,7 +2184,11 @@ const getGuaranteeText = (guarantee) => {
     Check for any remaining cracks, splits, or damage that need repair. Ensure all repairs are completed and fully cured before application.
   </Text>
 
-  <PdfFooter guarantee={guarantee} />
+  <PdfFooter
+  guarantee={guarantee}
+  pageNumber={getPageNumber('Waterproof coverings') + waterproofPageIndex++}
+/>
+
 </Page>
 
 {/* Página 37 - RapidRoof TopCoat (parte 2/2) */}
@@ -2130,7 +2248,11 @@ const getGuaranteeText = (guarantee) => {
     By following these steps, you ensure that the RapidRoof TopCoat is properly applied, creating a durable and waterproof surface that will protect the roof for years to come.
   </Text>
 
-  <PdfFooter guarantee={guarantee} />
+  <PdfFooter
+  guarantee={guarantee}
+  pageNumber={getPageNumber('Waterproof coverings') + waterproofPageIndex++}
+/>
+
 </Page>
 
 {/* Página 38 - RapidRoof Anti-Skid (parte 1/2) */}
@@ -2173,7 +2295,11 @@ const getGuaranteeText = (guarantee) => {
   <Text style={[styles.text, { marginLeft: 16 }]}>• Protect Surrounding Areas:</Text>
   <Text style={styles.textIndent}>Use tarpaulins or plastic sheeting to protect landscaping, walls, and other nearby structures from splashes.</Text>
 
-  <PdfFooter guarantee={guarantee} />
+  <PdfFooter
+  guarantee={guarantee}
+  pageNumber={getPageNumber('Waterproof coverings') + waterproofPageIndex++}
+/>
+
 </Page>
 
 {/* Página 39 - RapidRoof Anti-Skid (parte 2/2) */}
@@ -2216,7 +2342,11 @@ const getGuaranteeText = (guarantee) => {
     By following these steps, you ensure that the RapidRoof Anti-Skid coating is applied correctly, providing a durable and effective anti-skid finish that enhances the safety and longevity of the roofing surface.
   </Text>
 
-  <PdfFooter guarantee={guarantee} />
+  <PdfFooter
+  guarantee={guarantee}
+  pageNumber={getPageNumber('Waterproof coverings') + waterproofPageIndex++}
+/>
+
 </Page>
 </>
 )}
@@ -2263,7 +2393,11 @@ const getGuaranteeText = (guarantee) => {
   <Text style={[styles.text, { marginLeft: 16 }]}>• Ensure Even Coverage:</Text>
   <Text style={styles.textIndent}>Uniform Thickness: Verify that the coating is uniformly thick across the entire roof. There should be no thin spots or exposed substrate.</Text>
 
-  <PdfFooter guarantee={guarantee} />
+  <PdfFooter
+  guarantee={guarantee}
+  pageNumber={getPageNumber('Waterproof coverings') + waterproofPageIndex++}
+/>
+
 </Page>
 
 {/* Página 41 - Completed Roof Surface (parte 2/2) */}
@@ -2313,7 +2447,11 @@ const getGuaranteeText = (guarantee) => {
     By following these steps, you ensure that the completed roof surface is properly inspected for pinholes, even coverage, correct detailing at 150mm, and proper application of {guarantee === '20-year' ? 'Reinforcement Matting' : 'Joint Tape'}. This thorough inspection helps maintain the integrity and longevity of the roofing system.
   </Text>
 
-  <PdfFooter guarantee={guarantee} />
+  <PdfFooter
+  guarantee={guarantee}
+  pageNumber={getPageNumber('Waterproof coverings') + waterproofPageIndex++}
+/>
+
 </Page>
 
 {/* Página 42 - Schedule of Products (parte 1/2) */}
@@ -2375,7 +2513,8 @@ const getGuaranteeText = (guarantee) => {
     </>
   )}
 
-  <PdfFooter guarantee={guarantee} />
+  {/* Schedule of products (2 pages) */}
+<PdfFooter guarantee={guarantee} pageNumber={getPageNumber('Schedule of products')} />
 </Page>
 
 {/* Página 43 - Schedule of Products (parte 2/2) */}
@@ -2408,7 +2547,7 @@ const getGuaranteeText = (guarantee) => {
     {"\n"}5kg tin – 5m²{"\n"}10kg tin – 10m²
   </Text>
 
-  <PdfFooter guarantee={guarantee} />
+  <PdfFooter guarantee={guarantee} pageNumber={getPageNumber('Schedule of products') + 1} />
 </Page>
 
 {/* Página 44 - Additional Information (parte 1/2) */}
@@ -2458,7 +2597,7 @@ const getGuaranteeText = (guarantee) => {
     If left more than 14 days, the surfaces will need to be re-primed using LRS RapidRoof Primer.
   </Text>
 
-  <PdfFooter guarantee={guarantee} />
+  <PdfFooter guarantee={guarantee} pageNumber={getPageNumber('Additional information')} />
 </Page>
 
 {/* Página 45 - Additional Information (parte 2/2) */}
@@ -2482,7 +2621,7 @@ const getGuaranteeText = (guarantee) => {
     Typical drying times at 15°c – 20 minutes.
   </Text>
 
-  <PdfFooter guarantee={guarantee} />
+  <PdfFooter guarantee={guarantee} pageNumber={getPageNumber('Additional information') + 1} />
 </Page>
 
 {/* Página 46 - General Guidance and Requirements (parte 1/2) */}
@@ -2527,7 +2666,7 @@ const getGuaranteeText = (guarantee) => {
     Available at https://www.hse.gov.uk/legislation/index.htm
   </Text>
 
-  <PdfFooter guarantee={guarantee} />
+  <PdfFooter guarantee={guarantee} pageNumber={getPageNumber('General guidance and requirements')} />
 </Page>
 
 {/* Página 47 - General Guidance and Requirements (parte 2/2) */}
@@ -2555,7 +2694,7 @@ const getGuaranteeText = (guarantee) => {
     Coatings that are over 14 days will need to be re-primed using LRS RapidRoof Primer at a coverage rate of 0.3kg per m². This should be applied using a brush or short piled roller.
   </Text>
 
-  <PdfFooter guarantee={guarantee} />
+  <PdfFooter guarantee={guarantee} pageNumber={getPageNumber('General guidance and requirements') + 1} />
 </Page>
 
 {/* Página 48 - Safety Advice for Using RapidRoof PMMA (parte 1/2) */}
@@ -2589,7 +2728,7 @@ const getGuaranteeText = (guarantee) => {
   <Text style={[styles.text, { marginLeft: 24 }]}>• Mixing: Follow LRS instructions for mixing PMMA products. Avoid creating dust or aerosols during mixing.</Text>
   <Text style={[styles.text, { marginLeft: 24, marginBottom: 12 }]}>• Application Tools: Use appropriate tools such as rollers and brushes. Clean tools thoroughly after use.</Text>
 
-  <PdfFooter guarantee={guarantee} />
+  <PdfFooter guarantee={guarantee} pageNumber={getPageNumber('Safety Advice for Usinf RapidRoof PMMA')} />
 </Page>
 
 {/* Página 49 - Safety Advice for Using RapidRoof PMMA (parte 2/2) */}
@@ -2620,7 +2759,7 @@ const getGuaranteeText = (guarantee) => {
     By following these safety guidelines, you can minimize the risk of accidents and health hazards when using RapidRoof PMMA products. Ensuring proper handling, storage, and personal protection will help maintain a safe working environment.
   </Text>
 
-  <PdfFooter guarantee={guarantee} />
+  <PdfFooter guarantee={guarantee} pageNumber={getPageNumber('Safety Advice for Usinf RapidRoof PMMA') + 1} />
 </Page>
 
 {/* Página 50 - Photographic Evidence */}
@@ -2666,7 +2805,7 @@ const getGuaranteeText = (guarantee) => {
       ))}
     </View>
 
-    <PdfFooter guarantee={guarantee} />
+    <PdfFooter guarantee={guarantee} pageNumber={getPageNumber('Photographs')} />
   </Page>
 )}
 
@@ -2691,7 +2830,7 @@ const getGuaranteeText = (guarantee) => {
   <Text style={styles.text}>T: 01948 841 877</Text>
   <Text style={styles.text}>E: paul.jones@lrs-systems.co.uk</Text>
 
-  <PdfFooter guarantee={guarantee} />
+  <PdfFooter guarantee={guarantee} pageNumber={getPageNumber('Guarantee')} />
 </Page>
 
 
