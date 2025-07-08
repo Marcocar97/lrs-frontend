@@ -43,10 +43,8 @@ const RapidRoof = () => {
 
   const validateForm = () => {
     const requiredFields = [
-      "lrsReference",
       "reference",
       "date",
-      "roofSize",
       "attention",
       "preparedBy",
       "guarantee",
@@ -60,7 +58,9 @@ const RapidRoof = () => {
     setSubmitted(true);
     if (!validateForm()) return;
   
-    await sendPdfByEmail();
+    
+  console.log("Form is valid, sending PDF..."); // <-- esto debería salir en consola
+  await sendPdfByEmail();
   };
   
 
@@ -72,39 +72,51 @@ const RapidRoof = () => {
   };
 
   const sendPdfByEmail = async () => {
-    const blob = await pdf(<PdfDocument {...formData} />).toBlob();
-  
-    const file = new File([blob], `${formData.reference}.pdf`, { type: 'application/pdf' });
-    const formDataToSend = new FormData();
-    formDataToSend.append("file", file);
+    console.log("Starting sendPdfByEmail..."); // <-- ¿esto aparece?
   
     try {
-      const response = await fetch("https://file.io", {
-        method: "POST",
-        body: formDataToSend,
+      const blob = await pdf(<PdfDocument {...formData} />).toBlob();
+      console.log("PDF generated");
+  
+      const file = new File([blob], `${formData.reference}.pdf`, {
+        type: 'application/pdf',
       });
   
-      const data = await response.json();
-      const downloadLink = data.link;
+      const formDataUpload = new FormData();
+      formDataUpload.append("file", file);
   
-      if (!downloadLink) throw new Error("No link received from file.io");
+      const res = await fetch("https://store1.gofile.io/uploadFile", {
+        method: "POST",
+        body: formDataUpload,
+      });
   
-      await emailjs.send("service_yhlxanp", "template_mp9prl8", {
-        to_name: "Paul",
-        to_email: "mmarkito708@gmail.com", // Cambia a paul.jones@lrs-systems.co.uk cuando lo necesites
-        from_name: formData.preparedBy,
-        project_reference: formData.reference,
-        pdf_link: downloadLink,
-      }, "q8SYdWtSShPPbGI8c");
+      const result = await res.json();
+      console.log("Upload result:", result); // <-- ¿esto aparece?
   
-      alert("✅ PDF sent successfully by email!");
+      const downloadLink = result.data?.downloadPage;
+      if (!downloadLink) throw new Error("Upload failed");
   
+      await emailjs.send(
+        "service_yhlxanp",
+        "template_mp9prl8",
+        {
+          to_name: "Paul",
+          to_email: "mmarkito708@gmail.com",
+          from_name: formData.preparedBy,
+          project_reference: formData.reference,
+          pdf_link: downloadLink,
+        },
+        "q8SYdWtSShPPbGI8c"
+      );
+  
+      alert("PDF sent successfully by email!");
     } catch (error) {
-      console.error("❌ Error sending email:", error);
+      console.error("Error sending email:", error);
       alert("Something went wrong while sending the email.");
     }
   };
   
+
   
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -678,7 +690,10 @@ const RapidRoof = () => {
               backgroundColor: "#231f20",
               "&:hover": { backgroundColor: "#4a4a4a" },
             }}
-            onClick={handleSubmit}
+            onClick={(e) => {
+              e.preventDefault(); // <- esto evita que el form se envíe/reinicie
+              handleSubmit();
+            }}
           >
             Generate PDF
           </Button>
