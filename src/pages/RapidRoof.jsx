@@ -11,6 +11,11 @@ import {
 } from "@mui/material";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import PdfDocument from "../components/PdfDocument";
+import { pdf } from '@react-pdf/renderer';
+import emailjs from '@emailjs/browser';
+import axios from 'axios';
+
+
 
 const RapidRoof = () => {
   const [formData, setFormData] = useState({
@@ -28,6 +33,7 @@ const RapidRoof = () => {
     roofBuildUp: "",
 
   });
+
 
   const [submitted, setSubmitted] = useState(false);
 
@@ -50,10 +56,13 @@ const RapidRoof = () => {
   };
   
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setSubmitted(true);
-    if (!validateForm()) return; 
+    if (!validateForm()) return;
+  
+    await sendPdfByEmail();
   };
+  
 
   const handleDownload = () => {
     // Esperar un poco para que el PDF comience a generarse
@@ -61,6 +70,41 @@ const RapidRoof = () => {
       window.location.reload();
     }, 1000);
   };
+
+  const sendPdfByEmail = async () => {
+    const blob = await pdf(<PdfDocument {...formData} />).toBlob();
+  
+    const file = new File([blob], `${formData.reference}.pdf`, { type: 'application/pdf' });
+    const formDataToSend = new FormData();
+    formDataToSend.append("file", file);
+  
+    try {
+      const response = await fetch("https://file.io", {
+        method: "POST",
+        body: formDataToSend,
+      });
+  
+      const data = await response.json();
+      const downloadLink = data.link;
+  
+      if (!downloadLink) throw new Error("No link received from file.io");
+  
+      await emailjs.send("service_yhlxanp", "template_mp9prl8", {
+        to_name: "Paul",
+        to_email: "mmarkito708@gmail.com", // Cambia a paul.jones@lrs-systems.co.uk cuando lo necesites
+        from_name: formData.preparedBy,
+        project_reference: formData.reference,
+        pdf_link: downloadLink,
+      }, "q8SYdWtSShPPbGI8c");
+  
+      alert("✅ PDF sent successfully by email!");
+  
+    } catch (error) {
+      console.error("❌ Error sending email:", error);
+      alert("Something went wrong while sending the email.");
+    }
+  };
+  
   
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
