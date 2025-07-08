@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 import {
   Container,
   Box,
@@ -35,8 +35,24 @@ const RapidRoof = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const validateForm = () => {
+    const requiredFields = [
+      "lrsReference",
+      "reference",
+      "date",
+      "roofSize",
+      "attention",
+      "preparedBy",
+      "guarantee",
+      "surface"
+    ];
+    return requiredFields.every((field) => formData[field]?.trim());
+  };
+  
+
   const handleSubmit = () => {
     setSubmitted(true);
+    if (!validateForm()) return; 
   };
 
   const handleDownload = () => {
@@ -46,6 +62,15 @@ const RapidRoof = () => {
     }, 1000);
   };
   
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user?.name) {
+      setFormData((prev) => ({
+        ...prev,
+        preparedBy: user.name,
+      }));
+    }
+  }, []);
 
   return (
     <Container disableGutters sx={{ width: '100%', px: { xs: 2, sm: 4 } }}>
@@ -57,7 +82,7 @@ const RapidRoof = () => {
         {/* Encabezado visual */}
         <Box
           sx={{
-            backgroundColor: "#ef4136",
+            backgroundColor: "#f57c00",
             height: 60,
             borderRadius: 2,
             mb: 4,
@@ -91,6 +116,7 @@ const RapidRoof = () => {
       onChange={handleChange}
       size="small"
       margin="normal"
+
     />
   </Grid>
   <Grid item xs={12} sm={6} sx={{ flexGrow: 1 }}>
@@ -102,6 +128,9 @@ const RapidRoof = () => {
       onChange={handleChange}
       size="small"
       margin="normal"
+      required
+      error={submitted && !formData.lrsReference}
+      helperText={submitted && !formData.lrsReference ? "This field is required" : ""}
     />
   </Grid>
 </Grid>
@@ -109,17 +138,22 @@ const RapidRoof = () => {
 {/* Fila 2 */}
 <Grid container spacing={2} sx={{ mb: 1 }}>
 <Grid item xs={12} sm={6} sx={{ flexGrow: 1 }}>
-    <TextField
-      fullWidth
-      label="Date"
-      type="date"
-      name="date"
-      value={formData.date}
-      onChange={handleChange}
-      InputLabelProps={{ shrink: true }}
-      size="small"
-      margin="normal"
-    />
+<TextField
+  fullWidth
+  label="Date"
+  type="date"
+  name="date"
+  value={formData.date}
+  onChange={handleChange}
+  InputLabelProps={{ shrink: true }}
+  inputProps={{ min: new Date().toISOString().split("T")[0] }}
+  size="small"
+  margin="normal"
+  required
+  error={submitted && !formData.date}
+  helperText={submitted && !formData.date ? "This field is required" : ""}
+/>
+
   </Grid>
   <Grid item xs={12} sm={6} sx={{ flexGrow: 1 }}>
   <TextField
@@ -163,18 +197,23 @@ const RapidRoof = () => {
       onChange={handleChange}
       size="small"
       margin="normal"
+      required
+      error={submitted && !formData.lrsReference}
+      helperText={submitted && !formData.lrsReference ? "This field is required" : ""}
     />
   </Grid>
   <Grid item xs={12} sm={6} sx={{ flexGrow: 1 }}>
-    <TextField
-      fullWidth
-      label="Prepared by"
-      name="preparedBy"
-      value={formData.preparedBy}
-      onChange={handleChange}
-      size="small"
-      margin="normal"
-    />
+  <TextField
+  fullWidth
+  label="Prepared by"
+  name="preparedBy"
+  value={formData.preparedBy}
+  onChange={handleChange}
+  size="small"
+  margin="normal"
+  required
+  disabled
+/>
   </Grid>
 </Grid>
 
@@ -190,6 +229,9 @@ const RapidRoof = () => {
       onChange={handleChange}
       size="small"
       margin="normal"
+      required
+      error={submitted && !formData.lrsReference}
+      helperText={submitted && !formData.lrsReference ? "This field is required" : ""}
     >
       <MenuItem value="10-year">10-Year Guarantee</MenuItem>
       <MenuItem value="20-year">20-Year Guarantee</MenuItem>
@@ -205,6 +247,9 @@ const RapidRoof = () => {
       onChange={handleChange}
       size="small"
       margin="normal"
+      required
+      error={submitted && !formData.lrsReference}
+      helperText={submitted && !formData.lrsReference ? "This field is required" : ""}
     >
       {[
         "Asbestos", "Concrete", "Existing Coatings", "Single-Ply", "VCL",
@@ -284,6 +329,9 @@ const RapidRoof = () => {
       }}
       size="small"
       margin="normal"
+      required
+      error={submitted && !formData.lrsReference}
+      helperText={submitted && !formData.lrsReference ? "This field is required" : ""}
     >
       {["Existing Overlay", "Warm Roof", "Inverted Roof"].map((option) => (
         <MenuItem key={option} value={option}>
@@ -351,8 +399,11 @@ const RapidRoof = () => {
       onChange={handleChange}
       size="small"
       margin="normal"
+      required
+      error={submitted && !formData.lrsReference}
+      helperText={submitted && !formData.lrsReference ? "This field is required" : ""}
     >
-      {["TBC", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10+"].map(
+      {["TBC", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10+"].map(
         (option) => (
           <MenuItem key={option} value={option}>
             {option}
@@ -372,8 +423,11 @@ const RapidRoof = () => {
       onChange={handleChange}
       size="small"
       margin="normal"
+      required
+      error={submitted && !formData.lrsReference}
+      helperText={submitted && !formData.lrsReference ? "This field is required" : ""}
     >
-      {["TBC", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10+"].map(
+      {["TBC", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10+"].map(
         (option) => (
           <MenuItem key={option} value={option}>
             {option}
@@ -396,8 +450,11 @@ const RapidRoof = () => {
       onChange={handleChange}
       size="small"
       margin="normal"
+      required
+      error={submitted && !formData.lrsReference}
+      helperText={submitted && !formData.lrsReference ? "This field is required" : ""}
     >
-      {["TBC", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10+"].map(
+      {["TBC", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10+"].map(
         (option) => (
           <MenuItem key={option} value={option}>
             {option}
@@ -417,6 +474,9 @@ const RapidRoof = () => {
       onChange={handleChange}
       size="small"
       margin="normal"
+      required
+      error={submitted && !formData.lrsReference}
+      helperText={submitted && !formData.lrsReference ? "This field is required" : ""}
     >
       {["Yes", "No"].map((option) => (
         <MenuItem key={option} value={option}>
@@ -439,6 +499,9 @@ const RapidRoof = () => {
       onChange={handleChange}
       size="small"
       margin="normal"
+      required
+      error={submitted && !formData.lrsReference}
+      helperText={submitted && !formData.lrsReference ? "This field is required" : ""}
     >
       {["Yes", "No"].map((option) => (
         <MenuItem key={option} value={option}>
@@ -461,6 +524,9 @@ const RapidRoof = () => {
       onChange={handleChange}
       size="small"
       margin="normal"
+      required
+      error={submitted && !formData.lrsReference}
+      helperText={submitted && !formData.lrsReference ? "This field is required" : ""}
     >
       {["Yes", "No"].map((option) => (
         <MenuItem key={option} value={option}>

@@ -9,14 +9,26 @@ const products = [
     comingSoon: false,
   },
   {
-    name: 'Fastcoat',
+    name: 'FastCoat',
     comingSoon: true,
   },
   {
-    name: 'Elasto-Kote',
+    name: 'ElastoKote',
+    comingSoon: true,
+  },
+  {
+    name: 'EcoThane',
     comingSoon: true,
   },
 ];
+
+const productColors = {
+    RapidRoof: '#f57c00',   
+    FastCoat: '#388e3c',  
+    ElastoKote: '#d32f2f',  
+    EchoThane: '#2795d4', 
+  };
+  
 
 const Dashboard = () => {
   const [userName, setUserName] = useState('User');
@@ -47,7 +59,7 @@ const Dashboard = () => {
 </Typography>
 
 
-      <Box
+<Box
         sx={{
           display: 'flex',
           flexWrap: 'wrap',
@@ -56,53 +68,53 @@ const Dashboard = () => {
         }}
       >
         {products.map((product) => (
-         <Box
-         key={product.name}
-         onClick={() => !product.comingSoon && navigate(product.path)}
-         sx={{
-           width: isMobile ? '100%' : 'calc(50% - 2rem)',
-           height: '22vh',
-           minHeight: 140,
-           backgroundColor: product.comingSoon ? '#e0e0e0' : '#42a5f5',
-           color: '#fff',
-           borderRadius: 3,
-           display: 'flex',
-           flexDirection: 'column',
-           justifyContent: 'center',
-           alignItems: 'center',
-           fontWeight: 'bold',
-           fontSize: '1.4rem',
-           position: 'relative',
-           cursor: product.comingSoon ? 'not-allowed' : 'pointer',
-           transition: 'transform 0.3s ease',
-           '&:hover': {
-             transform: product.comingSoon ? 'none' : 'scale(1.02)',
-           },
-           '&:hover .coming-soon': {
-             opacity: 1,
-           },
-           overflow: 'hidden',
-         }}
-       >
-         {product.name}
-         {product.comingSoon && (
-           <Box
-             className="coming-soon"
-             sx={{
-               position: 'absolute',
-               bottom: 12,
-               fontSize: '0.9rem',
-               fontWeight: 500,
-               color: '#333',
-               opacity: 0,
-               transition: 'opacity 0.3s ease',
-               pointerEvents: 'none',
-             }}
-           >
-             Coming soon
-           </Box>
-         )}
-       </Box>
+          <Box
+            key={product.name}
+            onClick={() => !product.comingSoon && navigate(product.path)}
+            sx={{
+              width: isMobile ? '100%' : 'calc(50% - 2rem)',
+              height: '22vh',
+              minHeight: 140,
+              backgroundColor: productColors[product.name] || '#42a5f5',
+              color: '#fff',
+              borderRadius: 3,
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              fontWeight: 'bold',
+              fontSize: '1.4rem',
+              position: 'relative',
+              cursor: product.comingSoon ? 'not-allowed' : 'pointer',
+              transition: 'transform 0.3s ease',
+              '&:hover': {
+                transform: product.comingSoon ? 'none' : 'scale(1.02)',
+              },
+              '&:hover .coming-soon': {
+                opacity: 1,
+              },
+              overflow: 'hidden',
+            }}
+          >
+            {product.name}
+            {product.comingSoon && (
+              <Box
+                className="coming-soon"
+                sx={{
+                  position: 'absolute',
+                  bottom: 12,
+                  fontSize: '0.9rem',
+                  fontWeight: 500,
+                  color: '#333',
+                  opacity: 0,
+                  transition: 'opacity 0.3s ease',
+                  pointerEvents: 'none',
+                }}
+              >
+                Coming soon
+              </Box>
+            )}
+          </Box>
        
         ))}
       </Box>
