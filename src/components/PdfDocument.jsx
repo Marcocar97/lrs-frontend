@@ -230,14 +230,14 @@ const PdfHeader = ({ reference }) => (
             }}
           >
             <Image
-              src="https://i.postimg.cc/J00vg9FS/LRS-solid-black-v1-transparent.png"
+              src="https://i.postimg.cc/rwMLwvcz/lrs-1.png"
               style={{ width: 110 }}
             />
             <Image
               src={
                 guarantee === '20-year'
-                  ? 'https://i.postimg.cc/D0NHKxk0/Rapid-Roof-Pro-logo-pro-amended-25th-June-large-01-2.jpg'
-                  : 'https://i.postimg.cc/G2q6XcXk/Rapid-Roof-logo-Jan-25.jpg'
+                  ? 'https://i.postimg.cc/QxGVDBvM/20-1.jpg'
+                  : 'https://i.postimg.cc/8PRczpVm/10-1.jpg'
               }
               style={{ width: 200 }}
             />
@@ -325,8 +325,8 @@ let waterproofPageIndex = 0;
   }}>
     {/* Logo: MUCHO más grande */}
     <Image
-      src={guarantee === '20-year'   ? 'https://i.postimg.cc/D0NHKxk0/Rapid-Roof-Pro-logo-pro-amended-25th-June-large-01-2.jpg'
-                  : 'https://i.postimg.cc/G2q6XcXk/Rapid-Roof-logo-Jan-25.jpg'}
+      src={guarantee === '20-year'    ? 'https://i.postimg.cc/QxGVDBvM/20-1.jpg'
+                  : 'https://i.postimg.cc/8PRczpVm/10-1.jpg'}
       style={{ width: 340, marginBottom: 40 }}
     />
 
@@ -3216,7 +3216,7 @@ BaseCoat, TopCoat, or other layers as required.
 
     {/* Columna derecha: logo alineado con el texto */}
     <Image
-      src="https://i.postimg.cc/J00vg9FS/LRS-solid-black-v1-transparent.png"
+      src="https://i.postimg.cc/YCt945rK/1lrs-1.png"
       style={{ width: 110, marginTop: 6 }}
     />
   </View>

@@ -92,7 +92,6 @@ const RapidRoof = () => {
       const result = await response.json();
       console.log("✅ Archivo subido:", result.url);
   
-      alert(`PDF subido correctamente: ${result.url}`);
     } catch (error) {
       console.error("❌ Error subiendo el archivo:", error);
       alert("Hubo un problema al subir el PDF.");
