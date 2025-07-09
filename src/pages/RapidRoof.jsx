@@ -60,7 +60,7 @@ const RapidRoof = () => {
   
     
   console.log("Form is valid, sending PDF..."); // <-- esto debería salir en consola
-  await sendPdfByEmail(); 
+  await uploadPdfToBackend(); 
   };
   
 
@@ -72,13 +72,11 @@ const RapidRoof = () => {
   };
 
 
-  const sendPdfByEmail = async () => {
-    console.log("Starting sendPdfByEmail..."); // <-- ¿esto aparece?
+  const uploadPdfToBackend = async () => {
+    console.log("⏳ Generando PDF y subiendo al backend...");
   
     try {
       const blob = await pdf(<PdfDocument {...formData} />).toBlob();
-      console.log("PDF generated");
-  
       const file = new File([blob], `${formData.reference}.pdf`, {
         type: 'application/pdf',
       });
@@ -86,33 +84,18 @@ const RapidRoof = () => {
       const formDataUpload = new FormData();
       formDataUpload.append("file", file);
   
-      const res = await fetch("https://store1.gofile.io/uploadFile", {
+      const response = await fetch("https://api.liquidwaterproofingacademy.com/api/upload", {
         method: "POST",
         body: formDataUpload,
       });
   
-      const result = await res.json();
-      console.log("Upload result:", result); // <-- ¿esto aparece?
+      const result = await response.json();
+      console.log("✅ Archivo subido:", result.url);
   
-      const downloadLink = result.data?.downloadPage;
-      if (!downloadLink) throw new Error("Upload failed");
-  
-      await emailjs.send(
-        "service_yhlxanp",
-        "template_mp9prl8",
-        {
-          to_name: "Paul",
-          to_email: "mmarkito708@gmail.com",
-          from_name: formData.preparedBy,
-          project_reference: formData.reference,
-          pdf_link: downloadLink,
-        },
-        "q8SYdWtSShPPbGI8c"
-      );
-  
+      alert(`PDF subido correctamente: ${result.url}`);
     } catch (error) {
-      console.error("Error sending email:", error);
-      alert("Something went wrong while sending the email.");
+      console.error("❌ Error subiendo el archivo:", error);
+      alert("Hubo un problema al subir el PDF.");
     }
   };
   

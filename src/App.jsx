@@ -5,6 +5,7 @@ import Dashboard from './pages/Dashboard';
 import Navbar from './components/Navbar';
 import RapidRoof from './pages/RapidRoof';
 import HelpPage from './pages/Help';
+import UploadFile from './pages/UploadedFiles';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/rapidroof" element={<RapidRoof />} />
         <Route path="/help" element={<HelpPage />} />
+        <Route path="/list" element={<UploadFile />} />
 
       </Routes>
     </BrowserRouter>
