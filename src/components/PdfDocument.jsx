@@ -230,16 +230,16 @@ const PdfHeader = ({ reference }) => (
             }}
           >
             <Image
-              src="https://i.postimg.cc/WhWy9YdP/lrs-1.png"
-              style={{ width: 160 }}
+              src="https://i.postimg.cc/J00vg9FS/LRS-solid-black-v1-transparent.png"
+              style={{ width: 110 }}
             />
             <Image
               src={
                 guarantee === '20-year'
-                  ? 'https://i.postimg.cc/SnnvHL9Y/20y-1.png'
-                  : 'https://i.postimg.cc/yD2bKJhQ/10y-1.png'
+                  ? 'https://i.postimg.cc/D0NHKxk0/Rapid-Roof-Pro-logo-pro-amended-25th-June-large-01-2.jpg'
+                  : 'https://i.postimg.cc/G2q6XcXk/Rapid-Roof-logo-Jan-25.jpg'
               }
-              style={{ width: 160 }}
+              style={{ width: 200 }}
             />
           </View>
     
@@ -325,7 +325,8 @@ let waterproofPageIndex = 0;
   }}>
     {/* Logo: MUCHO más grande */}
     <Image
-      src={guarantee === '20-year' ? '/20y.png' : '/10y.png'}
+      src={guarantee === '20-year'   ? 'https://i.postimg.cc/D0NHKxk0/Rapid-Roof-Pro-logo-pro-amended-25th-June-large-01-2.jpg'
+                  : 'https://i.postimg.cc/G2q6XcXk/Rapid-Roof-logo-Jan-25.jpg'}
       style={{ width: 340, marginBottom: 40 }}
     />
 
@@ -363,7 +364,7 @@ let waterproofPageIndex = 0;
     </View>
   ))}
 
-  <PdfFooter guarantee={guarantee} />
+  <PdfFooter guarantee={guarantee} pageNumber={2} />
 </Page>
 
 
@@ -3196,7 +3197,7 @@ BaseCoat, TopCoat, or other layers as required.
           marginBottom: 10,
         }}
       >
-        LIQUID ROOFING SYSTEMS
+        LIQUID ROOFING SYSTEMS LTD
       </Text>
 
       <Text style={{ fontSize: 12, marginBottom: 3 }}>
@@ -3215,7 +3216,7 @@ BaseCoat, TopCoat, or other layers as required.
 
     {/* Columna derecha: logo alineado con el texto */}
     <Image
-      src="https://i.postimg.cc/WhWy9YdP/lrs-1.png"
+      src="https://i.postimg.cc/J00vg9FS/LRS-solid-black-v1-transparent.png"
       style={{ width: 110, marginTop: 6 }}
     />
   </View>

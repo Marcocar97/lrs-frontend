@@ -60,7 +60,7 @@ const RapidRoof = () => {
   
     
   console.log("Form is valid, sending PDF..."); // <-- esto debería salir en consola
-  await sendPdfByEmail();
+  await sendPdfByEmail(); 
   };
   
 
@@ -70,6 +70,7 @@ const RapidRoof = () => {
       window.location.reload();
     }, 1000);
   };
+
 
   const sendPdfByEmail = async () => {
     console.log("Starting sendPdfByEmail..."); // <-- ¿esto aparece?
@@ -109,7 +110,6 @@ const RapidRoof = () => {
         "q8SYdWtSShPPbGI8c"
       );
   
-      alert("PDF sent successfully by email!");
     } catch (error) {
       console.error("Error sending email:", error);
       alert("Something went wrong while sending the email.");
