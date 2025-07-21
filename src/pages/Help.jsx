@@ -43,7 +43,7 @@ import {
     },
     { name: 'Fastcoat', comingSoon: true },
     { name: 'Elasto-Kote', comingSoon: true },
-    { name: 'Karnak', comingSoon: true },
+    { name: 'EcoThane', comingSoon: true },
   ];
   
   const HelpPage = () => {
