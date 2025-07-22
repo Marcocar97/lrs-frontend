@@ -676,7 +676,30 @@ let waterproofPageIndex = 0;
 
 
     {/* IMAGEN DEL PROYECTO */}
-    <Image src={image} style={{ width: '100%', height: 'auto', marginBottom: 30 }} />
+
+
+<View
+  style={{
+    width: 400, // similar a 48% del ancho de A4 con padding incluido
+    height: 350,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 4,
+    border: '1pt solid #ccc',
+    marginBottom: 30,
+  }}
+>
+  <Image
+    src={image}
+    style={{
+      width: '100%',
+      height: '100%',
+    }}
+  />
+</View>
+
+
 
     {/* Roof specification */}
 <PdfFooter guarantee={guarantee} pageNumber={getPageNumber('Roof specification')} />
