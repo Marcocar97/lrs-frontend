@@ -54,20 +54,26 @@ const RapidRoof = () => {
   };
   
 
-// 2) Valida, sube y luego envía el email (con el enlace)
-//    Asegúrate de tener definida sendEmailLink(fileUrl, formData)
+// handleSubmit: genera + sube PDF y luego envía la notificación al portal
 const handleSubmit = async () => {
   setSubmitted(true);
   if (!validateForm()) return;
 
-  console.log("Form is valid, creating & uploading PDF...");
   try {
-    const url = await uploadPdfToBackend();   // genera y SUBE el PDF → URL
-    await sendEmailLink(url, formData);       // envía el EMAIL con el link (sin adjunto)
-    console.log("📧 Email enviado (link)");
+    console.log("Form is valid, creating & uploading PDF...");
+    const url = await uploadPdfToBackend(); // no lo usamos para el email, pero valida que subió bien
+
+    // Usa el mismo nombre que enviaste al backend al crear el File
+    // (en tu upload actual: `${formData.reference}.pdf`)
+    const filename = `${formData.reference || "project"}.pdf`;
+
+    const ok = await sendEmail(DOCUMENTS_PORTAL_URL, formData, filename);
+    if (!ok) throw new Error("Email notification failed");
+
+    console.log("✅ Notificación enviada (portal)");
   } catch (err) {
     console.error("❌ Error en envío:", err);
-    alert("Hubo un problema al generar/subir el PDF o enviar el email.");
+    alert("Hubo un problema al generar/subir el PDF o enviar la notificación.");
   }
 };
 
@@ -119,33 +125,42 @@ const uploadPdfToBackend = async () => {
 
 
   // Enviar email por REST con ENLACE (sin adjunto)
-const sendEmailLink = async (fileUrl, formData) => {
-  const urlPublica = encodeURI(fileUrl);
-  const res = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      service_id: "service_yhlxanp",
-      template_id: "template_mp9prl8",
-      user_id: "q8SYdWtSShPPbGI8c", // Public key
-      template_params: {
-        file_url: urlPublica, // {{file_url}} en tu template
-        filename: `${formData.reference || "project"}-specification.pdf`,
-        reference: formData.reference,
-        attention: formData.attention,
-        date: formData.date,
-        guarantee: formData.guarantee,
-        surface: formData.surface,
-        preparedBy: formData.preparedBy,
-        // to_email: "enquiries@lrs-systems.co.uk", // si tu template lo espera
-      },
-    }),
-  });
+// URL fija del listado de documentos
+const DOCUMENTS_PORTAL_URL = "https://liquidwaterproofingacademy.com/list";
 
-  const text = await res.text(); // "OK" si fue bien
-  if (!res.ok) throw new Error(`EmailJS REST ${res.status}: ${text}`);
-  console.log("📧 Email enviado (link):", text);
+// Enviar NOTIFICACIÓN por EmailJS (sin adjunto, sin link directo al archivo)
+const sendEmail = async (formData, filename) => {
+  try {
+    const res = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        service_id: "service_8qd27im",      // <- tu service real
+        template_id: "template_mp9prl8",    // <- tu template
+        user_id: "q8SYdWtSShPPbGI8c",       // <- public key
+        template_params: {
+          portal_url: DOCUMENTS_PORTAL_URL,                          // {{portal_url}}
+          doc_name: filename || `${formData.reference || "project"}.pdf`, // {{doc_name}}
+          created_by: formData.preparedBy || "",                     // {{created_by}}
+          created_at: formData.date || "",                           // {{created_at}}
+          reference: formData.reference || "",                       // {{reference}}
+          lrs_reference: formData.lrsReference || "",                // {{lrs_reference}} (si lo usas)
+          guarantee: formData.guarantee || "",                       // {{guarantee}}
+          surface: formData.surface || "",                           // {{surface}}
+        },
+      }),
+    });
+
+    const text = await res.text(); // normalmente "OK"
+    if (!res.ok) throw new Error(`EmailJS REST ${res.status}: ${text}`);
+    console.log("📧 Notificación enviada:", text);
+    return true;
+  } catch (err) {
+    console.error("❌ EmailJS ERROR:", err);
+    return false;
+  }
 };
+
 
   
   useEffect(() => {
