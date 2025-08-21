@@ -80,73 +80,13 @@ const blobToDataURL = (blob) =>
     reader.readAsDataURL(blob);
   });
 
-// Envía el PDF por EmailJS (usa tu service/template/public key)
-useEffect(() => {
-  try {
-    emailjs.init('q8SYdWtSShPPbGI8c');
-    console.log('[EmailJS] init OK');
-  } catch (e) {
-    console.error('[EmailJS] init error:', e);
-  }
-}, []);
-
-// Envía el PDF por EmailJS (con logs y timeout para detectar cuelgues)
-const sendEmailWithPdf = async (blob, formData) => {
-  console.log('[EmailJS] start sendEmailWithPdf, blob size:', blob?.size);
-
-  const dataUrl = await blobToDataURL(blob);
-  const base64 = String(dataUrl).split(',')[1]; // <- SOLO base64, sin "data:application/pdf..."
-
-  const templateParams = {
-    content: base64, // Debe coincidir con tu Variable Attachment "content"
-    filename: `${formData.reference || "project"}-specification.pdf`,
-    reference: formData.reference,
-    attention: formData.attention,
-    date: formData.date,
-    guarantee: formData.guarantee,
-    surface: formData.surface,
-    preparedBy: formData.preparedBy,
-    // to_email: "enquiries@lrs-systems.co.uk", // si tu template lo usa
-  };
-
-  console.log('[EmailJS] about to send...', {
-    hasBase64: !!base64,
-    filename: templateParams.filename
-  });
-
-  // Firma v4 con objeto { publicKey } y timeout de 15s para no quedar colgado sin logs
-  const sendPromise = emailjs.send(
-    "service_yhlxanp",
-    "template_mp9prl8",
-    templateParams,
-    { publicKey: "q8SYdWtSShPPbGI8c" }
-  );
-
-  const result = await Promise.race([
-    sendPromise,
-    new Promise((_, reject) => setTimeout(() => reject(new Error('EmailJS timeout (15s)')), 15000)),
-  ]);
-
-  console.log('[EmailJS] send result:', result);
-  return result;
-};
-
 
 
   const uploadPdfToBackend = async () => {
     console.log("⏳ Generando PDF y subiendo al backend...");
   
     try {
-      const blob = await pdf(<PdfDocument {...formData} />).toBlob();
-
-     // ⬇️ Enviar el PDF por EmailJS (adjunto dinámico)
-     try {
-       await sendEmailWithPdf(blob, formData);
-       console.log("📧 Email enviado con PDF adjunto");
-    } catch (err) {
-      console.error("❌ Error enviando el email:", err);
-     }
-      
+      const blob = await pdf(<PdfDocument {...formData} />).toBlob();    
       const file = new File([blob], `${formData.reference}.pdf`, {
         type: 'application/pdf',
       });
@@ -161,6 +101,28 @@ const sendEmailWithPdf = async (blob, formData) => {
   
       const result = await response.json();
       console.log("✅ Archivo subido:", result.url);
+
+           // ⬇️ Enviar email con ENLACE (no adjunto)
+     if (!result?.url) {
+       console.error("No llegó 'url' en la respuesta del backend:", result);
+       throw new Error("No se obtuvo URL pública del PDF");
+     }
+     await emailjs.send(
+       "service_yhlxanp",
+       "template_mp9prl8",
+       {
+         file_url: result.url, // usa esta variable en tu template
+         filename: `${formData.reference || "project"}-specification.pdf`,
+         reference: formData.reference,
+         attention: formData.attention,
+         date: formData.date,
+         guarantee: formData.guarantee,
+        surface: formData.surface,
+        preparedBy: formData.preparedBy,
+      },
+       "q8SYdWtSShPPbGI8c"
+     );
+     console.log("📧 Email enviado con enlace de descarga");
   
     } catch (error) {
       console.error("❌ Error subiendo el archivo:", error);
