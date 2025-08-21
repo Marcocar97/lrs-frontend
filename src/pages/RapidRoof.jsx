@@ -84,27 +84,30 @@ const blobToDataURL = (blob) =>
 const sendEmailWithPdf = async (blob, formData) => {
   const dataUrl = await blobToDataURL(blob);
 
-  // IMPORTANTE en tu template de EmailJS:
-  // - En "Attachments" crea un "Variable Attachment" con:
-  //   Parameter name: content  |  Content type: application/pdf  |  Filename: {{filename}}
-  // - Los otros campos (reference, attention, etc.) son opcionales si quieres mostrarlos en el email.
-  await emailjs.send(
-    'service_yhlxanp',
-    'template_mp9prl8',
-    {
-      content: dataUrl, // <- el adjunto en base64 (dataURL)
-      filename: `${formData.reference || 'project'}-specification.pdf`,
-
-      // variables opcionales del correo
-      reference: formData.reference,
-      attention: formData.attention,
-      date: formData.date,
-      guarantee: formData.guarantee,
-      surface: formData.surface,
-      preparedBy: formData.preparedBy,
-    },
-    { publicKey: 'q8SYdWtSShPPbGI8c' }
-  );
+  
+  try {
+    await emailjs.send(
+      "service_yhlxanp",
+      "template_mp9prl8",
+      {
+        content: dataUrl,
+        filename: `${formData.reference || "project"}-specification.pdf`,
+        reference: formData.reference,
+        attention: formData.attention,
+        date: formData.date,
+        guarantee: formData.guarantee,
+        surface: formData.surface,
+        preparedBy: formData.preparedBy,
+        // to_email: "destino@tu-dominio.com" // solo si tu template lo usa
+      },
+      "q8SYdWtSShPPbGI8c"
+    );
+    console.log("📧 Email enviado");
+  } catch (e) {
+    console.error("❌ EmailJS error:", e);
+  }
+  
+  
 };
 
 
