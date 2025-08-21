@@ -71,12 +71,57 @@ const RapidRoof = () => {
     }, 1000);
   };
 
+  // Convierte un Blob a DataURL (base64)
+const blobToDataURL = (blob) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result); // data:application/pdf;base64,....
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+
+// Envía el PDF por EmailJS (usa tu service/template/public key)
+const sendEmailWithPdf = async (blob, formData) => {
+  const dataUrl = await blobToDataURL(blob);
+
+  // IMPORTANTE en tu template de EmailJS:
+  // - En "Attachments" crea un "Variable Attachment" con:
+  //   Parameter name: content  |  Content type: application/pdf  |  Filename: {{filename}}
+  // - Los otros campos (reference, attention, etc.) son opcionales si quieres mostrarlos en el email.
+  await emailjs.send(
+    'service_yhlxanp',
+    'template_mp9prl8',
+    {
+      content: dataUrl, // <- el adjunto en base64 (dataURL)
+      filename: `${formData.reference || 'project'}-specification.pdf`,
+
+      // variables opcionales del correo
+      reference: formData.reference,
+      attention: formData.attention,
+      date: formData.date,
+      guarantee: formData.guarantee,
+      surface: formData.surface,
+      preparedBy: formData.preparedBy,
+    },
+    { publicKey: 'q8SYdWtSShPPbGI8c' }
+  );
+};
+
 
   const uploadPdfToBackend = async () => {
     console.log("⏳ Generando PDF y subiendo al backend...");
   
     try {
       const blob = await pdf(<PdfDocument {...formData} />).toBlob();
+
+     // ⬇️ Enviar el PDF por EmailJS (adjunto dinámico)
+     try {
+       await sendEmailWithPdf(blob, formData);
+       console.log("📧 Email enviado con PDF adjunto");
+    } catch (err) {
+      console.error("❌ Error enviando el email:", err);
+     }
+      
       const file = new File([blob], `${formData.reference}.pdf`, {
         type: 'application/pdf',
       });
