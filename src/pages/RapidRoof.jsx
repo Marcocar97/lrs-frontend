@@ -81,34 +81,56 @@ const blobToDataURL = (blob) =>
   });
 
 // Envía el PDF por EmailJS (usa tu service/template/public key)
-const sendEmailWithPdf = async (blob, formData) => {
-  const dataUrl = await blobToDataURL(blob);
-
-  
+useEffect(() => {
   try {
-    await emailjs.send(
-      "service_yhlxanp",
-      "template_mp9prl8",
-      {
-        content: dataUrl,
-        filename: `${formData.reference || "project"}-specification.pdf`,
-        reference: formData.reference,
-        attention: formData.attention,
-        date: formData.date,
-        guarantee: formData.guarantee,
-        surface: formData.surface,
-        preparedBy: formData.preparedBy,
-        // to_email: "destino@tu-dominio.com" // solo si tu template lo usa
-      },
-      "q8SYdWtSShPPbGI8c"
-    );
-    console.log("📧 Email enviado");
+    emailjs.init('q8SYdWtSShPPbGI8c');
+    console.log('[EmailJS] init OK');
   } catch (e) {
-    console.error("❌ EmailJS error:", e);
+    console.error('[EmailJS] init error:', e);
   }
-  
-  
+}, []);
+
+// Envía el PDF por EmailJS (con logs y timeout para detectar cuelgues)
+const sendEmailWithPdf = async (blob, formData) => {
+  console.log('[EmailJS] start sendEmailWithPdf, blob size:', blob?.size);
+
+  const dataUrl = await blobToDataURL(blob);
+  const base64 = String(dataUrl).split(',')[1]; // <- SOLO base64, sin "data:application/pdf..."
+
+  const templateParams = {
+    content: base64, // Debe coincidir con tu Variable Attachment "content"
+    filename: `${formData.reference || "project"}-specification.pdf`,
+    reference: formData.reference,
+    attention: formData.attention,
+    date: formData.date,
+    guarantee: formData.guarantee,
+    surface: formData.surface,
+    preparedBy: formData.preparedBy,
+    // to_email: "enquiries@lrs-systems.co.uk", // si tu template lo usa
+  };
+
+  console.log('[EmailJS] about to send...', {
+    hasBase64: !!base64,
+    filename: templateParams.filename
+  });
+
+  // Firma v4 con objeto { publicKey } y timeout de 15s para no quedar colgado sin logs
+  const sendPromise = emailjs.send(
+    "service_yhlxanp",
+    "template_mp9prl8",
+    templateParams,
+    { publicKey: "q8SYdWtSShPPbGI8c" }
+  );
+
+  const result = await Promise.race([
+    sendPromise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error('EmailJS timeout (15s)')), 15000)),
+  ]);
+
+  console.log('[EmailJS] send result:', result);
+  return result;
 };
+
 
 
   const uploadPdfToBackend = async () => {
