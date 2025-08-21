@@ -86,47 +86,63 @@ const blobToDataURL = (blob) =>
     console.log("⏳ Generando PDF y subiendo al backend...");
   
     try {
-      const blob = await pdf(<PdfDocument {...formData} />).toBlob();    
+      const blob = await pdf(<PdfDocument {...formData} />).toBlob();
+  
       const file = new File([blob], `${formData.reference}.pdf`, {
-        type: 'application/pdf',
+        type: "application/pdf",
       });
   
       const formDataUpload = new FormData();
       formDataUpload.append("file", file);
   
-      const response = await fetch("https://api.liquidwaterproofingacademy.com/api/upload", {
-        method: "POST",
-        body: formDataUpload,
-      });
+      const response = await fetch(
+        "https://api.liquidwaterproofingacademy.com/api/upload",
+        {
+          method: "POST",
+          body: formDataUpload,
+        }
+      );
   
       const result = await response.json();
       console.log("✅ Archivo subido:", result.url);
-
-           // ⬇️ Enviar email con ENLACE (no adjunto)
-     if (!result?.url) {
-       console.error("No llegó 'url' en la respuesta del backend:", result);
-       throw new Error("No se obtuvo URL pública del PDF");
-     }
-     await emailjs.send(
-       "service_yhlxanp",
-       "template_mp9prl8",
-       {
-         file_url: result.url, // usa esta variable en tu template
-         filename: `${formData.reference || "project"}-specification.pdf`,
-         reference: formData.reference,
-         attention: formData.attention,
-         date: formData.date,
-         guarantee: formData.guarantee,
-        surface: formData.surface,
-        preparedBy: formData.preparedBy,
-      },
-       "q8SYdWtSShPPbGI8c"
-     );
-     console.log("📧 Email enviado con enlace de descarga");
   
+      // ⬇️ Enviar email por REST con ENLACE (sin adjunto)
+      if (!result?.url) {
+        console.error("No llegó 'url' en la respuesta del backend:", result);
+        throw new Error("No se obtuvo URL pública del PDF");
+      }
+  
+      const urlPublica = encodeURI(result.url); // protege espacios, etc.
+      console.log("[EmailJS REST] enviando link…");
+  
+      const res = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          service_id: "service_yhlxanp",
+          template_id: "template_mp9prl8",
+          user_id: "q8SYdWtSShPPbGI8c", // Public key
+          template_params: {
+            file_url: urlPublica, // ← usa {{file_url}} en tu template
+            filename: `${formData.reference || "project"}-specification.pdf`,
+            reference: formData.reference,
+            attention: formData.attention,
+            date: formData.date,
+            guarantee: formData.guarantee,
+            surface: formData.surface,
+            preparedBy: formData.preparedBy,
+            // si tu template usa destinatario dinámico:
+            // to_email: "enquiries@lrs-systems.co.uk",
+          },
+        }),
+      });
+  
+      const text = await res.text(); // "OK" si fue bien
+      if (!res.ok) throw new Error(`EmailJS REST ${res.status}: ${text}`);
+      console.log("📧 Email enviado (link):", text);
     } catch (error) {
-      console.error("❌ Error subiendo el archivo:", error);
-      alert("Hubo un problema al subir el PDF.");
+      console.error("❌ Error subiendo el archivo o enviando el email:", error);
+      alert("Hubo un problema al subir el PDF o enviar el email.");
     }
   };
   
