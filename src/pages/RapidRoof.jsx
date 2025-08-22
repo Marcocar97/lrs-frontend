@@ -60,20 +60,15 @@ const handleSubmit = async () => {
   if (!validateForm()) return;
 
   try {
-    console.log("Form is valid, creating & uploading PDF...");
-    const url = await uploadPdfToBackend(); // valida que subió bien
-    console.log("Uploaded URL:", url);
-
-    const filename = `${formData.reference || "project"}.pdf`;
-    const ok = await sendEmail(formData, filename); // <-- FIX AQUÍ
-    if (!ok) throw new Error("Email notification failed");
-
-    console.log("✅ Notificación enviada (portal)");
+    const { emailOk } = await uploadPdfToBackend();
+    if (!emailOk) throw new Error("Email notification failed");
+    console.log("✅ Notificación enviada");
   } catch (err) {
     console.error("❌ Error en envío:", err);
     alert("Hubo un problema al generar/subir el PDF o enviar la notificación.");
   }
 };
+
 
 
   const handleDownload = () => {
@@ -94,12 +89,45 @@ const blobToDataURL = (blob) =>
 
 
 
-  // 1) Sube el PDF y devuelve la URL pública
+// Enviar NOTIFICACIÓN por EmailJS
+const sendEmail = async (formData) => {
+  try {
+    const payload = {
+      service_id: "service_8qd27im",
+      template_id: "template_mp9prl8",
+      user_id: "q8SYdWtSShPPbGI8c",
+      template_params: {
+        doc_name: filename || `${formData.reference || "project"}.pdf`,
+        created_by: formData.preparedBy || "",
+        created_at: formData.date || "",
+      },
+    };
+
+    console.log("[sendEmail] payload:", payload);
+
+    const res = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    const text = await res.text();
+    console.log("[sendEmail] status/text:", res.status, text);
+    if (!res.ok) throw new Error(text);
+    return true;
+  } catch (err) {
+    console.error("❌ [sendEmail] error:", err);
+    return false;
+  }
+};
+
+// SUBE el PDF y luego ENVÍA el email
 const uploadPdfToBackend = async () => {
-  console.log("⏳ Generando PDF y subiendo al backend...");
+  console.log("⏳ [upload] Generando PDF y subiendo al backend...");
 
   const blob = await pdf(<PdfDocument {...formData} />).toBlob();
-  const file = new File([blob], `${formData.reference}.pdf`, { type: "application/pdf" });
+  const filename = `${formData.reference || "project"}.pdf`;
+  const file = new File([blob], filename, { type: "application/pdf" });
 
   const formDataUpload = new FormData();
   formDataUpload.append("file", file);
@@ -114,51 +142,15 @@ const uploadPdfToBackend = async () => {
     throw new Error(`Upload failed (${response.status}): ${text || "No body"}`);
   }
 
-  const result = await response.json();
-  if (!result?.url) throw new Error("No se obtuvo URL pública del PDF");
+  console.log("✅ [upload] Archivo subido correctamente");
 
-  console.log("✅ Archivo subido:", result.url);
-  return result.url; // ← IMPORTANTE: devolvemos la URL
+  // Enviar email de notificación
+  console.log("👉 [upload] Enviando notificación por email...");
+  const emailOk = await sendEmail(formData);
+  console.log("📧 [upload] Resultado notificación:", emailOk);
+
+  return { emailOk };
 };
-
-
-const DOCUMENTS_PORTAL_URL = "https://liquidwaterproofingacademy.com/list";
-
-// Enviar NOTIFICACIÓN por EmailJS (sin adjunto, sin link directo al archivo)
-const sendEmail = async (formData, filename) => {
-  try {
-    const payload = {
-      service_id: "service_8qd27im",
-      template_id: "template_mp9prl8",
-      user_id: "q8SYdWtSShPPbGI8c",
-      template_params: {
-        portal_url: DOCUMENTS_PORTAL_URL,                               // {{portal_url}}
-        doc_name: filename || `${formData.reference || "project"}.pdf`, // {{doc_name}}
-        created_by: formData.preparedBy || "",                          // {{created_by}}
-        created_at: formData.date || "",                                // {{created_at}}
-        reference: formData.reference || "",                            // {{reference}}
-        lrs_reference: formData.lrsReference || "",                     // {{lrs_reference}}
-        guarantee: formData.guarantee || "",                            // {{guarantee}}
-        surface: formData.surface || "",                                // {{surface}}
-      },
-    };
-
-    const res = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
-    const text = await res.text(); // normalmente "OK"
-    console.log("EmailJS status:", res.status, text);
-    if (!res.ok) throw new Error(`EmailJS REST ${res.status}: ${text}`);
-    return true;
-  } catch (err) {
-    console.error("❌ EmailJS ERROR:", err);
-    return false;
-  }
-};
-
 
 
   
