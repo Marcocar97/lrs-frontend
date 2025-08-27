@@ -56,19 +56,20 @@ const RapidRoof = () => {
 
 // handleSubmit: genera + sube PDF y luego envía la notificación al portal
 const handleSubmit = async () => {
-  setSubmitted(true);
+  setSubmitted(false);                // evita montar PDFDownloadLink ahora
   if (!validateForm()) return;
 
   try {
-    const { emailOk } = await uploadPdfToBackend();
+    const { emailOk } = await uploadPdfToBackend(); // hace upload y luego intentará email
     if (!emailOk) throw new Error("Email notification failed");
+
     console.log("✅ Notificación enviada");
+    setSubmitted(true);               // AHORA sí montas PDFDownloadLink
   } catch (err) {
     console.error("❌ Error en envío:", err);
     alert("Hubo un problema al generar/subir el PDF o enviar la notificación.");
   }
 };
-
 
 
   const handleDownload = () => {
