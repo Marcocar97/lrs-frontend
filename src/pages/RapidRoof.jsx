@@ -90,16 +90,16 @@ const blobToDataURL = (blob) =>
 
 
 // Enviar NOTIFICACIÓN por EmailJS
-const sendEmail = async (formData) => {
+// Enviar NOTIFICACIÓN por EmailJS
+const sendEmail = async () => {
   try {
     const payload = {
       service_id: "service_8qd27im",
       template_id: "template_mp9prl8",
       user_id: "q8SYdWtSShPPbGI8c",
       template_params: {
-        doc_name: filename || `${formData.reference || "project"}.pdf`,
-        created_by: formData.preparedBy || "",
-        created_at: formData.date || "",
+        // Campo genérico para tu plantilla de EmailJS (ajusta la variable en EmailJS a {{notice}}).
+        notice: "A new RapidRoof specification PDF was generated."
       },
     };
 
@@ -120,6 +120,7 @@ const sendEmail = async (formData) => {
     return false;
   }
 };
+
 
 // SUBE el PDF y luego ENVÍA el email
 const uploadPdfToBackend = async () => {
@@ -145,9 +146,9 @@ const uploadPdfToBackend = async () => {
   console.log("✅ [upload] Archivo subido correctamente");
 
   // Enviar email de notificación
-  console.log("👉 [upload] Enviando notificación por email...");
-  const emailOk = await sendEmail(formData);
-  console.log("📧 [upload] Resultado notificación:", emailOk);
+console.log("👉 [upload] Enviando notificación por email...");
+const emailOk = await sendEmail(); // <- sin argumentos
+console.log("📧 [upload] Resultado notificación:", emailOk);
 
   return { emailOk };
 };
