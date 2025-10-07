@@ -6,6 +6,7 @@ import Navbar from './components/Navbar';
 import RapidRoof from './pages/RapidRoof';
 import HelpPage from './pages/Help';
 import UploadFile from './pages/UploadedFiles';
+import FastCoat from './pages/FastCoat';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/rapidroof" element={<RapidRoof />} />
+        <Route path="/fascoat" element={<FastCoat />} />
         <Route path="/help" element={<HelpPage />} />
         <Route path="/list" element={<UploadFile />} />
 
