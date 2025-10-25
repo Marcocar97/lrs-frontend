@@ -272,7 +272,7 @@
         { title: 'Natural growth', pages: 1 },
         { title: 'Flat roof detailing guidance & CDM', pages: 3 },
         { title: 'Roof specification', pages: 1 },
-        { title: 'The roof build-up and preparation', pages: 1 },
+        { title: 'The roof build-up and preparation', pages: 2 },
         { title: 'Cleaning, TV, satellite arrays, cables', pages: 2 },
         { title: 'Waterproof coverings', pages: waterproofPageCount },
         { title: 'General guidance and requirements', pages: 3 },
@@ -309,7 +309,7 @@
   
              <Page size="A4" style={{ padding: 0, margin: 0 }}>
     {/* Imagen superior (sin padding) */}
-    <Image src="/techo.png" style={{ width: '100%' }} />
+    <Image src="/1F.png" style={{ width: '100%' }} />
   
     {/* Contenido central más protagonista */}
     <View style={{
@@ -846,8 +846,103 @@
   </Page>
 )}
 
+
 {/* =========================
-    Página 11 – The Roof Build Up
+    Página 11 — FastCoat: The Roof Build-Up (formulario)
+   ========================= */}
+<Page size="A4" style={styles.page}>
+  <PdfHeader reference={reference} />
+
+  <Text style={styles.sectionTitle}>The Roof Build-Up</Text>
+
+  <Text style={{ fontSize: 12, marginBottom: 20 }}>
+    With the information and images provided this specification is for <Text style={{ fontWeight: 'bold' }}>{reference || '________'}</Text>, which is approx. <Text style={{ fontWeight: 'bold' }}>{roofSize || '________'}</Text> and is a <Text style={{ fontWeight: 'bold' }}>{roofType || '________'}</Text>. <Text style={{ fontStyle: 'italic' }}>{roofBuildUp || ''}</Text>
+  </Text>
+
+  {/* Tabla tipo rows visuales */}
+  <View style={{ borderTopWidth: 1, borderColor: '#ccc' }}>
+    {/* Project Reference */}
+    <View style={{ flexDirection: 'row', paddingVertical: 6 }}>
+      <Text style={{ width: '40%', fontWeight: 'bold', fontSize: 12 }}>Project Reference</Text>
+      <Text style={{ fontSize: 12 }}>{reference || '________'}</Text>
+    </View>
+
+    {/* Roof Size */}
+    <View style={{ flexDirection: 'row', paddingVertical: 6 }}>
+      <Text style={{ width: '40%', fontWeight: 'bold', fontSize: 12 }}>Roof Size</Text>
+      <Text style={{ fontSize: 12 }}>{roofSize || '________'}</Text>
+    </View>
+
+    {/* Roof Type */}
+    <View style={{ flexDirection: 'row', paddingVertical: 6 }}>
+      <Text style={{ width: '40%', fontWeight: 'bold', fontSize: 12 }}>Roof Type</Text>
+      <Text style={{ fontSize: 12 }}>{roofType || '________'}</Text>
+    </View>
+
+    {/* Build Up */}
+    <View style={{ flexDirection: 'row', paddingVertical: 6 }}>
+      <Text style={{ width: '40%', fontWeight: 'bold', fontSize: 12 }}>
+        {roofType === 'Warm Roof' && 'Warm Roof Build Up'}
+        {roofType === 'Inverted Roof' && 'Inverted Roof Build Up'}
+        {!['Warm Roof', 'Inverted Roof'].includes(roofType || '') && 'Build Up'}
+      </Text>
+
+      <View>
+        {roofType === 'Warm Roof' && [
+          'Existing Substrate',
+          'Elotene VCL',
+          'Insulation',
+          'Elotene Foil Faced Carrier',
+          'FastCoat Pro Waterproof',
+        ].map((item, i) => (
+          <Text key={`warm-${i}`} style={{ fontSize: 12 }}>{item}</Text>
+        ))}
+
+        {roofType === 'Inverted Roof' && [
+          'Existing Substrate',
+          'FastCoat Pro Waterproof',
+          'XPS Insulation',
+          'WFRL',
+          'Slabs / Ballast',
+        ].map((item, i) => (
+          <Text key={`inv-${i}`} style={{ fontSize: 12 }}>{item}</Text>
+        ))}
+
+        {!['Warm Roof', 'Inverted Roof'].includes(roofType || '') && [
+          'Existing Substrate',
+          'FastCoat Pro Waterproof',
+        ].map((item, i) => (
+          <Text key={`default-${i}`} style={{ fontSize: 12 }}>{item}</Text>
+        ))}
+      </View>
+    </View>
+
+    {/* Campos adicionales */}
+    {[
+      ...(roofType === 'Warm Roof' ? [['U Value Needed', uValue]] : []),
+      ['Outlets', outlets],
+      ['Skylights', skylights],
+      ['AC Units', acUnits],
+      ['Existing Coatings', existingCoatings],
+      ['Ponding Water', pondingWater],
+    ].map(([label, value], i) => (
+      <View key={`extra-${i}`} style={{ flexDirection: 'row', paddingVertical: 6 }}>
+        <Text style={{ width: '40%', fontWeight: 'bold', fontSize: 12 }}>{label}</Text>
+        <Text style={{ fontSize: 12 }}>{value || '________'}</Text>
+      </View>
+    ))}
+  </View>
+
+  {/* Footer con clave EXACTA para índice de esta sección */}
+  <PdfFooter
+    guarantee={guarantee}
+    pageNumber={getPageNumber('The roof build-up and preparation')}
+  />
+</Page>
+
+
+{/* =========================
+    Página 11.1 — FastCoat: The Roof Build Up & Preparation (sin intro duplicada)
    ========================= */}
 <Page size="A4" style={styles.page}>
   <PdfHeader reference={reference} />
@@ -855,9 +950,7 @@
   <View style={{ marginTop: 14 }}>
     <Text style={styles.sectionTitle}>The Roof Build Up & Preparation</Text>
 
-    <Text style={[styles.text, { marginBottom: 12 }]}>
-      With the information and images provided this specification is {reference || '________'}
-    </Text>
+    {/* (Intro eliminada — ya está en pág. 11) */}
 
     <Text style={[styles.text, { marginBottom: 12 }]}>
       LRS have been brought in to provide a {guarantee === '25-year' ? '25-year' : '20-year'} product guarantee using FastCoat Pro.
@@ -890,7 +983,7 @@
     {/* 2. Cleaning */}
     <Text style={styles.label}>2. Cleaning</Text>
     <Text style={[styles.text, { marginBottom: 12 }]}>
-      Please see page 12.
+      See the Cleaning section.
     </Text>
 
     {/* 3. Repairing */}
@@ -917,14 +1010,15 @@
         • <Text style={styles.label}>Mixing the Coating:</Text> Mix the FastCoat Waterproof thoroughly before application.
       </Text>
     </View>
-
   </View>
 
+  {/* Footer con la CLAVE EXACTA y OFFSET +1 para el índice */}
   <PdfFooter
     guarantee={guarantee}
-    pageNumber={getPageNumber('The roof build-up and preparation')}
+    pageNumber={getPageNumber('The roof build-up and preparation') +1}
   />
 </Page>
+
 
 {/* =========================
     Página 12 – The Roof Build Up & Preparation: Cleaning
@@ -2035,6 +2129,59 @@
     guarantee={guarantee}
     pageNumber={getPageNumber('Materials & Guarantee')}
   />
+</Page>
+
+{/* Página final - estilo profesional como la imagen 2 */}
+
+<Page size="A4" style={{ padding: 0, margin: 0 }}>
+  {/* Imagen superior */}
+  <Image src="/2F.png" style={{ width: '100%' }} />
+
+  {/* Contenido inferior, compactado */}
+  <View
+    style={{
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'flex-start',
+      paddingHorizontal: 60,
+      paddingTop: 30,
+      paddingBottom: 40, // usamos el espacio inferior útil
+      height: 'auto',
+    }}
+  >
+    {/* Columna izquierda */}
+    <View style={{ flex: 1 }}>
+      <Text
+        style={{
+          fontSize: 14,
+          fontWeight: 'bold',
+          color: '#f5a623',
+          marginBottom: 10,
+        }}
+      >
+        LIQUID ROOFING SYSTEMS LTD
+      </Text>
+
+      <Text style={{ fontSize: 12, marginBottom: 3 }}>
+        Roofing House, Prees Green, Whitchurch, SY13 2BN
+      </Text>
+      <Text style={{ fontSize: 12, marginBottom: 3 }}>
+        01948 841 877
+      </Text>
+      <Text style={{ fontSize: 12, marginBottom: 3 }}>
+        enquiries@lrs-systems.co.uk
+      </Text>
+      <Text style={{ fontSize: 12, color: '#f5a623' }}>
+        www.lrs-systems.co.uk
+      </Text>
+    </View>
+
+    {/* Columna derecha: logo alineado con el texto */}
+    <Image
+      src="https://i.postimg.cc/YCt945rK/1lrs-1.png"
+      style={{ width: 110, marginTop: 6 }}
+    />
+  </View>
 </Page>
 
 
