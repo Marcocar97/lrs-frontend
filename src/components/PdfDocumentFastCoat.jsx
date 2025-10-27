@@ -948,17 +948,6 @@
   <PdfHeader reference={reference} />
 
   <View style={{ marginTop: 14 }}>
-    <Text style={styles.sectionTitle}>The Roof Build Up & Preparation</Text>
-
-    {/* (Intro eliminada — ya está en pág. 11) */}
-
-    <Text style={[styles.text, { marginBottom: 12 }]}>
-      LRS have been brought in to provide a {guarantee === '25-year' ? '25-year' : '20-year'} product guarantee using FastCoat Pro.
-    </Text>
-
-    <Text style={[styles.text, { marginBottom: 16 }]}>
-      The correct HSE approved access and safety systems should be implemented to ensure a safe working environment for all employees.
-    </Text>
 
     {/* Preparation */}
     <Text style={styles.label}>Preparation</Text>
