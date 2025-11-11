@@ -1176,14 +1176,14 @@
       </View>
 
       <Text style={styles.label}>6. Maintain Coverage Rate</Text>
-      <View style={{ marginLeft: 16, marginBottom: 12 }}>
-        <Text style={styles.text}>• Apply at ≈ 0.2 kg per m² (12.5 kg → 62.5 m² coverage).</Text>
-      </View>
-
-      <Text style={styles.label}>7. Drying Time</Text>
-      <View style={{ marginLeft: 16, marginBottom: 12 }}>
-        <Text style={styles.text}>• Allow 4–6 hours to dry before applying FastCoat Waterproof (coating times vary with conditions).</Text>
-      </View>
+<View style={{ marginLeft: 16, marginBottom: 12 }}>
+  <Text style={styles.text}>
+    • Ensure you apply the MS 2-Part Primer at the recommended coverage rate of 0.2kg per m².
+  </Text>
+  <Text style={styles.text}>
+    • A 12.5kg tin should cover approximately 62.5m², so adjust the amount of MS 2-Part Primer used based on the area being covered.
+  </Text>
+</View>
 
     
     </View>
@@ -1204,6 +1204,10 @@
 
     <View style={{ marginTop: 14 }}>
     
+    <Text style={styles.label}>7. Drying Time</Text>
+      <View style={{ marginLeft: 16, marginBottom: 12 }}>
+        <Text style={styles.text}>• Allow 4–6 hours to dry before applying FastCoat Waterproof (coating times vary with conditions).</Text>
+      </View>
 
       <Text style={styles.label}>8. Clean Up</Text>
       <View style={{ marginLeft: 16 }}>
@@ -1591,7 +1595,9 @@
 
   <Text style={styles.label}>5. Application of FastCoat Waterproof</Text>
     <View style={{ marginLeft: 16, marginBottom: 8 }}>
-      <Text style={styles.text}>• <Text style={{ fontWeight: 'bold' }}>Coverage Rate:</Text> Apply the FastCoat Waterproof at a coverage rate of 1 kg per m².</Text>
+    <Text style={styles.text}>
+  • <Text style={{ fontWeight: 'bold' }}>Coverage Rate:</Text> Apply the FastCoat Waterproof at a coverage rate of {guarantee === '25-year' ? '1.4 kg per m²' : '1 kg per m²'}.
+</Text>
       <Text style={styles.text}>• Apply evenly using a short-pile roller or brush. Ensure consistent thickness and avoid streaks or thin areas.</Text>
       <Text style={styles.text}>• Apply in consistent, straight strokes to achieve an even finish.</Text>
     </View>
