@@ -53,7 +53,6 @@ const FastCoat = () => {
     return requiredFields.every((field) => formData[field]?.trim());
   };
   
-/*
 // handleSubmit: genera + sube PDF y luego envía la notificación al portal
 const handleSubmit = async () => {
   setSubmitted(false);                // evita montar PDFDownloadLink ahora
@@ -157,50 +156,6 @@ console.log("📧 [upload] Resultado notificación:", emailOk);
     }
   }, []);
 
-  */
-
-  const handleSubmit = async () => {
-    setSubmitted(false);
-    if (!validateForm()) return;
-  
-    try {
-      // 1) Generar el blob del PDF
-      const blob = await pdf(<PdfDocument {...formData} />).toBlob();
-  
-      // 2) Disparar descarga inmediata
-      const filename = `${formData.reference || "project"}.pdf`;
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-  
-      console.log("✅ PDF generado y descarga iniciada");
-      setSubmitted(true);
-    } catch (err) {
-      console.error("❌ Error al generar el PDF:", err);
-      alert("Hubo un problema al generar el PDF.");
-    }
-  };
-  
-  // Si mantienes este handler en tu UI, puedes dejarlo vacío o eliminarlo
-  const handleDownload = () => {
-    // No es necesario recargar ni nada: la descarga ya se dispara en handleSubmit.
-  };
-  
-  // Mantén tu useEffect si quieres autocompletar preparedBy desde localStorage
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (user?.name) {
-      setFormData((prev) => ({
-        ...prev,
-        preparedBy: user.name,
-      }));
-    }
-  }, []);
 
 
   return (

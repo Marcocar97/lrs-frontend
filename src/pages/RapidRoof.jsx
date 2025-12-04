@@ -166,6 +166,8 @@ console.log("📧 [upload] Resultado notificación:", emailOk);
     }
   }, []);
 
+
+
   return (
     <Container disableGutters sx={{ width: '100%', px: { xs: 2, sm: 4 } }}>
     <Paper elevation={3} sx={{ mt: 8, p: { xs: 3, sm: 5 }, borderRadius: 3, width: '100%' }}>
