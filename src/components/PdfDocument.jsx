@@ -161,18 +161,6 @@ const styles = StyleSheet.create({
 });
 
 
-/*
-  
-const getGuaranteeText = (guarantee) => {
-    return isPro
-      ? 'RapidRoof Pro 20 Specification'
-      : 'RapidRoof 10 Specification';
-  };
-
-  */ 
-
-  const isPro = guarantee === "20-year" || guarantee === "25-year";
-
 
   const getGuaranteeText = (guarantee) => {
     return guarantee === "20-year" || guarantee === "25-year"
@@ -217,6 +205,9 @@ const getGuaranteeText = (guarantee) => {
   photos,
   roofBuildUp,
   }) => {
+
+    const isPro = guarantee === "20-year" || guarantee === "25-year";
+
     const guaranteeText = getGuaranteeText(guarantee);
     const surfaceText = surfaceTexts[surface] || '';
 
