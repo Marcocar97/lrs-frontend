@@ -161,13 +161,23 @@ const styles = StyleSheet.create({
 });
 
 
-
+/*
   
 const getGuaranteeText = (guarantee) => {
     return guarantee === '20-year'
       ? 'RapidRoof Pro 20 Specification'
       : 'RapidRoof 10 Specification';
   };
+
+  */ 
+
+  const getGuaranteeText = (guarantee) => {
+    const isPro = guarantee === "20-year" || guarantee === "25-year";
+    return isPro
+      ? "RapidRoof Pro 20 Specification"
+      : "RapidRoof 10 Specification";
+  };
+  
 
   const surfaceTexts = {
     Asbestos: "Ensure surface is cleaned and all loose material removed. Use primer for adhesion.",
@@ -3713,9 +3723,10 @@ temperature + 0°c and max surface temperature is 35°c.</Text></Text>
   <Text style={styles.sectionTitle}>Guarantee</Text>
 
   <Text style={[styles.text, { marginBottom: 12 }]}>
-    Materials only. The following guaranteed specification is covered by LRS product
-    guarantee for the period of {guarantee === '20-year' ? '20-years' : '10-years'} from the date of practical completion.
-  </Text>
+  Materials only. The following guaranteed specification is covered by LRS product
+  guarantee for the period of {guarantee === "25-year" ? "25-years" : guarantee === "20-year" ? "20-years" : "10-years"} from the date of practical completion.
+</Text>
+
 
   <Text style={[styles.text, { marginBottom: 12 }]}>
     Please Note: Only products supplied by LRS will be covered in this guarantee.

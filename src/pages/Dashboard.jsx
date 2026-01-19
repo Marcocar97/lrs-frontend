@@ -18,7 +18,7 @@ const products = [
     comingSoon: true,
   },
   {
-    name: 'EcoThane',
+    name: 'RapidRoof Gutter',
     comingSoon: true,
   },
 ];

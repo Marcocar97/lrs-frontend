@@ -34,9 +34,9 @@ const Navbar = () => {
 
   const navItems = [
     { label: 'RAPIDROOF', path: '/rapidroof' },
-    { label: 'FASTCOAT', path: '/fastcoat' },
+    { label: 'FASTCOAT', path: '/fascoat' },
     { label: 'ELASTO-KOTE', path: '/elasto-kote' },
-    { label: 'ECOTHANE', path: '/ecothane' },
+    { label: 'RAPIDROOF GUTTER', path: '/ecothane' },
   ];
 
   return (
