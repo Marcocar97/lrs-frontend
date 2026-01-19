@@ -164,19 +164,22 @@ const styles = StyleSheet.create({
 /*
   
 const getGuaranteeText = (guarantee) => {
-    return guarantee === '20-year'
+    return isPro
       ? 'RapidRoof Pro 20 Specification'
       : 'RapidRoof 10 Specification';
   };
 
   */ 
 
+  const isPro = guarantee === "20-year" || guarantee === "25-year";
+
+
   const getGuaranteeText = (guarantee) => {
-    const isPro = guarantee === "20-year" || guarantee === "25-year";
-    return isPro
+    return guarantee === "20-year" || guarantee === "25-year"
       ? "RapidRoof Pro 20 Specification"
       : "RapidRoof 10 Specification";
   };
+  
   
 
   const surfaceTexts = {
@@ -318,18 +321,16 @@ const PdfHeader = ({ reference }) => (
               width: '100%',
             }}
           >
-            <Image
-              src="https://i.postimg.cc/rwMLwvcz/lrs-1.png"
-              style={{ width: 110 }}
-            />
-            <Image
-              src={
-                guarantee === '20-year'
-                  ? 'https://i.postimg.cc/QxGVDBvM/20-1.jpg'
-                  : 'https://i.postimg.cc/8PRczpVm/10-1.jpg'
-              }
-              style={{ width: 200 }}
-            />
+           <Image
+  src={
+    isPro
+      ? 'https://i.postimg.cc/QxGVDBvM/20-1.jpg'
+      : 'https://i.postimg.cc/8PRczpVm/10-1.jpg'
+  }
+  style={{ width: 200 }}
+/>
+
+          
           </View>
     
           {/* Número de página centrado debajo */}
@@ -344,7 +345,11 @@ const PdfHeader = ({ reference }) => (
     const getWaterproofPagesCount = ({ guarantee, surface, antiSkid }) => {
       const isFullyPrimed = fullyPrimedSurfaces.includes(surface);
       let count = 20;
-      const includesPrimer = guarantee === '20-year' || (guarantee === '10-year' && isFullyPrimed);
+      const includesPrimer =
+      isPro ||
+      (guarantee === '10-year' && isFullyPrimed);
+    
+
       if (!includesPrimer) count -= 2;
       if (antiSkid !== 'Yes') count -= 2;
       return count;
@@ -412,10 +417,11 @@ let waterproofPageIndex = 0;
   }}>
     {/* Logo: MUCHO más grande */}
     <Image
-      src={guarantee === '20-year'    ? 'https://i.postimg.cc/QxGVDBvM/20-1.jpg'
-                  : 'https://i.postimg.cc/8PRczpVm/10-1.jpg'}
-      style={{ width: 340, marginBottom: 40 }}
-    />
+   src={isPro
+    ? 'https://i.postimg.cc/QxGVDBvM/20-1.jpg'
+    : 'https://i.postimg.cc/8PRczpVm/10-1.jpg'}
+  style={{ width: 340, marginBottom: 40 }}
+/>
 
     {/* Título: más peso y tamaño */}
     <Text style={{
@@ -481,11 +487,12 @@ let waterproofPageIndex = 0;
       <PdfHeader reference={reference} />
 
   {/* Título principal */}
-<Text style={[styles.sectionTitle, { fontSize: 18, marginBottom: 30 }]}>
-  {guarantee === '20-year'
+  <Text style={[styles.sectionTitle, { fontSize: 18, marginBottom: 30 }]}>
+  {isPro
     ? 'RapidRoof Pro 20 Specification'
-    : 'RapidRoof 10 Specification'} Ref: {lrsReference || 'LRS – [ref]'}
+    : 'RapidRoof 10 Specification'}
 </Text>
+
 
 {/* Tabla de información */}
 <View style={{ flexDirection: 'row', gap: 40 }}>
@@ -533,7 +540,7 @@ let waterproofPageIndex = 0;
     It is recommended that you familiarise yourself with the installation procedure and any site-specific peculiarities. (See ‘Site Visit’ below).
   </Text>
 
-  {guarantee === '20-year' && (
+  {isPro && (
     <Text style={[styles.text, { marginBottom: 12 }]}>
       All LRS PRO system specifications need to be undertaken by ‘LRS Approved’ operatives.
     </Text>
@@ -559,7 +566,7 @@ let waterproofPageIndex = 0;
   <Text style={[styles.text, { marginBottom: 12 }]}>
     The contractor shall employ no-one, but LRS approved, competent tradesmen and the whole of the works shall be carried out and completed in accordance to the correct{' '}
     <Text style={styles.label}>
-      {guarantee === '20-year' ? 'RapidRoof Pro Specification' : 'RapidRoof Specification'}
+      {isPro ? 'RapidRoof Pro Specification' : 'RapidRoof Specification'}
     </Text>.
   </Text>
 
@@ -577,7 +584,7 @@ let waterproofPageIndex = 0;
 
 {/* Página 5 */}
 
-{(guarantee === '10-year' || guarantee === '20-year') && (
+{(guarantee === '10-year' || isPro) && (
   <Page size="A4" style={styles.page}>
      <PdfHeader reference={reference} />
 
@@ -689,7 +696,7 @@ let waterproofPageIndex = 0;
   </Text>
 
   {/* Bloque condicional según garantía */}
-  {guarantee === '20-year' ? (
+  {isPro ? (
     <>
       <Text style={styles.text}>
         The contractor must document and record the identified test areas after applying RapidRoof BaseCoat.
@@ -820,7 +827,7 @@ let waterproofPageIndex = 0;
       <Text style={styles.text}>• Roof access hatches.</Text>
 
       <Text style={styles.text}>
-        {guarantee === '20-year'
+        {isPro
           ? '• Access should be installed and signed off by an appropriate access professional.'
           : '• Access should be installed and signed off be the appropriate access professional.'
         }
@@ -1253,14 +1260,14 @@ let waterproofPageIndex = 0;
     {/* Título – cambia Pro en 20-year */}
     <Text style={[styles.textBold, { marginTop: 12, marginBottom: 6 }]}>
       Guide to Cleaning a Roof for RapidRoof
-      {guarantee === '20-year' ? ' Pro Waterproof Application' : ' Waterproof Application'}
+      {isPro ? ' Pro Waterproof Application' : ' Waterproof Application'}
     </Text>
 
     {/* Objetivo – cambia Pro en 20-year */}
     <View style={{ marginLeft: 16, marginBottom: 20 }}>
       <Text style={styles.text}>
         <Text style={styles.label}>Objective:</Text> ensure the roof surface is properly prepared for the application of RapidRoof
-        {guarantee === '20-year' ? ' Pro Waterproof' : ' Waterproof'} to achieve optimal adhesion and performance.
+        {isPro ? ' Pro Waterproof' : ' Waterproof'} to achieve optimal adhesion and performance.
       </Text>
 
       {/* Safety pages cambia */}
@@ -1285,7 +1292,7 @@ let waterproofPageIndex = 0;
       </Text>
 
       {/* Diferencia 1 – aplicación del limpiador */}
-      {guarantee === '20-year' && (
+      {isPro && (
         <>
           <Text style={styles.text}>
             • Apply Cleaning Solution - mix 799 Wash N Prep roof cleaner with water according to the product instructions. Apply the cleaning solution to the roof.
@@ -1317,7 +1324,7 @@ let waterproofPageIndex = 0;
       {/* Resto del texto (idéntico) */}
       <Text style={styles.text}>
         • Rinse Thoroughly - rinse the roof thoroughly with clean water to remove all soap and cleaning solution residues. Ensure no cleaner is left behind as it can affect the adhesion of RapidRoof
-        {guarantee === '20-year' ? ' Pro Waterproof' : ' Waterproof'}.
+        {isPro ? ' Pro Waterproof' : ' Waterproof'}.
       </Text>
 
       <Text style={styles.text}>
@@ -1386,11 +1393,11 @@ let waterproofPageIndex = 0;
 <Text style={styles.sectionTitle}>Outlets</Text>
 
 <Text style={[styles.textBold, { marginBottom: 8 }]}>
-  Guide to Applying {guarantee === '20-year' ? 'RapidRoof Pro' : 'RapidRoof'} into Roof Rainwater Outlets (RWO)
+  Guide to Applying {isPro ? 'RapidRoof Pro' : 'RapidRoof'} into Roof Rainwater Outlets (RWO)
 </Text>
 
 <Text style={[styles.text, { marginBottom: 14 }]}>
-  Objective: Properly apply {guarantee === '20-year' ? 'RapidRoof Pro' : 'RapidRoof'} into roof Outlets, ensuring the waterproofing extends as far into the outlet as possible and creating a durable, watertight seal.
+  Objective: Properly apply {isPro ? 'RapidRoof Pro' : 'RapidRoof'} into roof Outlets, ensuring the waterproofing extends as far into the outlet as possible and creating a durable, watertight seal.
 </Text>
 
 <Text style={[styles.text, { marginBottom: 14 }]}>
@@ -1436,7 +1443,7 @@ let waterproofPageIndex = 0;
     {/* OBJETIVO – cambia “Use” */}
     <Text style={styles.text}>
       <Text style={styles.label}>Objective:</Text>{' '}
-      {guarantee === '20-year'
+      {isPro
         ? 'Use RapidRoof Multi-Purpose Filler (resin and aggregate) to fill ponding areas on a roof, ensuring a level surface that promotes proper drainage and prevents water accumulation. Also used for filled large cracks or splits within the existing surface.'
         : 'RapidRoof Multi-Purpose Filler (resin and aggregate) to fill ponding areas on a roof, ensuring a level surface that promotes proper drainage and prevents water accumulation. Also used for filled large cracks or splits within the existing surface.'}
     </Text>
@@ -1463,7 +1470,7 @@ let waterproofPageIndex = 0;
       </Text>
 
       <Text style={[styles.text, { marginTop: 6 }]}>
-        • Inspect for damage: inspect the areas for any underlying damage. Repair any minor cracks or splits using RapidRoof Pro Detailer. Allow repairs to {guarantee === '20-year' ? 'fully cure.' : 'cure fully.'}
+        • Inspect for damage: inspect the areas for any underlying damage. Repair any minor cracks or splits using RapidRoof Pro Detailer. Allow repairs to {isPro ? 'fully cure.' : 'cure fully.'}
       </Text>
 
       {/* MIXING STEPS */}
@@ -1631,7 +1638,7 @@ let waterproofPageIndex = 0;
       </Text>
 
       <Text style={styles.text}>
-        – Allow to cure: within 20 minutes, the {guarantee === '20-year' ? 'RapidRoof Pro' : 'RapidRoof'} will begin to cure. Ensure no traffic or disturbance occurs during this time or for a period of up to 1 hour after mixing.
+        – Allow to cure: within 20 minutes, the {isPro ? 'RapidRoof Pro' : 'RapidRoof'} will begin to cure. Ensure no traffic or disturbance occurs during this time or for a period of up to 1 hour after mixing.
       </Text>
     </View>
 
@@ -1646,7 +1653,7 @@ let waterproofPageIndex = 0;
       </Text>
 
       <Text style={styles.text}>
-        – Inspect the applied coatings for any imperfections. Smooth out any areas{guarantee === '20-year' ? '' : ','} if necessary, before the product fully cures.
+        – Inspect the applied coatings for any imperfections. Smooth out any areas{isPro ? '' : ','} if necessary, before the product fully cures.
       </Text>
 
       <Text style={[styles.textBold, { marginTop: 12, marginBottom: 6 }]}>
@@ -1654,7 +1661,7 @@ let waterproofPageIndex = 0;
       </Text>
 
       <Text style={styles.text}>
-        – Allow all applied {guarantee === '20-year' ? 'RapidRoof Pro' : 'RapidRoof'} products to cure completely for overcoating, recommended leaving 1 hour. Full cure time may vary based on environmental conditions.
+        – Allow all applied {isPro ? 'RapidRoof Pro' : 'RapidRoof'} products to cure completely for overcoating, recommended leaving 1 hour. Full cure time may vary based on environmental conditions.
       </Text>
     </View>
   </View>
@@ -1944,7 +1951,7 @@ let waterproofPageIndex = 0;
 
     <Text style={[styles.text, { marginBottom: 20 }]}>
       Ensure all existing details, terminations and upstands on the roof are properly treated
-      {guarantee === '20-year' || fullyPrimedSurfaces.includes(surface)
+      {isPro || fullyPrimedSurfaces.includes(surface)
         ? ', primed and waterproofed'
         : ' and waterproofed'} to a minimum height of 150mm using RapidRoof products.
     </Text>
@@ -1985,7 +1992,7 @@ let waterproofPageIndex = 0;
   style={[styles.textBold, { marginBottom: 6 }]}
 >
   Application Steps: Please see page{' '}
-  {(guarantee === '20-year' || fullyPrimedSurfaces.includes(surface))
+  {(isPro || fullyPrimedSurfaces.includes(surface))
     ? '30'
     : '28'}
   .
@@ -2055,14 +2062,14 @@ let waterproofPageIndex = 0;
       </Text>
 
       {/* Primer */}
-{(guarantee === '20-year' || fullyPrimedSurfaces.includes(surface)) && (
+{(isPro || fullyPrimedSurfaces.includes(surface)) && (
   <Text style={styles.text}>
     • Apply RapidRoof Primer: please see page 28.
   </Text>
 )}
 
 {/* BaseCoat / TopCoat */}
-{(guarantee === '20-year' || fullyPrimedSurfaces.includes(surface)) ? (
+{(isPro || fullyPrimedSurfaces.includes(surface)) ? (
   <Text style={[styles.text, { marginTop: 6 }]}>
     • Apply RapidRoof Waterproof as a basecoat and reinforcement matting: please see page 30.
   </Text>
@@ -2091,7 +2098,7 @@ let waterproofPageIndex = 0;
       Seal the chase:
     </Text>
 
-    {guarantee === '20-year' ? (
+    {isPro ? (
       <>
         <Text style={styles.text}>
           • Option 1 – Apply sealant: once the RapidRoof waterproofing layers are dry, apply LRS PU Mastic into the chase. This will provide an additional seal and help secure the membrane in place.
@@ -2127,7 +2134,7 @@ let waterproofPageIndex = 0;
       – Allow all applied materials to cure completely according to {guarantee === '10-year' ? 'this specification.' : 'the manufacturer’s instructions.'}
     </Text>
 
-    {guarantee === '20-year' && (
+    {isPro && (
       <>
         <Text style={[styles.textBold, { marginTop: 12, marginBottom: 6 }]}>
           Protection:
@@ -2156,7 +2163,7 @@ let waterproofPageIndex = 0;
 
 
 
-{(guarantee === '20-year' || (guarantee === '10-year' && fullyPrimedSurfaces.includes(surface))) && (
+{(isPro || (guarantee === '10-year' && fullyPrimedSurfaces.includes(surface))) && (
   <>
     {/* Página 29 GUIDE APLY PRIMER */}
     <Page size="A4" style={styles.page}>
@@ -2302,7 +2309,7 @@ temperature + 0°c and max surface temperature is 35°c.</Text></Text>
 
 {/* SUBTÍTULO */}
 <Text style={[styles.text, { marginBottom: 10 }]}>
-  {guarantee === '20-year'
+  {isPro
     ? 'Guide to Applying RapidRoof BaseCoat with Reinforcement Matting'
     : fullyPrimedSurfaces.includes(surface)
       ? 'Guide to Applying RapidRoof BaseCoat to All Areas'
@@ -2311,7 +2318,7 @@ temperature + 0°c and max surface temperature is 35°c.</Text></Text>
 
   {/* Objective */}
   <Text style={[styles.text, { marginBottom: 6 }]}>
-        {guarantee === '20-year'
+        {isPro
           ? 'Objective: Fully Reinforced RapidRoof Waterproof at a coverage rate of 1.25kg per m² to ensure a durable and waterproof roof surface.'
           : 'Objective: RapidRoof Waterproof at a coverage rate of 1kg per m² to ensure a durable and waterproof roof surface.'}
       </Text>
@@ -2326,7 +2333,7 @@ temperature + 0°c and max surface temperature is 35°c.</Text></Text>
       {/* Preparation Steps */}
       <Text style={[styles.label, { marginBottom: 4 }]}>Preparation Steps:</Text>
 
-      {guarantee === '20-year' ? (
+      {isPro ? (
         <>
           <Text style={styles.listItem}> Clean the Roof:</Text>
           <Text style={[styles.text, { marginLeft: 16 }]}>
@@ -2350,11 +2357,11 @@ temperature + 0°c and max surface temperature is 35°c.</Text></Text>
       <View style={{ marginTop: 14 }}>
     <Text style={styles.sectionTitle}>
       Application of RapidRoof Waterproof
-      {guarantee === '20-year' ? ' with Reinforcement Matting' : ''}
+      {isPro ? ' with Reinforcement Matting' : ''}
     </Text>
 
     {/* PRIMER ÍTEM (diferente entre 10 y 20 años) */}
-    {guarantee === '20-year' ? (
+    {isPro ? (
       <>
         <Text style={styles.listItem}> Measure and Cut Matting:</Text>
         <Text style={[styles.text, { marginLeft: 16 }]}>
@@ -2373,7 +2380,7 @@ temperature + 0°c and max surface temperature is 35°c.</Text></Text>
     {/* Mix RapidRoof Waterproof (solo cambia un pequeño texto) */}
     <Text style={[styles.listItem, { marginTop: 6 }]}> Mix RapidRoof Waterproof:</Text>
     <Text style={[styles.text, { marginLeft: 16 }]}>
-      {guarantee === '20-year'
+      {isPro
         ? '• Mix RapidRoof Waterproof and RapidRoof Waterproof Catalyst. Use a drill with a mixing attachment or a mixing stick for even consistency.'
         : '• Mix the RapidRoof Waterproof and RapidRoof Waterproof Catalyst. Use a drill with a mixing attachment or mixing stick for even consistency.'}
     </Text>
@@ -2381,7 +2388,7 @@ temperature + 0°c and max surface temperature is 35°c.</Text></Text>
     {/* Apply RapidRoof Waterproof (texto diferente) */}
     <Text style={[styles.listItem, { marginTop: 6 }]}> Apply RapidRoof Waterproof:</Text>
     <Text style={[styles.text, { marginLeft: 16 }]}>
-      {guarantee === '20-year'
+      {isPro
         ? '• Using a short pile roller and brush, apply a layer of RapidRoof Waterproof at a coverage rate of 1.25kg per m². Work in manageable sections to ensure the RapidRoof Waterproof does not dry before laying the RapidRoof Reinforcement Matting.'
         : '• Using a short pile roller or brush, apply a layer of RapidRoof Waterproof at a coverage rate of 1kg per m². Work in manageable sections to ensure the Waterproof does not dry before the mixed product is applied.'}
     </Text>
@@ -2399,7 +2406,7 @@ temperature + 0°c and max surface temperature is 35°c.</Text></Text>
 <Page size="A4" style={styles.page}>
   <PdfHeader reference={reference} />
 
-  {guarantee === '20-year' ? (
+  {isPro ? (
       <>
         {/* Lay RapidRoof Reinforcement Matting – SOLO 20 AÑOS */}
         <Text style={styles.listItem}> Lay RapidRoof Reinforcement Matting:</Text>
@@ -2432,14 +2439,14 @@ temperature + 0°c and max surface temperature is 35°c.</Text></Text>
 
       <Text style={styles.listItem}> Allow to Dry:</Text>
       <Text style={[styles.text, { marginLeft: 16 }]}>
-        {guarantee === '20-year'
+        {isPro
           ? 'The drying time will depend on weather conditions, typically 1 hour before over coating.'
           : 'The drying time will depend on weather conditions, typically 1 hour before over coating.'}
       </Text>
 
       <Text style={[styles.listItem, { marginTop: 6 }]}> Final Inspection:</Text>
       <Text style={[styles.text, { marginLeft: 16, marginBottom: 10 }]}>
-        {guarantee === '20-year'
+        {isPro
           ? '• Perform a final inspection of the applied BaseCoat and matting. Ensure there are no visible bubbles, wrinkles, pinholes or uncoated areas.'
           : '• Perform a final inspection of the applied RapidRoof Waterproof. Ensure there are no visible bubbles, wrinkles, pinholes or uncoated areas.'}
       </Text>
@@ -2447,7 +2454,7 @@ temperature + 0°c and max surface temperature is 35°c.</Text></Text>
       {/* Final Steps */}
       <Text style={[styles.label, { marginBottom: 6 }]}>Final Steps</Text>
 
-      {guarantee === '20-year' && (
+      {isPro && (
         <>
           <Text style={styles.listItem}> Protection:</Text>
           <Text style={[styles.text, { marginLeft: 16 }]}>
@@ -2456,7 +2463,7 @@ temperature + 0°c and max surface temperature is 35°c.</Text></Text>
         </>
       )}
 
-      <Text style={[styles.listItem, { marginTop: guarantee === '20-year' ? 6 : 0 }]}>
+      <Text style={[styles.listItem, { marginTop: isPro ? 6 : 0 }]}>
          Documentation:
       </Text>
       <Text style={[styles.text, { marginLeft: 16, marginBottom: 6 }]}>
@@ -2465,10 +2472,10 @@ temperature + 0°c and max surface temperature is 35°c.</Text></Text>
 
       {/* Storage / Storage Temperatures */}
       <Text style={[styles.label, { marginBottom: 6 }]}>
-        {guarantee === '20-year' ? 'Storage Temperatures:' : 'Storage'}
+        {isPro ? 'Storage Temperatures:' : 'Storage'}
       </Text>
 
-      {guarantee === '20-year' ? (
+      {isPro ? (
         <Text style={[styles.text, { marginBottom: 6 }]}>
           All RapidRoof product should be stored inside between 5°c and 20°c at all times and kept
           out of direct sunlight.
@@ -2483,7 +2490,7 @@ temperature + 0°c and max surface temperature is 35°c.</Text></Text>
       {/* Application Temperatures */}
       <Text style={[styles.label, { marginBottom: 6 }]}>Application Temperatures:</Text>
 
-      {guarantee === '20-year' ? (
+      {isPro ? (
         <Text style={styles.text}>
           Check the surface temperature prior to application. Minimum 0°c and max 35°c.
         </Text>
@@ -2527,7 +2534,7 @@ temperature + 0°c and max surface temperature is 35°c.</Text></Text>
       {/* Required Rate */}
       <Text style={styles.text}>
         • Required rate: RapidRoof Waterproof should be applied at a coverage rate of{' '}
-        {guarantee === '20-year' ? '1.25kg per m².' : '1kg per m².'}
+        {isPro ? '1.25kg per m².' : '1kg per m².'}
       </Text>
 
       {/* Calculate Area */}
@@ -2539,7 +2546,7 @@ temperature + 0°c and max surface temperature is 35°c.</Text></Text>
       <Text style={[styles.text, { marginTop: 6, marginBottom: 10 }]}>
         • Check usage: compare the amount of RapidRoof Waterproof used to the calculated area
         to ensure it aligns with the recommended coverage rate.{' '}
-        {guarantee === '20-year'
+        {isPro
           ? 'For example, if you coated 20m², you should have used approximately 25kg of RapidRoof Waterproof (20m² x 1.25kg/m²).'
           : 'For example, if you coated 20m², you should have used approximately 20kg of BaseCoat (20m² x 1kg/m²); this does not include any wastage.'}
       </Text>
@@ -2616,7 +2623,7 @@ temperature + 0°c and max surface temperature is 35°c.</Text></Text>
     </Text>
 
     <Text style={styles.text}>
-      • Curing check: allow RapidRoof Waterproof to dry, typically {guarantee === '20-year' ? '20 minutes.' : '1 hour.'} Once cured, perform a final inspection to ensure all touch-ups and additional layers have properly adhered.
+      • Curing check: allow RapidRoof Waterproof to dry, typically {isPro ? '20 minutes.' : '1 hour.'} Once cured, perform a final inspection to ensure all touch-ups and additional layers have properly adhered.
     </Text>
 
     <Text style={[styles.text, { marginTop: 6, marginBottom: 16 }]}>
@@ -2660,13 +2667,13 @@ temperature + 0°c and max surface temperature is 35°c.</Text></Text>
       </Text>
     )}
 
-    <View style={{ marginLeft: 16, marginBottom: 24, marginTop: guarantee === '20-year' ? 8 : 0 }}>
+    <View style={{ marginLeft: 16, marginBottom: 24, marginTop: isPro ? 8 : 0 }}>
       {/* Objective */}
       <Text style={[styles.textBold, { marginBottom: 6 }]}>
         Objective:
       </Text>
       <Text style={styles.text}>
-        {guarantee === '20-year'
+        {isPro
           ? 'Apply RapidRoof Waterproof at a coverage rate of 0.75kg per m² to ensure a durable and waterproof roof surface.'
           : 'Apply RapidRoof Waterproof at a coverage rate of 0.5kg per m² to ensure a durable and waterproof roof surface.'}
       </Text>
@@ -2685,40 +2692,40 @@ temperature + 0°c and max surface temperature is 35°c.</Text></Text>
 
       {/* Clean the Roof */}
       <Text style={styles.text}>
-        • Clean the roof: {guarantee === '20-year' ? 'please see page 15.' : 'please see page 15.'}
+        • Clean the roof: {isPro ? 'please see page 15.' : 'please see page 15.'}
       </Text>
 
       {/* Inspect the Roof */}
       <Text style={[styles.text, { marginTop: 6 }]}>
-        • Inspect the roof: {guarantee === '20-year'
+        • Inspect the roof: {isPro
           ? 'check for pinholes, wicks and ensure termination points are fully bonded. Ensure all repairs are completed and fully cured before application.'
           : 'check for any remaining cracks, splits or damage that need repair. Ensure all repairs are completed and fully cured before application.'}
       </Text>
 
       {/* Application heading */}
       <Text style={[styles.textBold, { marginTop: 16, marginBottom: 6 }]}>
-        {guarantee === '20-year'
+        {isPro
           ? 'Application of RapidRoof TopCoat:'
           : 'Application of RapidRoof Waterproof as a TopCoat:'}
       </Text>
 
       {/* Measure the Area */}
       <Text style={styles.text}>
-        • Measure the area: {guarantee === '20-year'
+        • Measure the area: {isPro
           ? 'measure the area of the roof to calculate the amount of RapidRoof Waterproof required. At a coverage rate of 0.75kg per m², ensure you have sufficient product to cover the entire roof.'
           : 'measure the area of the roof to calculate the amount of RapidRoof Waterproof required. At a coverage rate of 0.5kg per m², ensure you have sufficient product to cover the entire roof.'}
       </Text>
 
       {/* Mix section */}
       <Text style={[styles.text, { marginTop: 6 }]}>
-        {guarantee === '20-year'
+        {isPro
           ? '• Mix RapidRoof TopCoat: mix RapidRoof Waterproof with the RapidRoof Waterproof Catalyst. Use a drill with a mixing attachment or a mixing stick to ensure an even consistency.'
           : '• Mix RapidRoof Waterproof: mix the RapidRoof Waterproof with the RapidRoof Waterproof Catalyst. Use a drill with a mixing attachment or a mixing stick to achieve an even consistency.'}
       </Text>
 
       {/* Apply TopCoat */}
       <Text style={[styles.text, { marginTop: 6 }]}>
-        {guarantee === '20-year'
+        {isPro
           ? '• Apply TopCoat: using a short pile roller or brush, apply the RapidRoof Waterproof at a coverage rate of 0.75kg per m².'
           : '• Apply RapidRoof Waterproof as a TopCoat: using a short pile roller or brush, apply the RapidRoof Waterproof at a coverage rate of 0.5kg per m².'}
       </Text>
@@ -2732,7 +2739,7 @@ temperature + 0°c and max surface temperature is 35°c.</Text></Text>
         Ensure even coverage:
       </Text>
       <Text style={styles.text}>
-        {guarantee === '20-year'
+        {isPro
           ? '• Apply the RapidRoof Waterproof evenly, making sure to cover all areas thoroughly without leaving gaps or thin spots.'
           : '• Apply RapidRoof Waterproof evenly, making sure to cover all areas thoroughly without leaving gaps or thin spots.'}
       </Text>
@@ -2763,7 +2770,7 @@ temperature + 0°c and max surface temperature is 35°c.</Text></Text>
       </Text>
 
       <Text style={styles.text}>
-        {guarantee === '20-year'
+        {isPro
           ? '• Use the roller or brush to smooth out any bubbles or imperfections. Ensure the surface is even and fully coated.'
           : '• Use the short pile roller or brush to smooth out any bubbles or imperfections. Ensure the surface is even and fully coated.'}
       </Text>
@@ -2792,11 +2799,11 @@ temperature + 0°c and max surface temperature is 35°c.</Text></Text>
 
       {/* Storage / Storage Temperatures */}
       <Text style={[styles.textBold, { marginTop: 16, marginBottom: 6 }]}>
-        {guarantee === '20-year' ? 'Storage temperatures:' : 'Storage:'}
+        {isPro ? 'Storage temperatures:' : 'Storage:'}
       </Text>
 
       <Text style={styles.text}>
-        {guarantee === '20-year'
+        {isPro
           ? '• All RapidRoof product should be stored inside between 5°C and 20°C at all times and kept out of direct sunlight.'
           : '• LRS RapidRoof Waterproof must be stored between 5°C and 20°C at all times and kept out of direct sunlight.'}
       </Text>
@@ -2807,7 +2814,7 @@ temperature + 0°c and max surface temperature is 35°c.</Text></Text>
       </Text>
 
       <Text style={styles.text}>
-        {guarantee === '20-year'
+        {isPro
           ? '• Check the surface temperature prior to application. Minimum surface temperature 0°C and the maximum surface temperature is 35°C.'
           : '• Check the substrate temperatures prior to application. Minimum surface temperature 0°C and maximum surface temperature is 35°C.'}
       </Text>
@@ -2859,18 +2866,18 @@ temperature + 0°c and max surface temperature is 35°c.</Text></Text>
 
           {/* Ensure RapidRoof Waterproof is Dry / completely dry */}
           <Text style={styles.text}>
-            {guarantee === '20-year'
+            {isPro
               ? '• Ensure RapidRoof Waterproof is dry:'
               : '• Ensure RapidRoof Waterproof is completely dry:'}
           </Text>
           <Text style={[styles.text, { marginTop: 4 }]}>
-            {guarantee === '20-year'
+            {isPro
               ? '– The RapidRoof waterproof layer should be completely dry. Ensure there are no contaminants on the surface.'
               : '– The RapidRoof Waterproof layer should be completely dry. Ensure there are no contaminants on the surface.'}
           </Text>
 
           {/* Clean the Roof Surface – estructura distinta entre 20 y 10 años */}
-          {guarantee === '20-year' ? (
+          {isPro ? (
             <>
               <Text style={[styles.text, { marginTop: 6 }]}>
                 • Clean the roof surface:
@@ -2906,7 +2913,7 @@ temperature + 0°c and max surface temperature is 35°c.</Text></Text>
             • Mix RapidRoof Anti-Skid coating:
           </Text>
           <Text style={styles.text}>
-            {guarantee === '20-year'
+            {isPro
               ? '– Thoroughly mix the RapidRoof Anti-Skid coating with the RapidRoof Anti-Skid Catalyst. Ensure the aggregate is evenly distributed throughout the coating.'
               : '– Mix the RapidRoof Anti-Skid coating with the RapidRoof Anti-Skid Catalyst. Ensure the aggregate is evenly distributed throughout the coating.'}
           </Text>
@@ -2940,7 +2947,7 @@ temperature + 0°c and max surface temperature is 35°c.</Text></Text>
              short pile roller or brush to spread the coating evenly over the RapidRoof Waterproof layer.
           </Text>
           <Text style={styles.text}>
-            {guarantee === '20-year'
+            {isPro
               ? '– Uniform coverage: ensure the coating is applied uniformly without any missed spots or thin areas.'
               : '– Uniform coverage: ensure the RapidRoof Anti-Skid is applied uniformly without any missed spots or thin areas.'}
           </Text>
@@ -2950,7 +2957,7 @@ temperature + 0°c and max surface temperature is 35°c.</Text></Text>
             • Back roll to agitate aggregate:
           </Text>
           <Text style={styles.text}>
-            {guarantee === '20-year'
+            {isPro
               ? '– Timing: before the coating dries, typically between 3–7 minutes, back roll to agitate the aggregate.'
               : '– Timing: before the coating dries, back roll to agitate the aggregate; typically between 3–7 minutes.'}
           </Text>
@@ -2973,7 +2980,7 @@ temperature + 0°c and max surface temperature is 35°c.</Text></Text>
         • Allow to cure:
       </Text>
       <Text style={styles.text}>
-        {guarantee === '20-year'
+        {isPro
           ? '– Allow the RapidRoof Anti-Skid coating to completely dry, typically 20 minutes. Curing time may vary based on environmental conditions.'
           : '– Allow the RapidRoof Anti-Skid coating to completely dry, typically 1 hour. Curing time may vary based on environmental conditions.'}
       </Text>
@@ -3025,7 +3032,7 @@ temperature + 0°c and max surface temperature is 35°c.</Text></Text>
 
   <View style={{ marginTop: 14 }}>
     {/* Storage / Storage Temperatures */}
-    {guarantee === '20-year' ? (
+    {isPro ? (
         <>
           <Text style={[styles.textBold, { marginTop: 16, marginBottom: 6 }]}>
             Storage temperatures:
@@ -3046,7 +3053,7 @@ temperature + 0°c and max surface temperature is 35°c.</Text></Text>
       )}
 
       {/* Application Temperatures */}
-      {guarantee === '20-year' ? (
+      {isPro ? (
         <>
           <Text style={[styles.textBold, { marginTop: 16, marginBottom: 6 }]}>
             Application temperatures:
@@ -3079,7 +3086,7 @@ temperature + 0°c and max surface temperature is 35°c.</Text></Text>
       Objective:
     </Text>
     <Text style={styles.text}>
-      {guarantee === '20-year'
+      {isPro
         ? 'Conduct a thorough visual inspection of the completed roof surface to ensure there are no pinholes, the coverage is even, details are correctly applied at 150mm and reinforcement matting is properly installed on all details.'
         : 'Conduct a thorough visual inspection of the completed roof surface to ensure there are no pinholes, the coverage is even, details are correctly applied at 150mm and all joints, cracks, splits and changes of substrate are reinforced with Joint Tape.'}
     </Text>
@@ -3164,7 +3171,7 @@ temperature + 0°c and max surface temperature is 35°c.</Text></Text>
       </Text>
 
       {/* Bloque dinámico: Reinforcement Matting / Joint Tape */}
-      {guarantee === '20-year' ? (
+      {isPro ? (
         <>
           <Text style={[styles.textBold, { marginBottom: 6 }]}>
             Verify reinforcement matting:
@@ -3266,7 +3273,7 @@ temperature + 0°c and max surface temperature is 35°c.</Text></Text>
       </Text>
 
       {/* Bloque dinámico final: Reinforcement Matting / Joint Tape */}
-      {guarantee === '20-year' ? (
+      {isPro ? (
         <>
           <Text style={[styles.textBold, { marginBottom: 6 }]}>
             Reinforcement matting:
@@ -3340,7 +3347,7 @@ temperature + 0°c and max surface temperature is 35°c.</Text></Text>
 
       {/* BASECOAT */}
       <Text style={[styles.textBold, { marginBottom: 6 }]}>
-        LRS RapidRoof Waterproof BaseCoat @ {guarantee === '20-year' ? '1.25kg' : '1kg'} per m²:
+        LRS RapidRoof Waterproof BaseCoat @ {isPro ? '1.25kg' : '1kg'} per m²:
       </Text>
 
       <Text style={styles.text}>
@@ -3363,7 +3370,7 @@ temperature + 0°c and max surface temperature is 35°c.</Text></Text>
         Typical coverage rates:
       </Text>
 
-      {guarantee === '20-year' ? (
+      {isPro ? (
         <>
           <Text style={styles.text}>• 5kg tin – 4m²</Text>
           <Text style={styles.text}>• 7.5kg tin – 6m²</Text>
@@ -3400,7 +3407,7 @@ temperature + 0°c and max surface temperature is 35°c.</Text></Text>
 
 
       {/* REINFORCEMENT / JOINT */}
-      {guarantee === '20-year' ? (
+      {isPro ? (
         <>
           <Text style={[styles.textBold, { marginBottom: 6 }]}>
             Reinforcement matting:
@@ -3440,7 +3447,7 @@ temperature + 0°c and max surface temperature is 35°c.</Text></Text>
 
       {/* TOPCOAT */}
       <Text style={[styles.textBold, { marginTop: 8, marginBottom: 6 }]}>
-        LRS RapidRoof Waterproof TopCoat @ {guarantee === '20-year' ? '0.75kg' : '0.5kg'} per m²:
+        LRS RapidRoof Waterproof TopCoat @ {isPro ? '0.75kg' : '0.5kg'} per m²:
       </Text>
 
       <Text style={styles.text}>
@@ -3457,7 +3464,7 @@ temperature + 0°c and max surface temperature is 35°c.</Text></Text>
         Typical coverage rates:
       </Text>
 
-      {guarantee === '20-year' ? (
+      {isPro ? (
         <>
           <Text style={styles.text}>• 5kg tin – 6.6m²</Text>
           <Text style={styles.text}>• 7.5kg tin – 10m²</Text>
