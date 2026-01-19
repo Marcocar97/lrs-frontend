@@ -315,7 +315,7 @@ const PdfHeader = ({ reference }) => (
             <Image 
             src="https://i.postimg.cc/rwMLwvcz/lrs-1.png" style={{ width: 110 }}
              />
-             
+
            <Image
   src={
     isPro
@@ -483,10 +483,13 @@ let waterproofPageIndex = 0;
 
   {/* Título principal */}
   <Text style={[styles.sectionTitle, { fontSize: 18, marginBottom: 30 }]}>
-  {isPro
+  {guarantee === '25-year'
+    ? 'RapidRoof Pro 25 Specification'
+    : isPro
     ? 'RapidRoof Pro 20 Specification'
     : 'RapidRoof 10 Specification'}
 </Text>
+
 
 
 {/* Tabla de información */}
