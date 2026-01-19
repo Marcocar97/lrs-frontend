@@ -312,6 +312,10 @@ const PdfHeader = ({ reference }) => (
               width: '100%',
             }}
           >
+            <Image 
+            src="https://i.postimg.cc/rwMLwvcz/lrs-1.png" style={{ width: 110 }}
+             />
+             
            <Image
   src={
     isPro
