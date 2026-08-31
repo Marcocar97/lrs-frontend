@@ -10,75 +10,108 @@ import {
 } from '@react-pdf/renderer';
 import { Svg, Polygon } from '@react-pdf/renderer';
 
+Font.registerHyphenationCallback((word) => [word]);
+
+const PDF_FONT = {
+  regular: 'Helvetica',
+  bold: 'Helvetica-Bold',
+  italic: 'Helvetica-Oblique',
+};
 
 
 // Estilos PDF
 const styles = StyleSheet.create({
-  page: {
-    padding: 40,
-    fontSize: 12,
-    fontFamily: 'Helvetica',
-    color: '#000',
-    lineHeight: 1.6,
-  },
-  header: {
-    fontSize: 16,
-    color: '#4c4c4c',
-    marginBottom: 8,
-    fontWeight: 'bold',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#231f20',
-    letterSpacing: 1,
-    textAlign: 'center',
-  },
-  line: {
-    width: 40,
-    height: 3,
-    marginHorizontal: 2,
-    backgroundColor: '#231f20',
-  },
-  tableRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 6,
-  },
-  label: {
-    fontWeight: 'bold',
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#231f20',
-    marginBottom: 15,
-  },
-  textBold: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    marginBottom: 6,
-  },
-  text: {
-    fontSize: 12,
-    marginBottom: 4,
-  },
-  listItem: {
-    marginLeft: 16,
-    fontSize: 12,
-    marginBottom: 4,
-  },
-  footer: {
-    position: 'absolute',
-    bottom: 40,
-    left: 60,
-    right: 60,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    fontSize: 10,
-    color: '#666',
-  },
-});
+    page: {
+      paddingTop: 40,
+      paddingHorizontal: 40,
+      paddingBottom: 64,
+      fontSize: 12,
+      fontFamily: PDF_FONT.regular,
+      color: '#000000',
+      lineHeight: 1.45,
+    },
+    header: {
+      fontSize: 16,
+      fontFamily: PDF_FONT.bold,
+      color: '#4c4c4c',
+      marginBottom: 8,
+    },
+    title: {
+      fontSize: 24,
+      fontFamily: PDF_FONT.bold,
+      color: '#231f20',
+      letterSpacing: 1,
+      textAlign: 'center',
+    },
+    line: {
+      width: 40,
+      height: 3,
+      marginHorizontal: 2,
+      backgroundColor: '#231f20',
+    },
+    tableRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginBottom: 6,
+      fontFamily: PDF_FONT.regular,
+    },
+    label: {
+      fontFamily: PDF_FONT.bold,
+    },
+    sectionTitle: {
+      fontSize: 18,
+      fontFamily: PDF_FONT.bold,
+      color: '#231f20',
+      marginBottom: 15,
+    },
+    textBold: {
+      fontSize: 12,
+      fontFamily: PDF_FONT.bold,
+      marginBottom: 6,
+    },
+    text: {
+      fontSize: 12,
+      fontFamily: PDF_FONT.regular,
+      marginBottom: 4,
+    },
+    listItem: {
+      marginLeft: 16,
+      fontSize: 12,
+      fontFamily: PDF_FONT.regular,
+      marginBottom: 4,
+    },
+    footer: {
+      position: 'absolute',
+      bottom: 18,
+      left: 40,
+      right: 40,
+      height: 32,
+      paddingTop: 7,
+      borderTopWidth: 1,
+      borderTopColor: '#d6d6d6',
+      backgroundColor: '#ffffff',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    footerLrsLogo: {
+      width: 82,
+      height: 24,
+      objectFit: 'contain',
+    },
+    footerFastCoatLogo: {
+      width: 125,
+      height: 24,
+      objectFit: 'contain',
+    },
+    footerPageNumber: {
+      width: 120,
+      fontSize: 9.5,
+      fontFamily: PDF_FONT.bold,
+      color: '#231f20',
+      textAlign: 'center',
+    },
+  });
 
 
   
@@ -206,48 +239,26 @@ const PdfHeader = ({ reference }) => (
 );
 
     
-    const PdfFooter = ({ guarantee, pageNumber }) => (
-      <>
-    
-        <View
-          style={{
-            position: 'absolute',
-            bottom: 0,
-            left: 40,
-            right: 40,
-            paddingVertical: 10,
-            alignItems: 'center',
-          }}
-        >
-          {/* Logos en una fila */}
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              width: '100%',
-            }}
-          >
-            <Image
-              src="https://i.postimg.cc/rwMLwvcz/lrs-1.png"
-              style={{ width: 110 }}
-            />
-            <Image
-              src={
-                guarantee === '25-year'
-                  ? 'https://i.postimg.cc/NjhXVsGZ/LRS-FASTCOAT-PRO-without-registered-trademark-Amended-26th-June-2025-01.jpg'
-                  : 'https://i.postimg.cc/NjhXVsGZ/LRS-FASTCOAT-PRO-without-registered-trademark-Amended-26th-June-2025-01.jpg'
-              }
-              style={{ width: 200 }}
-            />
-          </View>
-    
-          {/* Número de página centrado debajo */}
-          <Text style={{ fontSize: 12, fontWeight: 'bold', marginTop: 6 }}>
-            Page {pageNumber}
-          </Text>
-        </View>
-      </>
-    );
+const PdfFooter = () => (
+    <View style={styles.footer} fixed wrap={false}>
+      <Image
+        src="/lrs-footer-logo.png"
+        style={styles.footerLrsLogo}
+      />
+  
+      <Text
+        style={styles.footerPageNumber}
+        render={({ pageNumber, totalPages }) =>
+          `Page ${pageNumber} of ${totalPages}`
+        }
+      />
+  
+      <Image
+        src="/fastcoat-pro-logo.jpg"
+        style={styles.footerFastCoatLogo}
+      />
+    </View>
+  );
     
     
     const getWaterproofPagesCount = ({ guarantee, surface }) => {
@@ -329,7 +340,7 @@ let waterproofPageIndex = 0;
     {/* Título: más peso y tamaño */}
     <Text style={{
       fontSize: 26,
-      fontWeight: 'bold',
+      fontFamily: PDF_FONT.bold,
       color: '#000',
       marginBottom: 18
     }}>
@@ -339,7 +350,7 @@ let waterproofPageIndex = 0;
     {/* Project Reference: más grande y azul plomo */}
     <Text style={{
       fontSize: 18,
-      fontWeight: 'bold',
+      fontFamily: PDF_FONT.bold,
       color: '#666666'
     }}>
       {reference?.toUpperCase() || 'PROJECT REFERENCE'}
@@ -380,11 +391,11 @@ let waterproofPageIndex = 0;
 <View style={{ flexDirection: 'row', gap: 40 }}>
   {/* Columna izquierda: etiquetas */}
   <View style={{ gap: 14 }}>
-    <Text style={{ fontWeight: 'bold', fontSize: 13.5, color: '#000' }}>Date</Text>
-    <Text style={{ fontWeight: 'bold', fontSize: 13.5, color: '#000' }}>Project reference</Text>
-    <Text style={{ fontWeight: 'bold', fontSize: 13.5, color: '#000' }}>Roof size</Text>
-    <Text style={{ fontWeight: 'bold', fontSize: 13.5, color: '#000' }}>For the attention of</Text>
-    <Text style={{ fontWeight: 'bold', fontSize: 13.5, color: '#000' }}>Prepared by</Text>
+    <Text style={{ fontFamily: PDF_FONT.bold, fontSize: 13.5, color: '#000' }}>Date</Text>
+    <Text style={{ fontFamily: PDF_FONT.bold, fontSize: 13.5, color: '#000' }}>Project reference</Text>
+    <Text style={{ fontFamily: PDF_FONT.bold, fontSize: 13.5, color: '#000' }}>Roof size</Text>
+    <Text style={{ fontFamily: PDF_FONT.bold, fontSize: 13.5, color: '#000' }}>For the attention of</Text>
+    <Text style={{ fontFamily: PDF_FONT.bold, fontSize: 13.5, color: '#000' }}>Prepared by</Text>
   </View>
 
   {/* Columna derecha: datos */}
@@ -857,32 +868,32 @@ let waterproofPageIndex = 0;
 <Text style={styles.sectionTitle}>The Roof Build-Up</Text>
 
 <Text style={{ fontSize: 12, marginBottom: 20 }}>
-  With the information and images provided this specification is for <Text style={{ fontWeight: 'bold' }}>{reference || '________'}</Text>, which is approx. <Text style={{ fontWeight: 'bold' }}>{roofSize || '________'}</Text> and is a <Text style={{ fontWeight: 'bold' }}>{roofType || '________'}</Text>. <Text style={{ fontStyle: 'italic' }}>{roofBuildUp || ''}</Text>
+  With the information and images provided this specification is for <Text style={{ fontFamily: PDF_FONT.bold }}>{reference || '________'}</Text>, which is approx. <Text style={{ fontFamily: PDF_FONT.bold }}>{roofSize || '________'}</Text> and is a <Text style={{ fontFamily: PDF_FONT.bold }}>{roofType || '________'}</Text>. <Text style={{ fontFamily: PDF_FONT.italic }}>{roofBuildUp || ''}</Text>
 </Text>
 
 {/* Tabla tipo rows visuales */}
 <View style={{ borderTopWidth: 1, borderColor: '#ccc' }}>
   {/* Project Reference */}
   <View style={{ flexDirection: 'row', paddingVertical: 6 }}>
-    <Text style={{ width: '40%', fontWeight: 'bold', fontSize: 12 }}>Project Reference</Text>
+    <Text style={{ width: '40%', fontFamily: PDF_FONT.bold, fontSize: 12 }}>Project Reference</Text>
     <Text style={{ fontSize: 12 }}>{reference || '________'}</Text>
   </View>
 
   {/* Roof Size */}
   <View style={{ flexDirection: 'row', paddingVertical: 6 }}>
-    <Text style={{ width: '40%', fontWeight: 'bold', fontSize: 12 }}>Roof Size</Text>
+    <Text style={{ width: '40%', fontFamily: PDF_FONT.bold, fontSize: 12 }}>Roof Size</Text>
     <Text style={{ fontSize: 12 }}>{roofSize || '________'}</Text>
   </View>
 
   {/* Roof Type */}
   <View style={{ flexDirection: 'row', paddingVertical: 6 }}>
-    <Text style={{ width: '40%', fontWeight: 'bold', fontSize: 12 }}>Roof Type</Text>
+    <Text style={{ width: '40%', fontFamily: PDF_FONT.bold, fontSize: 12 }}>Roof Type</Text>
     <Text style={{ fontSize: 12 }}>{roofType || '________'}</Text>
   </View>
 
   {/* Build Up */}
   <View style={{ flexDirection: 'row', paddingVertical: 6 }}>
-    <Text style={{ width: '40%', fontWeight: 'bold', fontSize: 12 }}>
+    <Text style={{ width: '40%', fontFamily: PDF_FONT.bold, fontSize: 12 }}>
       {roofType === 'Warm Roof' && 'Warm Roof Build Up'}
       {roofType === 'Inverted Roof' && 'Inverted Roof Build Up'}
       {!['Warm Roof', 'Inverted Roof'].includes(roofType || '') && 'Build Up'}
@@ -928,7 +939,7 @@ let waterproofPageIndex = 0;
     ['Ponding Water', pondingWater],
   ].map(([label, value], i) => (
     <View key={`extra-${i}`} style={{ flexDirection: 'row', paddingVertical: 6 }}>
-      <Text style={{ width: '40%', fontWeight: 'bold', fontSize: 12 }}>{label}</Text>
+      <Text style={{ width: '40%', fontFamily: PDF_FONT.bold, fontSize: 12 }}>{label}</Text>
       <Text style={{ fontSize: 12 }}>{value || '________'}</Text>
     </View>
   ))}
@@ -1362,10 +1373,10 @@ let waterproofPageIndex = 0;
 
   <Text style={styles.label}>5. Application of FastCoat Waterproof</Text>
   <View style={{ marginLeft: 16, marginBottom: 8 }}>
-    <Text style={styles.text}>• <Text style={{ fontWeight: 'bold' }}>First Section:</Text> Start with a manageable section of the roof.</Text>
-    <Text style={styles.text}>• <Text style={{ fontWeight: 'bold' }}>Coverage Rate:</Text> Apply at 1.5kg per m² using a short-pile roller or brush for even application.</Text>
+    <Text style={styles.text}>• <Text style={{ fontFamily: PDF_FONT.bold }}>First Section:</Text> Start with a manageable section of the roof.</Text>
+    <Text style={styles.text}>• <Text style={{ fontFamily: PDF_FONT.bold }}>Coverage Rate:</Text> Apply at 1.5kg per m² using a short-pile roller or brush for even application.</Text>
     <Text style={styles.text}>
-      • <Text style={{ fontWeight: 'bold' }}>Embed Reinforcement Matting:</Text> While still wet, embed the Reinforcement Matting into the FastCoat Waterproof. Ensure it lies flat and smooth without wrinkles or air bubbles.
+      • <Text style={{ fontFamily: PDF_FONT.bold }}>Embed Reinforcement Matting:</Text> While still wet, embed the Reinforcement Matting into the FastCoat Waterproof. Ensure it lies flat and smooth without wrinkles or air bubbles.
     </Text>
     <Text style={styles.text}>• Overlap adjacent pieces of Reinforcement Matting by 50mm to ensure a continuous and strong layer.</Text>
   </View>
@@ -1489,10 +1500,10 @@ let waterproofPageIndex = 0;
   <Text style={styles.label}>2. Initial Inspection</Text>
   <View style={{ marginLeft: 16, marginBottom: 8 }}>
     <Text style={styles.text}>
-      • <Text style={{ fontWeight: 'bold' }}>Visual Check:</Text> Begin with a visual inspection of the entire roof surface. Look for any visible defects such as pinholes, air bubbles, or wicks.
+      • <Text style={{ fontFamily: PDF_FONT.bold }}>Visual Check:</Text> Begin with a visual inspection of the entire roof surface. Look for any visible defects such as pinholes, air bubbles, or wicks.
     </Text>
     <Text style={styles.text}>
-      • <Text style={{ fontWeight: 'bold' }}>Lighting:</Text> Use a flashlight or inspection light to illuminate the surface. This helps identify small pinholes and imperfections that may not be visible under normal lighting conditions.
+      • <Text style={{ fontFamily: PDF_FONT.bold }}>Lighting:</Text> Use a flashlight or inspection light to illuminate the surface. This helps identify small pinholes and imperfections that may not be visible under normal lighting conditions.
     </Text>
   </View>
 
@@ -1617,7 +1628,7 @@ let waterproofPageIndex = 0;
 
     <Text style={styles.label}>5. Application of FastCoat MidCoat</Text>
     <View style={{ marginLeft: 16, marginBottom: 8 }}>
-      <Text style={styles.text}>• <Text style={{ fontWeight: 'bold' }}>Coverage Rate:</Text> Apply FastCoat Waterproof at a coverage rate of 1kg per m².</Text>
+      <Text style={styles.text}>• <Text style={{ fontFamily: PDF_FONT.bold }}>Coverage Rate:</Text> Apply FastCoat Waterproof at a coverage rate of 1kg per m².</Text>
       <Text style={styles.text}>• Use a short-pile roller or brush to apply FastCoat Waterproof evenly. Ensure consistent thickness and avoid leaving streaks or thin spots.</Text>
       <Text style={styles.text}>• Apply FastCoat Waterproof in consistent, straight strokes to achieve an even finish.</Text>
     </View>
@@ -1706,7 +1717,7 @@ let waterproofPageIndex = 0;
 <Text style={styles.label}>5. Application of FastCoat TopCoat</Text>
   <View style={{ marginLeft: 16, marginBottom: 8 }}>
   <Text style={styles.text}>
-• <Text style={{ fontWeight: 'bold' }}>Coverage Rate:</Text> Apply FastCoat TopCoat at a coverage rate of 0.3kg per m².
+• <Text style={{ fontFamily: PDF_FONT.bold }}>Coverage Rate:</Text> Apply FastCoat TopCoat at a coverage rate of 0.3kg per m².
 </Text>
     <Text style={styles.text}>• Use a short-pile roller or brush to apply FastCoat TopCoat evenly. Ensure consistent thickness and avoid leaving streaks or thin spots.</Text>
     <Text style={styles.text}>• Apply FastCoat TopCoat in consistent, straight strokes to achieve an even finish.</Text>
@@ -1879,16 +1890,16 @@ let waterproofPageIndex = 0;
    <Text style={[styles.label, { width: 'auto', marginBottom: 6 }]}>Addressing Issues:</Text>
   <View style={{ marginLeft: 16, marginBottom: 12 }}>
     <Text style={styles.text}>
-      • <Text style={{ fontWeight: 'bold' }}>Pinholes:</Text> Mark any pinholes with chalk or tape. Prepare a small amount of LRS PU Mastic to fill in the pinholes before reapplying FastCoat Waterproof.
+      • <Text style={{ fontFamily: PDF_FONT.bold }}>Pinholes:</Text> Mark any pinholes with chalk or tape. Prepare a small amount of LRS PU Mastic to fill in the pinholes before reapplying FastCoat Waterproof.
     </Text>
     <Text style={styles.text}>
-      • <Text style={{ fontWeight: 'bold' }}>Uneven Coverage:</Text> Apply additional FastCoat Waterproof to any areas with insufficient coverage to achieve uniform thickness.
+      • <Text style={{ fontFamily: PDF_FONT.bold }}>Uneven Coverage:</Text> Apply additional FastCoat Waterproof to any areas with insufficient coverage to achieve uniform thickness.
     </Text>
     <Text style={styles.text}>
-      • <Text style={{ fontWeight: 'bold' }}>Detail Adjustments:</Text> Correct any issues with details that are not at the required 150mm height where possible. Apply additional coating if necessary.
+      • <Text style={{ fontFamily: PDF_FONT.bold }}>Detail Adjustments:</Text> Correct any issues with details that are not at the required 150mm height where possible. Apply additional coating if necessary.
     </Text>
     <Text style={styles.text}>
-      • <Text style={{ fontWeight: 'bold' }}>Reinforcement Matting:</Text> Ensure any improperly applied Reinforcement Matting is corrected by applying additional FastCoat Waterproof and embedding new Reinforcement Matting as needed.
+      • <Text style={{ fontFamily: PDF_FONT.bold }}>Reinforcement Matting:</Text> Ensure any improperly applied Reinforcement Matting is corrected by applying additional FastCoat Waterproof and embedding new Reinforcement Matting as needed.
     </Text>
   </View>
 
@@ -1920,16 +1931,16 @@ let waterproofPageIndex = 0;
 
   <View style={{ marginLeft: 16, marginBottom: 8 }}>
     <Text style={styles.text}>
-      • LRS Traffic Coat is applied in 2 coats (<Text style={{ fontStyle: 'italic' }}>Holding Layer</Text> &amp; <Text style={{ fontStyle: 'italic' }}>Seal Coat</Text>) and typically cures in 30 minutes.
+      • LRS Traffic Coat is applied in 2 coats (<Text style={{ fontFamily: PDF_FONT.italic }}>Holding Layer</Text> &amp; <Text style={{ fontFamily: PDF_FONT.italic }}>Seal Coat</Text>) and typically cures in 30 minutes.
     </Text>
     <Text style={styles.text}>
-      • <Text style={{ fontWeight: 'bold' }}>Holding Layer:</Text> Apply at 0.2kg/m² and while Traffic Coat is still wet, immediately broadcast to saturation, completely blinding the surface with 3kg/m² of Emery Aggregate.
+      • <Text style={{ fontFamily: PDF_FONT.bold }}>Holding Layer:</Text> Apply at 0.2kg/m² and while Traffic Coat is still wet, immediately broadcast to saturation, completely blinding the surface with 3kg/m² of Emery Aggregate.
     </Text>
     <Text style={styles.text}>
       • Once the Base Layer has fully cured (typically in 30 minutes), brush and bag up all the loose aggregate before applying the Seal Coat.
     </Text>
     <Text style={styles.text}>
-      • <Text style={{ fontWeight: 'bold' }}>Seal Coat:</Text> Apply at 0.2kg/m² ensuring the aggregate is encapsulated.
+      • <Text style={{ fontFamily: PDF_FONT.bold }}>Seal Coat:</Text> Apply at 0.2kg/m² ensuring the aggregate is encapsulated.
     </Text>
     <Text style={styles.text}>
       • Ensure all masking tape is removed once the walkway is complete and the Seal Coat is still wet to leave a crisp edge.
@@ -2242,7 +2253,7 @@ let waterproofPageIndex = 0;
     <Text
       style={{
         fontSize: 14,
-        fontWeight: 'bold',
+        fontFamily: PDF_FONT.bold,
         color: '#f5a623',
         marginBottom: 10,
       }}
