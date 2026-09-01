@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { PDFDownloadLink, pdf } from "@react-pdf/renderer";
-import PdfDocumentFasCoatTop from "../components/PdfDocumentFasCoatTop";
+import PdfDocumentFasCoatTop from "../components/PdfDocumentFastCoatTop";
 import { FULLY_PRIMED_SURFACES } from "../components/fastCoatTopContent";
 
 const SURFACES = [
@@ -114,6 +114,7 @@ const FastCoatTop = () => {
 
   const validate = () =>
     REQUIRED_FIELDS.every((name) => String(formData[name] || "").trim());
+
 /*
   const sendNotification = async () => {
     const response = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
