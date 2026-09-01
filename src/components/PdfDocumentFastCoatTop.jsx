@@ -1,4 +1,4 @@
-// VERSION: 2026-09-01-a4-media-box-fixed-v4
+// VERSION: 2026-09-01-a4-flow-layout-fixed-v5
 import React from "react";
 import {
   Document,
@@ -17,6 +17,10 @@ import {
   TWENTY_YEAR_PRIMER,
 } from "./fastCoatTopContent";
 
+// A4 portrait dimensions in PDF points (72 pt per inch). Using one shared
+// value guarantees that every physical page and every wrapped continuation
+// page uses the same MediaBox.
+const A4_PAGE_SIZE = [595.28, 841.89];
 
 // IMPORTANT:
 // The physical PDF MediaBox is controlled ONLY by A4_PAGE_SIZE on <Page>.
@@ -36,14 +40,19 @@ const styles = StyleSheet.create({
   coverPage: {
     padding: 0,
     backgroundColor: "#ffffff",
+    overflow: "hidden",
   },
   coverTopImage: {
     width: "100%",
+    height: "42%",
+    objectFit: "cover",
   },
   coverContent: {
+    flexGrow: 1,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 28,
+    paddingTop: 28,
+    paddingBottom: 28,
     paddingHorizontal: 48,
     textAlign: "center",
   },
@@ -231,9 +240,9 @@ const styles = StyleSheet.create({
 
   roofImageFrame: {
     width: "100%",
-    height: 355,
+    height: 285,
     marginTop: 8,
-    marginBottom: 14,
+    marginBottom: 12,
     padding: 4,
     borderWidth: 0.6,
     borderColor: "#bdbdbd",
@@ -281,7 +290,7 @@ const styles = StyleSheet.create({
   },
   photoBox: {
     width: "48.5%",
-    height: 165,
+    height: 235,
     marginBottom: 10,
     padding: 4,
     borderWidth: 0.6,
@@ -291,10 +300,10 @@ const styles = StyleSheet.create({
   },
   singlePhotoBox: {
     width: "100%",
-    height: 360,
+    height: 480,
   },
   twoPhotoBox: {
-    height: 245,
+    height: 440,
   },
   photo: {
     width: "100%",
@@ -346,11 +355,15 @@ const styles = StyleSheet.create({
   backCoverPage: {
     padding: 0,
     backgroundColor: "#ffffff",
+    overflow: "hidden",
   },
   backCoverImage: {
     width: "100%",
+    height: "52%",
+    objectFit: "cover",
   },
   backCoverContent: {
+    flexGrow: 1,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
@@ -572,7 +585,15 @@ const toBlocks = (lines) => {
   const blocks = [];
 
   lines.forEach((line) => {
-    if (!line || line === "[[PAGE_GAP]]") return;
+    if (!line) return;
+
+    // Preserve the logical boundary represented by the old page-gap marker,
+    // but do not force a physical page break or add visible empty space.
+    // This prevents text on either side of the marker from being joined.
+    if (line === "[[PAGE_GAP]]") {
+      blocks.push({ type: "boundary", text: "" });
+      return;
+    }
 
     const type = classifyLine(line);
     const previous = blocks[blocks.length - 1];
@@ -594,7 +615,7 @@ const toFinalGuaranteeBlocks = (blocks) =>
     text: block.text
       .replace(
         "The following guarantee specification",
-        "The following guarantee-specification",
+        "The following guarantee\u00A0specification",
       )
       .replace(
         "Only Waterproofing products supplied by LRS",
@@ -665,6 +686,8 @@ const resolveTextWithPageReference = (text, registry, pageStarts) => {
 };
 
 const renderBlock = (block, index, prefix, registry, pageStarts) => {
+  if (block.type === "boundary") return null;
+
   const isMajor = block.type === "majorHeading";
   const isHeading = block.type === "heading" || block.type === "numbered";
   const markerKeys = getMarkerKeys(block.text);
@@ -692,8 +715,8 @@ const renderBlock = (block, index, prefix, registry, pageStarts) => {
           block.type === "nestedBullet" && styles.nestedBullet,
         ]}
         minPresenceAhead={minPresenceAhead}
-        orphans={1}
-        widows={1}
+        orphans={2}
+        widows={2}
         {...textProps}
       >
         {hasDynamicReference ? null : block.text}
@@ -755,7 +778,7 @@ const ContentsPageNumber = ({ targetKey, registry, pageStarts }) => (
   />
 );
 
-const Contents = ({ registry, pageStarts }) => {
+const Contents = ({ registry, pageStarts, hasPhotos }) => {
   const rows = [
     ["Project details", "project"],
     ["Preliminaries & general conditions", "preliminaries"],
@@ -774,7 +797,7 @@ const Contents = ({ registry, pageStarts }) => {
     ["Waterproof coverings", "waterproof"],
     ["Additional information", "additional"],
     ["General guidance and requirements", "general"],
-    ["Photographs", "photographs"],
+    ...(hasPhotos ? [["Photographs", "photographs"]] : []),
     ["Materials and guarantee", "materials"],
     ["Guarantee", "guarantee"],
   ];
@@ -894,13 +917,29 @@ const RoofBuildUpSection = ({ roofDetailsProps, reference, registry }) => {
   );
 };
 
+const MaterialsSection = ({ registry, compact = false }) => (
+  <View
+    style={[
+      styles.materialsArea,
+      compact && { marginTop: 0, marginBottom: 14 },
+    ]}
+    wrap={false}
+  >
+    <Text style={styles.materialsLabel}>Materials</Text>
+    <SectionMarker markerKeys={["materials"]} registry={registry} />
+    <Text style={styles.paragraph}>TBC</Text>
+  </View>
+);
+
 const PhotographsAndMaterials = ({ photos, registry }) => (
-  <View wrap={false}>
-    <Text style={styles.photosTitle}>Photographs</Text>
-    <SectionMarker
-      markerKeys={["photographs"]}
-      registry={registry}
-    />
+  <>
+    <View wrap={false} minPresenceAhead={80}>
+      <Text style={styles.photosTitle}>Photographs</Text>
+      <SectionMarker
+        markerKeys={["photographs"]}
+        registry={registry}
+      />
+    </View>
 
     {photos.length > 0 ? (
       <View style={styles.photosGrid}>
@@ -912,6 +951,7 @@ const PhotographsAndMaterials = ({ photos, registry }) => (
               photos.length === 1 && styles.singlePhotoBox,
               photos.length === 2 && styles.twoPhotoBox,
             ]}
+            wrap={false}
           >
             <Image src={photo} style={styles.photo} />
           </View>
@@ -919,18 +959,16 @@ const PhotographsAndMaterials = ({ photos, registry }) => (
       </View>
     ) : null}
 
-    <View style={styles.materialsArea}>
-      <Text style={styles.materialsLabel}>Materials</Text>
-      <SectionMarker markerKeys={["materials"]} registry={registry} />
-      <Text style={styles.paragraph}>TBC</Text>
-    </View>
-  </View>
+    <MaterialsSection registry={registry} />
+  </>
 );
 
 const GuaranteeAndSignoff = ({ guaranteeBlocks, assetBase, registry, pageStarts }) => (
-  <View style={styles.guaranteeSection} wrap={false}>
-    <Text style={styles.materialsLabel}>Guarantee:</Text>
-    <SectionMarker markerKeys={["guarantee"]} registry={registry} />
+  <View style={styles.guaranteeSection}>
+    <View wrap={false} minPresenceAhead={72}>
+      <Text style={styles.materialsLabel}>Guarantee:</Text>
+      <SectionMarker markerKeys={["guarantee"]} registry={registry} />
+    </View>
 
     {guaranteeBlocks.map((block, index) =>
       renderBlock(
@@ -942,32 +980,37 @@ const GuaranteeAndSignoff = ({ guaranteeBlocks, assetBase, registry, pageStarts 
       ),
     )}
 
-    <Text style={styles.signoffTitle}>Kind Regards</Text>
-    <View style={styles.signoff}>
-      <View style={styles.signoffColumn}>
-        <Image src={asset(assetBase, "firma.png")} style={styles.signature} />
-        <Text style={styles.contactName}>Paul Jones</Text>
-        <Text style={styles.contactText}>LRS Technical Manager</Text>
-        <Text style={styles.contactText}>T: 01948 841 877</Text>
-        <Text style={styles.contactText}>E: paul.jones@lrs-systems.co.uk</Text>
-        <Text style={styles.contactText}>W: www.lrs-systems.co.uk</Text>
-      </View>
+    {/* Keep the complete sign-off together while allowing the guarantee text
+        above it to flow naturally across A4 continuation pages. */}
+    <View wrap={false}>
+      <Text style={styles.signoffTitle}>Kind Regards</Text>
+      <View style={styles.signoff}>
+        <View style={styles.signoffColumn}>
+          <Image src={asset(assetBase, "firma.png")} style={styles.signature} />
+          <Text style={styles.contactName}>Paul Jones</Text>
+          <Text style={styles.contactText}>LRS Technical Manager</Text>
+          <Text style={styles.contactText}>T: 01948 841 877</Text>
+          <Text style={styles.contactText}>E: paul.jones@lrs-systems.co.uk</Text>
+          <Text style={styles.contactText}>W: www.lrs-systems.co.uk</Text>
+        </View>
 
-      <View style={styles.signoffColumn}>
-        <Image src={asset(assetBase, "firmat.png")} style={styles.signature} />
-        <Text style={styles.contactName}>Tom Shone</Text>
-        <Text style={styles.contactText}>Managing Director</Text>
-        <Text style={styles.contactText}>T: 07415 116280</Text>
-        <Text style={styles.contactText}>E: tomshone@lrs-systems.co.uk</Text>
-        <Text style={styles.contactText}>W: www.lrs-systems.co.uk</Text>
+        <View style={styles.signoffColumn}>
+          <Image src={asset(assetBase, "firmat.png")} style={styles.signature} />
+          <Text style={styles.contactName}>Tom Shone</Text>
+          <Text style={styles.contactText}>Managing Director</Text>
+          <Text style={styles.contactText}>T: 07415 116280</Text>
+          <Text style={styles.contactText}>E: tomshone@lrs-systems.co.uk</Text>
+          <Text style={styles.contactText}>W: www.lrs-systems.co.uk</Text>
+        </View>
       </View>
     </View>
   </View>
 );
 
 const BackCover = ({ assetBase }) => (
-    <Page
-    size="A4"
+  <Page
+    size={A4_PAGE_SIZE}
+    orientation="portrait"
     style={styles.backCoverPage}
     wrap={false}
   >
@@ -1037,6 +1080,7 @@ const PdfDocumentFastCoatTop = ({
   const safePhotos = Array.isArray(photos)
     ? photos.filter(Boolean).slice(0, 4)
     : [];
+  const hasPhotos = safePhotos.length > 0;
 
   const roofDetailsProps = {
     reference,
@@ -1058,10 +1102,11 @@ const PdfDocumentFastCoatTop = ({
     >
       {/* COVER — always A4 and intentionally has no footer */}
       <Page
-  size="A4"
-  style={styles.coverPage}
-  wrap={false}
->
+        size={A4_PAGE_SIZE}
+        orientation="portrait"
+        style={styles.coverPage}
+        wrap={false}
+      >
         <Image src={asset(assetBase, "1F.png")} style={styles.coverTopImage} />
         <View style={styles.coverContent}>
           {/* Requested cover logo, directly above INSTALLATION SPECIFICATION */}
@@ -1075,12 +1120,17 @@ const PdfDocumentFastCoatTop = ({
 
       {/* CONTENTS */}
       <Page
-  size="A4"
-  style={styles.page}
-  wrap
->
+        size={A4_PAGE_SIZE}
+        orientation="portrait"
+        style={styles.page}
+        wrap
+      >
         <Header surface={surface} />
-        <Contents registry={pageRegistry} pageStarts={pageStarts} />
+        <Contents
+          registry={pageRegistry}
+          pageStarts={pageStarts}
+          hasPhotos={hasPhotos}
+        />
         <Text style={[styles.paragraph, { marginTop: 12 }]}>
           FastCoat Pro {guaranteeYears} Specification Ref: {lrsReference || "LRS – TBC"}
         </Text>
@@ -1089,10 +1139,11 @@ const PdfDocumentFastCoatTop = ({
 
       {/* PROJECT DETAILS */}
       <Page
-  size="A4"
-  style={styles.page}
-  wrap={false}
->
+        size={A4_PAGE_SIZE}
+        orientation="portrait"
+        style={styles.page}
+        wrap
+      >
         <Header surface={surface} />
         <Text style={styles.specificationTitle}>
           FastCoat Pro {guaranteeYears} Specification Ref: {lrsReference || "LRS – TBC"}
@@ -1134,10 +1185,11 @@ const PdfDocumentFastCoatTop = ({
         height estimation that was creating large unused gaps.
       */}
       <Page
-  size="A4"
-  style={styles.page}
-  wrap={false}
->
+        size={A4_PAGE_SIZE}
+        orientation="portrait"
+        style={styles.page}
+        wrap
+      >
         <Header surface={surface} />
 
         <Text style={styles.sectionTitle} minPresenceAhead={32}>
@@ -1180,27 +1232,36 @@ const PdfDocumentFastCoatTop = ({
         <Footer assetBase={assetBase} />
       </Page>
 
-      {/* PHOTOGRAPHS + MATERIALS — always one dedicated A4 page */}
-      <Page
-  size="A4"
-  style={styles.page}
-  wrap={false}
->
-        <Header surface={surface} />
-        <PhotographsAndMaterials
-          photos={safePhotos}
-          registry={pageRegistry}
-        />
-        <Footer assetBase={assetBase} />
-      </Page>
+      {/* Do not create an almost-empty photographs page when no photographs
+          were supplied. Materials then starts the guarantee page below. */}
+      {hasPhotos ? (
+        <Page
+          size={A4_PAGE_SIZE}
+          orientation="portrait"
+          style={styles.page}
+          wrap
+        >
+          <Header surface={surface} />
+          <PhotographsAndMaterials
+            photos={safePhotos}
+            registry={pageRegistry}
+          />
+          <Footer assetBase={assetBase} />
+        </Page>
+      ) : null}
 
-      {/* GUARANTEE + SIGNATURES — always one dedicated A4 page */}
+      {/* GUARANTEE + SIGNATURES — starts on a dedicated A4 page and can create
+          A4 continuation pages if the selected guarantee wording needs them. */}
       <Page
-  size="A4"
-  style={styles.page}
-  wrap={false}
->
+        size={A4_PAGE_SIZE}
+        orientation="portrait"
+        style={styles.page}
+        wrap
+      >
         <Header surface={surface} />
+        {!hasPhotos ? (
+          <MaterialsSection registry={pageRegistry} compact />
+        ) : null}
         <GuaranteeAndSignoff
           guaranteeBlocks={finalGuaranteeBlocks}
           assetBase={assetBase}
