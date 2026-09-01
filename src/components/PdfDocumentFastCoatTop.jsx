@@ -1,4 +1,4 @@
-// VERSION: 2026-09-01-a4-flow-layout-fixed-v5
+// VERSION: 2026-09-01-a4-flow-layout-fixed-v6
 import React from "react";
 import {
   Document,
@@ -17,13 +17,8 @@ import {
   TWENTY_YEAR_PRIMER,
 } from "./fastCoatTopContent";
 
-// A4 portrait dimensions in PDF points (72 pt per inch). Using one shared
-// value guarantees that every physical page and every wrapped continuation
-// page uses the same MediaBox.
-const A4_PAGE_SIZE = [595.28, 841.89];
-
 // IMPORTANT:
-// The physical PDF MediaBox is controlled ONLY by A4_PAGE_SIZE on <Page>.
+// The physical PDF MediaBox is controlled by size="A4" on every <Page>.
 // Do not add width/height to styles.page, styles.coverPage or styles.backCoverPage.
 // Pagination/blank-space fixes must only change content flow, wrapping and spacing.
 const styles = StyleSheet.create({
@@ -40,19 +35,14 @@ const styles = StyleSheet.create({
   coverPage: {
     padding: 0,
     backgroundColor: "#ffffff",
-    overflow: "hidden",
   },
   coverTopImage: {
     width: "100%",
-    height: "42%",
-    objectFit: "cover",
   },
   coverContent: {
-    flexGrow: 1,
     alignItems: "center",
     justifyContent: "center",
-    paddingTop: 28,
-    paddingBottom: 28,
+    marginTop: 28,
     paddingHorizontal: 48,
     textAlign: "center",
   },
@@ -141,8 +131,14 @@ const styles = StyleSheet.create({
     height: 35,
     objectFit: "contain",
   },
-  pageNumber: {
+  pageNumberSlot: {
     width: 100,
+  },
+  pageNumberOverlay: {
+    position: "absolute",
+    bottom: 35,
+    left: 42,
+    right: 42,
     fontFamily: "Helvetica-Bold",
     fontSize: 8.5,
     textAlign: "center",
@@ -355,15 +351,11 @@ const styles = StyleSheet.create({
   backCoverPage: {
     padding: 0,
     backgroundColor: "#ffffff",
-    overflow: "hidden",
   },
   backCoverImage: {
     width: "100%",
-    height: "52%",
-    objectFit: "cover",
   },
   backCoverContent: {
-    flexGrow: 1,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
@@ -538,20 +530,27 @@ const Header = ({ surface }) => (
 );
 
 const Footer = ({ assetBase }) => (
-  <View style={styles.footer} fixed>
-    <View style={styles.footerDivider} />
-    <View style={styles.footerRow}>
-      <Image src={asset(assetBase, "1lrs.png")} style={styles.footerLrsLogo} />
-      <Text
-        style={styles.pageNumber}
-        render={({ pageNumber }) => `Page ${pageNumber}`}
-      />
-      <Image
-        src={asset(assetBase, "fasttop1.jpg")}
-        style={styles.footerFastCoatLogo}
-      />
+  <>
+    <View style={styles.footer} fixed>
+      <View style={styles.footerDivider} />
+      <View style={styles.footerRow}>
+        <Image src={asset(assetBase, "1lrs.png")} style={styles.footerLrsLogo} />
+        <View style={styles.pageNumberSlot} />
+        <Image
+          src={asset(assetBase, "fasttop1.jpg")}
+          style={styles.footerFastCoatLogo}
+        />
+      </View>
     </View>
-  </View>
+
+    {/* Keep the dynamic page number as a direct fixed element. This ensures
+        React PDF evaluates it for every physical continuation page. */}
+    <Text
+      style={styles.pageNumberOverlay}
+      fixed
+      render={({ pageNumber }) => `Page ${pageNumber}`}
+    />
+  </>
 );
 
 const joinText = (left, right) =>
@@ -1009,8 +1008,7 @@ const GuaranteeAndSignoff = ({ guaranteeBlocks, assetBase, registry, pageStarts 
 
 const BackCover = ({ assetBase }) => (
   <Page
-    size={A4_PAGE_SIZE}
-    orientation="portrait"
+    size="A4"
     style={styles.backCoverPage}
     wrap={false}
   >
@@ -1102,8 +1100,7 @@ const PdfDocumentFastCoatTop = ({
     >
       {/* COVER — always A4 and intentionally has no footer */}
       <Page
-        size={A4_PAGE_SIZE}
-        orientation="portrait"
+        size="A4"
         style={styles.coverPage}
         wrap={false}
       >
@@ -1120,8 +1117,7 @@ const PdfDocumentFastCoatTop = ({
 
       {/* CONTENTS */}
       <Page
-        size={A4_PAGE_SIZE}
-        orientation="portrait"
+        size="A4"
         style={styles.page}
         wrap
       >
@@ -1139,8 +1135,7 @@ const PdfDocumentFastCoatTop = ({
 
       {/* PROJECT DETAILS */}
       <Page
-        size={A4_PAGE_SIZE}
-        orientation="portrait"
+        size="A4"
         style={styles.page}
         wrap
       >
@@ -1185,8 +1180,7 @@ const PdfDocumentFastCoatTop = ({
         height estimation that was creating large unused gaps.
       */}
       <Page
-        size={A4_PAGE_SIZE}
-        orientation="portrait"
+        size="A4"
         style={styles.page}
         wrap
       >
@@ -1236,8 +1230,7 @@ const PdfDocumentFastCoatTop = ({
           were supplied. Materials then starts the guarantee page below. */}
       {hasPhotos ? (
         <Page
-          size={A4_PAGE_SIZE}
-          orientation="portrait"
+          size="A4"
           style={styles.page}
           wrap
         >
@@ -1253,8 +1246,7 @@ const PdfDocumentFastCoatTop = ({
       {/* GUARANTEE + SIGNATURES — starts on a dedicated A4 page and can create
           A4 continuation pages if the selected guarantee wording needs them. */}
       <Page
-        size={A4_PAGE_SIZE}
-        orientation="portrait"
+        size="A4"
         style={styles.page}
         wrap
       >
