@@ -114,7 +114,7 @@ const FastCoatTop = () => {
 
   const validate = () =>
     REQUIRED_FIELDS.every((name) => String(formData[name] || "").trim());
-
+/*
   const sendNotification = async () => {
     const response = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
       method: "POST",
@@ -132,6 +132,8 @@ const FastCoatTop = () => {
       throw new Error("Email notification failed");
     }
   };
+
+  */
 
   const uploadPdf = async () => {
     const blob = await pdf(<PdfDocumentFasCoatTop {...formData} />).toBlob();

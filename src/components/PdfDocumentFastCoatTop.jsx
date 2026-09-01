@@ -56,12 +56,49 @@ const styles = StyleSheet.create({
   greenBar: { width: 56, height: 4, backgroundColor: "#39b54a", marginLeft: 5 },
   footer: {
     position: "absolute",
-    bottom: 24,
+    bottom: 7,
     left: 54,
     right: 54,
-    alignItems: "center",
+    height: 47,
     fontFamily: "Helvetica",
-    fontSize: 9,
+    fontSize: 7.5,
+  },
+  footerDivider: {
+    height: 0.6,
+    backgroundColor: "#c9c9c9",
+    marginBottom: 4,
+  },
+  footerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  footerLrsLogo: {
+    width: 50,
+    height: 34,
+    objectFit: "contain",
+  },
+  footerPageNumber: {
+    width: 100,
+    textAlign: "center",
+    fontFamily: "Helvetica-Bold",
+    fontSize: 8,
+  },
+  footerProduct: {
+    width: 118,
+    alignItems: "flex-end",
+  },
+  footerProductLogo: {
+    width: 112,
+    height: 27,
+    objectFit: "contain",
+  },
+  footerGuarantee: {
+    marginTop: -1,
+    marginRight: 3,
+    fontFamily: "Helvetica-Bold",
+    fontSize: 6.5,
+    color: "#289838",
   },
   sectionTitle: {
     fontFamily: "Times-Bold",
@@ -146,12 +183,17 @@ const styles = StyleSheet.create({
   roofValue: {
     width: "64%",
   },
-  specificationImage: {
+  contentsImage: {
     width: "100%",
-    height: 220,
-    objectFit: "contain",
-    marginTop: 5,
-    marginBottom: 10,
+    height: 245,
+    objectFit: "cover",
+    marginTop: 20,
+  },
+  projectDetailsImage: {
+    width: "100%",
+    height: 390,
+    objectFit: "cover",
+    marginTop: 18,
   },
   photosGrid: {
     flexDirection: "row",
@@ -270,13 +312,27 @@ const Header = ({ surface, fixed = true }) => (
   </View>
 );
 
-const Footer = ({ fixed = true, number }) => (
+const Footer = ({ assetBase, guarantee, fixed = true }) => (
   <View style={styles.footer} fixed={fixed}>
-    {number ? (
-      <Text>{number}</Text>
-    ) : (
-      <Text render={({ pageNumber }) => String(pageNumber)} />
-    )}
+    <View style={styles.footerDivider} />
+    <View style={styles.footerRow}>
+      <Image src={asset(assetBase, "1lrs.png")} style={styles.footerLrsLogo} />
+      <Text
+        style={styles.footerPageNumber}
+        render={({ pageNumber, totalPages }) =>
+          "Page " + pageNumber + " of " + totalPages
+        }
+      />
+      <View style={styles.footerProduct}>
+        <Image
+          src={asset(assetBase, "fastcoat-pro-footer.png")}
+          style={styles.footerProductLogo}
+        />
+        <Text style={styles.footerGuarantee}>
+          {guarantee === "25-year" ? "25-YEAR SYSTEM" : "20-YEAR SYSTEM"}
+        </Text>
+      </View>
+    </View>
   </View>
 );
 
@@ -374,14 +430,26 @@ const getPageStarts = ({
     ending = { general: 11, materials: 12 };
   }
 
-  const photoPages = photoCount > 0 ? 1 : 0;
+  const hasPhotographs = photoCount > 0;
+  const photographsPage =
+    guarantee === "20-year" && isFullyPrimed
+      ? ending.materials - 1
+      : ending.materials;
+  const photographsMoveMaterials =
+    hasPhotographs &&
+    (photoCount >= 3 ||
+      (guarantee === "25-year" && !isFullyPrimed) ||
+      (guarantee === "20-year" &&
+        !isFullyPrimed &&
+        trafficCoat === "Yes"));
+  const materialPagesAdded = photographsMoveMaterials ? 1 : 0;
   return {
     ...DEFAULT_PAGE_STARTS,
     ...ending,
     additional: ending.general,
-    photographs: ending.materials,
-    materials: ending.materials + photoPages,
-    guarantee: ending.materials + photoPages,
+    photographs: photographsPage,
+    materials: ending.materials + materialPagesAdded,
+    guarantee: ending.materials + materialPagesAdded,
   };
 };
 
@@ -489,6 +557,13 @@ const PdfDocumentFasCoatTop = ({
   });
   const guaranteeYears = guarantee === "25-year" ? "25" : "20";
   const safePhotos = Array.isArray(photos) ? photos.filter(Boolean).slice(0, 4) : [];
+  const photographsShareMaterialsPage =
+    safePhotos.length > 0 &&
+    safePhotos.length <= 2 &&
+    ((guarantee === "20-year" &&
+      !isFullyPrimed &&
+      selectedTrafficCoat !== "Yes") ||
+      (guarantee === "25-year" && isFullyPrimed));
   const photoRows = [];
   for (let index = 0; index < safePhotos.length; index += 2) {
     photoRows.push(safePhotos.slice(index, index + 2));
@@ -513,7 +588,7 @@ const PdfDocumentFasCoatTop = ({
           style={styles.coverImage}
         />
         <Header surface={surface} fixed={false} />
-        <Footer number="1" fixed={false} />
+        <Footer assetBase={assetBase} guarantee={guarantee} fixed={false} />
       </Page>
 
       <Page size="A4" style={styles.page}>
@@ -525,7 +600,12 @@ const PdfDocumentFasCoatTop = ({
         <Text style={[styles.line, { marginTop: 10 }]}>
           FastCoat Pro {guaranteeYears} Specification Ref: {lrsReference || "LRS – TBC"}
         </Text>
-        <Footer />
+        <Image
+          src={asset(assetBase, "2F.png")}
+          style={styles.contentsImage}
+          wrap={false}
+        />
+        <Footer assetBase={assetBase} guarantee={guarantee} />
       </Page>
 
       <Page size="A4" style={styles.page}>
@@ -558,7 +638,12 @@ const PdfDocumentFasCoatTop = ({
             <Text>{preparedByEmail}</Text>
           </View>
         </View>
-        <Footer />
+        <Image
+          src={image || asset(assetBase, "2F.png")}
+          style={styles.projectDetailsImage}
+          wrap={false}
+        />
+        <Footer assetBase={assetBase} guarantee={guarantee} />
       </Page>
 
       <Page size="A4" style={styles.page} wrap>
@@ -572,7 +657,6 @@ const PdfDocumentFasCoatTop = ({
         <Text style={styles.roofIntro}>
           Roof areas covered in this specification: {reference || "TBC"}
         </Text>
-        {image ? <Image src={image} style={styles.specificationImage} /> : null}
 
         <Text style={styles.sectionTitle}>The Roof Build Up</Text>
         <Text style={styles.roofIntro}>
@@ -599,7 +683,13 @@ const PdfDocumentFasCoatTop = ({
             {photoRows.map((row, rowIndex) => (
               <View key={"photo-row-" + rowIndex} style={styles.photosGrid} wrap={false}>
                 {row.map((src, photoIndex) => (
-                  <View key={"photo-" + rowIndex + "-" + photoIndex} style={styles.photoBox}>
+                  <View
+                    key={"photo-" + rowIndex + "-" + photoIndex}
+                    style={[
+                      styles.photoBox,
+                      row.length === 1 && { width: "100%" },
+                    ]}
+                  >
                     <Image src={src} style={styles.photo} />
                   </View>
                 ))}
@@ -638,28 +728,30 @@ const PdfDocumentFasCoatTop = ({
             </View>
           </View>
         </View>
-        <Image
-          src={asset(assetBase, "2F.png")}
-          style={[
-            styles.closingImage,
-            guarantee === "20-year" &&
-              !isFullyPrimed &&
-              { height: selectedTrafficCoat === "Yes" ? 180 : 220 },
-            guarantee === "20-year" &&
-              isFullyPrimed &&
-              selectedTrafficCoat === "Yes" &&
-              { height: 250 },
-            guarantee === "25-year" &&
-              isFullyPrimed &&
-              selectedTrafficCoat === "Yes" &&
-              { height: 220 },
-            guarantee === "25-year" &&
-              !isFullyPrimed &&
-              { height: selectedTrafficCoat === "Yes" ? 60 : 170 },
-            safePhotos.length > 0 && { height: 60 },
-          ]}
-        />
-        <Footer />
+        {photographsShareMaterialsPage ? null : (
+          <Image
+            src={asset(assetBase, "2F.png")}
+            style={[
+              styles.closingImage,
+              guarantee === "20-year" &&
+                !isFullyPrimed &&
+                { height: selectedTrafficCoat === "Yes" ? 340 : 220 },
+              guarantee === "20-year" &&
+                isFullyPrimed &&
+                selectedTrafficCoat === "Yes" &&
+                { height: 320 },
+              guarantee === "25-year" &&
+                isFullyPrimed &&
+                selectedTrafficCoat === "Yes" &&
+                { height: 220 },
+              guarantee === "25-year" &&
+                !isFullyPrimed &&
+                { height: selectedTrafficCoat === "Yes" ? 60 : 170 },
+              safePhotos.length > 0 && { height: 340 },
+            ]}
+          />
+        )}
+        <Footer assetBase={assetBase} guarantee={guarantee} />
       </Page>
     </Document>
   );
