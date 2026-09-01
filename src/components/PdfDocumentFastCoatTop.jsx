@@ -1,4 +1,4 @@
-// VERSION: 2026-09-01-a4-flow-layout-fixed-v7-footer-only
+// VERSION: 2026-09-01-a4-footer-toc-backcover-fixed-v8
 import React from "react";
 import {
   Document,
@@ -30,7 +30,9 @@ const styles = StyleSheet.create({
     color: "#000000",
     fontFamily: "Helvetica",
     fontSize: 9.8,
-    lineHeight: 1.32,
+    // Do not set lineHeight on Page. In @react-pdf/renderer 4.3.0 it is
+    // repeatedly inherited by fixed dynamic Text on continuation pages and
+    // eventually produces an unsupported transform number.
   },
   coverPage: {
     padding: 0,
@@ -131,8 +133,14 @@ const styles = StyleSheet.create({
     height: 35,
     objectFit: "contain",
   },
-  pageNumber: {
+  pageNumberSlot: {
     width: 100,
+  },
+  pageNumberOverlay: {
+    position: "absolute",
+    top: 794,
+    left: 42,
+    right: 42,
     fontFamily: "Helvetica-Bold",
     fontSize: 8.5,
     textAlign: "center",
@@ -343,8 +351,6 @@ const styles = StyleSheet.create({
   },
 
   backCoverPage: {
-    width: 595.28,
-    height: 841.89,
     padding: 0,
     backgroundColor: "#ffffff",
   },
@@ -526,21 +532,24 @@ const Header = ({ surface }) => (
 );
 
 const Footer = ({ assetBase }) => (
-  <View style={styles.footer} fixed>
-    <View style={styles.footerDivider} />
-    <View style={styles.footerRow}>
-      <Image src={asset(assetBase, "1lrs.png")} style={styles.footerLrsLogo} />
-      <Text
-  fixed
-  style={styles.pageNumber}
-  render={({ pageNumber }) => `Page ${pageNumber}`}
-/>
-      <Image
-        src={asset(assetBase, "fasttop1.jpg")}
-        style={styles.footerFastCoatLogo}
-      />
+  <>
+    <View style={styles.footer} fixed>
+      <View style={styles.footerDivider} />
+      <View style={styles.footerRow}>
+        <Image src={asset(assetBase, "1lrs.png")} style={styles.footerLrsLogo} />
+        <View style={styles.pageNumberSlot} />
+        <Image
+          src={asset(assetBase, "fasttop1.jpg")}
+          style={styles.footerFastCoatLogo}
+        />
+      </View>
     </View>
-  </View>
+    <Text
+      style={styles.pageNumberOverlay}
+      fixed
+      render={({ pageNumber }) => `Page ${pageNumber}`}
+    />
+  </>
 );
 
 const joinText = (left, right) =>
@@ -757,15 +766,14 @@ const getConditionalContent = ({ guarantee, isFullyPrimed, trafficCoat }) => {
 };
 
 const ContentsPageNumber = ({ targetKey, registry, pageStarts }) => (
-    <Text
-      fixed
-      style={styles.contentsPage}
-      render={() => {
-        const page = registry[targetKey] ?? pageStarts?.[targetKey];
-        return page == null ? "00" : String(page);
-      }}
-    />
-  );
+  <Text
+    style={styles.contentsPage}
+    render={() => {
+      const page = registry[targetKey] ?? pageStarts?.[targetKey];
+      return page == null ? "00" : String(page);
+    }}
+  />
+);
 
 const Contents = ({ registry, pageStarts, hasPhotos }) => {
   const rows = [
@@ -1000,7 +1008,6 @@ const BackCover = ({ assetBase }) => (
   <Page
     size="A4"
     style={styles.backCoverPage}
-    wrap={false}
   >
     <Image src={asset(assetBase, "2F.png")} style={styles.backCoverImage} />
     <View style={styles.backCoverContent}>
@@ -1092,7 +1099,6 @@ const PdfDocumentFastCoatTop = ({
       <Page
         size="A4"
         style={styles.coverPage}
-        wrap={false}
       >
         <Image src={asset(assetBase, "1F.png")} style={styles.coverTopImage} />
         <View style={styles.coverContent}>
