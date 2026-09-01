@@ -1,4 +1,4 @@
-// VERSION: 2026-09-01-a4-flow-layout-fixed-v8
+// VERSION: 2026-09-01-a4-flow-layout-fixed-v7-footer-only
 import React from "react";
 import {
   Document,
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
 
   footer: {
     position: "absolute",
-    top: 776,
+    bottom: 12,
     left: 42,
     right: 42,
     height: 54,
@@ -131,18 +131,10 @@ const styles = StyleSheet.create({
     height: 35,
     objectFit: "contain",
   },
-  pageNumberSlot: {
+  pageNumber: {
     width: 100,
-  },
-  pageNumberOverlay: {
-    position: "absolute",
-    top: 792,
-    left: 42,
-    right: 42,
-    height: 12,
     fontFamily: "Helvetica-Bold",
     fontSize: 8.5,
-    lineHeight: 1,
     textAlign: "center",
     color: "#333333",
   },
@@ -532,27 +524,20 @@ const Header = ({ surface }) => (
 );
 
 const Footer = ({ assetBase }) => (
-  <>
-    <View style={styles.footer} fixed>
-      <View style={styles.footerDivider} />
-      <View style={styles.footerRow}>
-        <Image src={asset(assetBase, "1lrs.png")} style={styles.footerLrsLogo} />
-        <View style={styles.pageNumberSlot} />
-        <Image
-          src={asset(assetBase, "fasttop1.jpg")}
-          style={styles.footerFastCoatLogo}
-        />
-      </View>
+  <View style={styles.footer} fixed>
+    <View style={styles.footerDivider} />
+    <View style={styles.footerRow}>
+      <Image src={asset(assetBase, "1lrs.png")} style={styles.footerLrsLogo} />
+      <Text
+        style={styles.pageNumber}
+        render={({ pageNumber }) => `Page ${pageNumber}`}
+      />
+      <Image
+        src={asset(assetBase, "fasttop1.jpg")}
+        style={styles.footerFastCoatLogo}
+      />
     </View>
-
-    {/* Keep the dynamic page number as a direct fixed element. This ensures
-        React PDF evaluates it for every physical continuation page. */}
-    <Text
-      style={styles.pageNumberOverlay}
-      fixed
-      render={({ pageNumber }) => `Page ${pageNumber}`}
-    />
-  </>
+  </View>
 );
 
 const joinText = (left, right) =>
@@ -1122,7 +1107,7 @@ const PdfDocumentFastCoatTop = ({
       <Page
         size="A4"
         style={styles.page}
-        wrap={false}
+        wrap
       >
         <Header surface={surface} />
         <Contents
@@ -1140,7 +1125,7 @@ const PdfDocumentFastCoatTop = ({
       <Page
         size="A4"
         style={styles.page}
-        wrap={false}
+        wrap
       >
         <Header surface={surface} />
         <Text style={styles.specificationTitle}>
@@ -1229,27 +1214,34 @@ const PdfDocumentFastCoatTop = ({
         <Footer assetBase={assetBase} />
       </Page>
 
-      {/* PHOTOGRAPHS + MATERIALS — dedicated A4 page */}
-      <Page
-        size="A4"
-        style={styles.page}
-        wrap={false}
-      >
-        <Header surface={surface} />
-        <PhotographsAndMaterials
-          photos={safePhotos}
-          registry={pageRegistry}
-        />
-        <Footer assetBase={assetBase} />
-      </Page>
+      {/* Do not create an almost-empty photographs page when no photographs
+          were supplied. Materials then starts the guarantee page below. */}
+      {hasPhotos ? (
+        <Page
+          size="A4"
+          style={styles.page}
+          wrap
+        >
+          <Header surface={surface} />
+          <PhotographsAndMaterials
+            photos={safePhotos}
+            registry={pageRegistry}
+          />
+          <Footer assetBase={assetBase} />
+        </Page>
+      ) : null}
 
-      {/* GUARANTEE + SIGNATURES — dedicated A4 page */}
+      {/* GUARANTEE + SIGNATURES — starts on a dedicated A4 page and can create
+          A4 continuation pages if the selected guarantee wording needs them. */}
       <Page
         size="A4"
         style={styles.page}
-        wrap={false}
+        wrap
       >
         <Header surface={surface} />
+        {!hasPhotos ? (
+          <MaterialsSection registry={pageRegistry} compact />
+        ) : null}
         <GuaranteeAndSignoff
           guaranteeBlocks={finalGuaranteeBlocks}
           assetBase={assetBase}
