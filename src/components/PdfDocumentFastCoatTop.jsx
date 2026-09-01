@@ -17,8 +17,6 @@ import {
   TWENTY_YEAR_PRIMER,
 } from "./fastCoatTopContent";
 
-const A4_PAGE_SIZE = { width: 595.28, height: 841.89 };
-
 
 // IMPORTANT:
 // The physical PDF MediaBox is controlled ONLY by A4_PAGE_SIZE on <Page>.
@@ -968,7 +966,11 @@ const GuaranteeAndSignoff = ({ guaranteeBlocks, assetBase, registry, pageStarts 
 );
 
 const BackCover = ({ assetBase }) => (
-  <Page size={A4_PAGE_SIZE} orientation="portrait" style={styles.backCoverPage} wrap={false}>
+    <Page
+    size="A4"
+    style={styles.backCoverPage}
+    wrap={false}
+  >
     <Image src={asset(assetBase, "2F.png")} style={styles.backCoverImage} />
     <View style={styles.backCoverContent}>
       <View>
@@ -1055,7 +1057,11 @@ const PdfDocumentFastCoatTop = ({
       author="Liquid Roofing Systems Ltd"
     >
       {/* COVER — always A4 and intentionally has no footer */}
-      <Page size={A4_PAGE_SIZE} orientation="portrait" style={styles.coverPage} wrap={false}>
+      <Page
+  size="A4"
+  style={styles.coverPage}
+  wrap={false}
+>
         <Image src={asset(assetBase, "1F.png")} style={styles.coverTopImage} />
         <View style={styles.coverContent}>
           {/* Requested cover logo, directly above INSTALLATION SPECIFICATION */}
@@ -1068,7 +1074,11 @@ const PdfDocumentFastCoatTop = ({
       </Page>
 
       {/* CONTENTS */}
-      <Page size={A4_PAGE_SIZE} orientation="portrait" style={styles.page} wrap={false}>
+      <Page
+  size="A4"
+  style={styles.page}
+  wrap
+>
         <Header surface={surface} />
         <Contents registry={pageRegistry} pageStarts={pageStarts} />
         <Text style={[styles.paragraph, { marginTop: 12 }]}>
@@ -1078,7 +1088,11 @@ const PdfDocumentFastCoatTop = ({
       </Page>
 
       {/* PROJECT DETAILS */}
-      <Page size={A4_PAGE_SIZE} orientation="portrait" style={styles.page} wrap={false}>
+      <Page
+  size="A4"
+  style={styles.page}
+  wrap={false}
+>
         <Header surface={surface} />
         <Text style={styles.specificationTitle}>
           FastCoat Pro {guaranteeYears} Specification Ref: {lrsReference || "LRS – TBC"}
@@ -1119,7 +1133,11 @@ const PdfDocumentFastCoatTop = ({
         A4 continuation pages as React PDF needs. This removes the old manual
         height estimation that was creating large unused gaps.
       */}
-      <Page size={A4_PAGE_SIZE} orientation="portrait" style={styles.page} wrap>
+      <Page
+  size="A4"
+  style={styles.page}
+  wrap={false}
+>
         <Header surface={surface} />
 
         <Text style={styles.sectionTitle} minPresenceAhead={32}>
@@ -1163,7 +1181,11 @@ const PdfDocumentFastCoatTop = ({
       </Page>
 
       {/* PHOTOGRAPHS + MATERIALS — always one dedicated A4 page */}
-      <Page size={A4_PAGE_SIZE} orientation="portrait" style={styles.page} wrap={false}>
+      <Page
+  size="A4"
+  style={styles.page}
+  wrap={false}
+>
         <Header surface={surface} />
         <PhotographsAndMaterials
           photos={safePhotos}
@@ -1173,7 +1195,11 @@ const PdfDocumentFastCoatTop = ({
       </Page>
 
       {/* GUARANTEE + SIGNATURES — always one dedicated A4 page */}
-      <Page size={A4_PAGE_SIZE} orientation="portrait" style={styles.page} wrap={false}>
+      <Page
+  size="A4"
+  style={styles.page}
+  wrap={false}
+>
         <Header surface={surface} />
         <GuaranteeAndSignoff
           guaranteeBlocks={finalGuaranteeBlocks}
