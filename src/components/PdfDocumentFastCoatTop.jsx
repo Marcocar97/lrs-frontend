@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
   },
   roofImageFrame: {
     width: "100%",
-    height: 445,
+    height: 355,
     marginTop: 8,
     marginBottom: 12,
     padding: 4,
@@ -592,7 +592,9 @@ const renderBlock = (block, index, prefix) => {
         block.type === "bullet" && styles.bullet,
         block.type === "nestedBullet" && styles.nestedBullet,
       ]}
-      wrap={false}
+      minPresenceAhead={
+        block.type === "majorHeading" ? 42 : isHeading ? 22 : 0
+      }
     >
       {block.text}
     </Text>
@@ -641,49 +643,17 @@ const estimateRoofDetailsHeight = (rows) =>
 
 const estimateItemHeight = (item) => {
   if (item.kind === "block") return estimateBlockHeight(item.block);
-  if (item.kind === "roofImage") return 467;
+  if (item.kind === "roofImage") return 375;
   if (item.kind === "roofDetails") {
     return estimateRoofDetailsHeight(item.rows);
   }
   return 0;
 };
 
-const getKeepWithNextHeight = (items, index) => {
-  const item = items[index];
-  if (item.kind !== "block") return 0;
-
-  const { type, text } = item.block;
-  if (!["majorHeading", "heading", "numbered"].includes(type)) return 0;
-
-  // The Roof Build Up must never be left below the project image by itself.
-  // Keep the heading, its intro and the complete roof-details table together.
-  if (text === "The Roof Build Up") {
-    let height = 0;
-    for (let offset = 1; offset <= 2; offset += 1) {
-      const next = items[index + offset];
-      if (!next || next.kind === "pageBreak") break;
-      height += estimateItemHeight(next);
-    }
-    return height;
-  }
-
-  // For every other heading, require at least the first real piece of content
-  // to fit on the same page. This prevents orphaned area titles.
-  const next = items[index + 1];
-  if (!next || next.kind === "pageBreak") return 0;
-
-  if (type === "majorHeading") {
-    return Math.min(estimateItemHeight(next), 105);
-  }
-
-  return Math.min(estimateItemHeight(next), 62);
-};
-
 const paginateContentItems = (items, startPage = 4) => {
-  // A4 content area after page paddings is ~672pt. Keep a small safety
-  // reserve for font metrics, but use substantially more space than before.
-  // This is the main control for how full each generated page becomes.
-  const maximumHeight = 646;
+  // Deliberately conservative so the pages read more like the original
+  // specification instead of packing every available line into the page.
+  const maximumHeight = 612;
   const pages = [];
   const pageStarts = {};
   let page = [];
@@ -703,20 +673,30 @@ const paginateContentItems = (items, startPage = 4) => {
     }
 
     const itemHeight = estimateItemHeight(item);
-    const keepWithNextHeight = getKeepWithNextHeight(items, index);
-    const requiredHeight = itemHeight + keepWithNextHeight;
+    const nextItem = items[index + 1];
+    const isMajorHeading =
+      item.kind === "block" && item.block.type === "majorHeading";
+    const keepWithNext =
+      item.kind === "block" &&
+      ["majorHeading", "heading", "numbered"].includes(item.block.type) &&
+      nextItem &&
+      nextItem.kind !== "pageBreak";
 
-    // Move the heading with its required following content only when that
-    // group genuinely cannot fit. Do not create an early break simply
-    // because a section starts in the lower part of a page.
-    if (page.length && usedHeight + requiredHeight > maximumHeight) {
+    // Do not squeeze a major new area into the last part of a page.
+    // This gives sections visible separation while still using the page well.
+    if (page.length && isMajorHeading && usedHeight > 490) {
       savePage();
     }
 
-    // Normal items are also checked independently. This catches paragraphs
-    // after a heading group and avoids relying on react-pdf to create hidden
-    // overflow pages.
-    if (page.length && usedHeight + itemHeight > maximumHeight) {
+    const followingContent =
+      keepWithNext && isMajorHeading
+        ? Math.min(estimateItemHeight(nextItem), 96)
+        : keepWithNext
+          ? Math.min(estimateItemHeight(nextItem), 54)
+          : 0;
+    const requiredHeight = itemHeight + followingContent;
+
+    if (page.length && usedHeight + requiredHeight > maximumHeight) {
       savePage();
     }
 
@@ -1086,6 +1066,7 @@ const PdfDocumentFastCoatTop = ({
     }),
     ...(image ? [{ kind: "roofImage", source: image }] : []),
     blockItem({ type: "majorHeading", text: "The Roof Build Up" }),
+    ...(image ? [{ kind: "pageBreak" }] : []),
     blockItem({
       type: "paragraph",
       text: `With the information and images provided this specification is for ${reference || "TBC"}.`,
@@ -1134,7 +1115,7 @@ const PdfDocumentFastCoatTop = ({
         </View>
       </Page>
 
-      <Page size="A4" style={styles.page} wrap={false}>
+      <Page size="A4" style={styles.page}>
         <Header surface={surface} />
         <Contents pageStarts={resolvedPageStarts} />
         <Text style={[styles.paragraph, { marginTop: 12 }]}>
@@ -1143,7 +1124,7 @@ const PdfDocumentFastCoatTop = ({
         <Footer assetBase={assetBase} pageNumber={2} />
       </Page>
 
-      <Page size="A4" style={styles.page} wrap={false}>
+      <Page size="A4" style={styles.page}>
         <Header surface={surface} />
         <Text style={styles.specificationTitle}>
           FastCoat Pro {guaranteeYears} Specification Ref: {lrsReference || "LRS – TBC"}
@@ -1185,7 +1166,6 @@ const PdfDocumentFastCoatTop = ({
             key={`content-page-${currentPageNumber}`}
             size="A4"
             style={styles.page}
-            wrap={false}
           >
             <Header surface={surface} />
 
@@ -1230,7 +1210,7 @@ const PdfDocumentFastCoatTop = ({
         );
       })}
 
-      <Page size="A4" style={styles.page} wrap={false}>
+      <Page size="A4" style={styles.page}>
         <Header surface={surface} />
         <PhotographsAndMaterials photos={safePhotos} />
         <Footer
@@ -1239,7 +1219,7 @@ const PdfDocumentFastCoatTop = ({
         />
       </Page>
 
-      <Page size="A4" style={styles.page} wrap={false}>
+      <Page size="A4" style={styles.page}>
         <Header surface={surface} />
         <GuaranteeAndSignoff
           guaranteeBlocks={finalGuaranteeBlocks}
