@@ -517,19 +517,23 @@ const formatDate = (value) => {
   );
 };
 
-const Header = ({ surface }) => (
-  <View style={styles.header} fixed>
-    <View style={styles.headerRow}>
-      <Text style={styles.headerTitle}>FastCoat Pro onto {surface}</Text>
-      <View style={styles.colourBars}>
-        <View style={styles.redBar} />
-        <View style={styles.orangeBar} />
-        <View style={styles.greenBar} />
+const Header = ({ reference }) => (
+    <View style={styles.header} fixed>
+      <View style={styles.headerRow}>
+        <Text style={styles.headerTitle}>
+          FastCoat - {reference || "TBC"}
+        </Text>
+  
+        <View style={styles.colourBars}>
+          <View style={styles.redBar} />
+          <View style={styles.orangeBar} />
+          <View style={styles.greenBar} />
+        </View>
       </View>
+  
+      <View style={styles.headerDivider} />
     </View>
-    <View style={styles.headerDivider} />
-  </View>
-);
+  );
 
 const Footer = ({ assetBase }) => (
   <>
