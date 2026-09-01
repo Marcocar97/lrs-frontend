@@ -1,3 +1,4 @@
+// VERSION: 2026-09-01-flow-pagination-v2
 import React from "react";
 import {
   Document,
@@ -16,10 +17,9 @@ import {
   TWENTY_YEAR_PRIMER,
 } from "./fastCoatTopContent";
 
+
 const styles = StyleSheet.create({
   page: {
-    width: 595.28,
-    height: 841.89,
     paddingTop: 88,
     paddingRight: 42,
     paddingBottom: 82,
@@ -30,8 +30,6 @@ const styles = StyleSheet.create({
     lineHeight: 1.32,
   },
   coverPage: {
-    width: 595.28,
-    height: 841.89,
     padding: 0,
     backgroundColor: "#ffffff",
   },
@@ -65,6 +63,7 @@ const styles = StyleSheet.create({
     color: "#666666",
     textAlign: "center",
   },
+
   header: {
     position: "absolute",
     top: 28,
@@ -106,6 +105,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     backgroundColor: "#3b3b3b",
   },
+
   footer: {
     position: "absolute",
     bottom: 12,
@@ -140,19 +140,20 @@ const styles = StyleSheet.create({
     height: 35,
     objectFit: "contain",
   },
+
   sectionTitle: {
     fontFamily: "Helvetica-Bold",
     fontSize: 14.6,
     lineHeight: 1.22,
-    marginTop: 11,
-    marginBottom: 8.5,
+    marginTop: 10,
+    marginBottom: 8,
     color: "#231f20",
   },
   subsectionTitle: {
     fontFamily: "Helvetica-Bold",
     fontSize: 10.2,
     lineHeight: 1.28,
-    marginTop: 6,
+    marginTop: 5.5,
     marginBottom: 3.5,
   },
   paragraph: {
@@ -169,6 +170,7 @@ const styles = StyleSheet.create({
     marginLeft: 28,
     paddingRight: 4,
   },
+
   contentsTitle: {
     fontFamily: "Helvetica-Bold",
     fontSize: 18,
@@ -201,6 +203,7 @@ const styles = StyleSheet.create({
     fontSize: 9.2,
     textAlign: "right",
   },
+
   specificationTitle: {
     fontFamily: "Helvetica-Bold",
     fontSize: 16,
@@ -221,16 +224,12 @@ const styles = StyleSheet.create({
     width: "66%",
     fontSize: 10,
   },
-  roofIntro: {
-    fontSize: 9.8,
-    lineHeight: 1.32,
-    marginBottom: 9,
-  },
+
   roofImageFrame: {
     width: "100%",
     height: 355,
     marginTop: 8,
-    marginBottom: 12,
+    marginBottom: 14,
     padding: 4,
     borderWidth: 0.6,
     borderColor: "#bdbdbd",
@@ -248,6 +247,10 @@ const styles = StyleSheet.create({
     borderTopWidth: 0.6,
     borderTopColor: "#777777",
   },
+  roofTableContinuation: {
+    marginTop: 0,
+    marginBottom: 9,
+  },
   roofRow: {
     flexDirection: "row",
     paddingVertical: 3.8,
@@ -261,6 +264,7 @@ const styles = StyleSheet.create({
   roofValue: {
     width: "66%",
   },
+
   photosTitle: {
     fontFamily: "Helvetica-Bold",
     fontSize: 15.5,
@@ -293,14 +297,15 @@ const styles = StyleSheet.create({
     height: "100%",
     objectFit: "contain",
   },
+  materialsArea: {
+    marginTop: 14,
+  },
   materialsLabel: {
     fontFamily: "Helvetica-Bold",
     fontSize: 13,
     marginBottom: 5,
   },
-  finalSection: {
-    marginTop: 16,
-  },
+
   guaranteeSection: {
     marginTop: 4,
   },
@@ -333,9 +338,8 @@ const styles = StyleSheet.create({
     fontSize: 8.6,
     marginBottom: 1.5,
   },
+
   backCoverPage: {
-    width: 595.28,
-    height: 841.89,
     padding: 0,
     backgroundColor: "#ffffff",
   },
@@ -368,6 +372,17 @@ const styles = StyleSheet.create({
     width: 105,
     height: 58,
     objectFit: "contain",
+  },
+
+  // Essentially invisible, but it remains in normal document flow so React
+  // PDF reports the page on which that section actually starts.
+  sectionMarker: {
+    fontSize: 0.1,
+    lineHeight: 0.1,
+    height: 0.1,
+    margin: 0,
+    padding: 0,
+    color: "#ffffff",
   },
 });
 
@@ -505,14 +520,17 @@ const Header = ({ surface }) => (
   </View>
 );
 
-const Footer = ({ assetBase, pageNumber }) => (
+const Footer = ({ assetBase }) => (
   <View style={styles.footer} fixed>
     <View style={styles.footerDivider} />
     <View style={styles.footerRow}>
       <Image src={asset(assetBase, "1lrs.png")} style={styles.footerLrsLogo} />
-      <Text style={styles.pageNumber}>Page {pageNumber}</Text>
+      <Text
+        style={styles.pageNumber}
+        render={({ pageNumber }) => `Page ${pageNumber}`}
+      />
       <Image
-        src={asset(assetBase, "fasttop.jpg")}
+        src={asset(assetBase, "fasttop1.jpg")}
         style={styles.footerFastCoatLogo}
       />
     </View>
@@ -580,212 +598,107 @@ const toFinalGuaranteeBlocks = (blocks) =>
       ),
   }));
 
-const renderBlock = (block, index, prefix) => {
-  const isHeading = block.type === "heading" || block.type === "numbered";
+const getMarkerKeys = (heading) =>
+  [TOC_KEYS[heading], INTERNAL_PAGE_KEYS[heading]].filter(
+    (value, index, array) => value && array.indexOf(value) === index,
+  );
+
+const SectionMarker = ({ markerKeys, registry }) => {
+  const keys = (markerKeys || []).filter(Boolean);
+  if (!keys.length) return null;
 
   return (
     <Text
-      key={`${prefix}-${index}`}
-      style={[
-        block.type === "majorHeading" ? styles.sectionTitle : styles.paragraph,
-        isHeading && styles.subsectionTitle,
-        block.type === "bullet" && styles.bullet,
-        block.type === "nestedBullet" && styles.nestedBullet,
-      ]}
-      minPresenceAhead={
-        block.type === "majorHeading" ? 42 : isHeading ? 22 : 0
-      }
-    >
-      {block.text}
-    </Text>
+      style={styles.sectionMarker}
+      render={({ pageNumber }) => {
+        keys.forEach((key) => {
+          registry[key] = pageNumber;
+        });
+        return "";
+      }}
+    />
   );
 };
 
-const estimateWrappedLines = (text, maxCharacters) => {
-  const words = String(text || "").split(/\s+/).filter(Boolean);
-  if (!words.length) return 1;
-
-  let lines = 1;
-  let currentLength = 0;
-
-  words.forEach((word) => {
-    const nextLength = currentLength ? currentLength + 1 + word.length : word.length;
-    if (nextLength > maxCharacters && currentLength > 0) {
-      lines += 1;
-      currentLength = word.length;
-    } else {
-      currentLength = nextLength;
-    }
-  });
-
-  return lines;
-};
-
-const estimateBlockHeight = (block) => {
-  if (block.type === "majorHeading") {
-    return estimateWrappedLines(block.text, 64) * 18.5 + 17;
-  }
-  if (block.type === "heading" || block.type === "numbered") {
-    return estimateWrappedLines(block.text, 84) * 13.8 + 9;
+const getReferenceTargetKey = (text) => {
+  if (
+    /Safety First|Safety Measures|Safety Precautions|Safe Working|Health and Safety Legislation/i.test(
+      text,
+    )
+  ) {
+    return "safety";
   }
 
-  const maxCharacters =
-    block.type === "nestedBullet" ? 84 : block.type === "bullet" ? 90 : 98;
-  return estimateWrappedLines(block.text, maxCharacters) * 13 + 4.5;
+  if (/Preparation of Existing Details/i.test(text)) return "preparation";
+  if (/Applying FastCoat Waterproof Coating/i.test(text)) return "baseCoat";
+  if (/Clean Surface:/i.test(text)) return "cleaning";
+  if (/cleaning.*(?:Please see|See)/i.test(text)) return "cleaning";
+
+  return null;
 };
 
-const estimateRoofDetailsHeight = (rows) =>
-  rows.reduce((height, [label, value]) => {
-    const labelLines = estimateWrappedLines(label, 28);
-    const valueLines = estimateWrappedLines(value || "TBC", 60);
-    return height + Math.max(labelLines, valueLines) * 12.8 + 7.6;
-  }, 16);
+const resolveTextWithPageReference = (text, registry, pageStarts) => {
+  const targetKey = getReferenceTargetKey(text);
+  if (!targetKey) return text;
 
-const estimateItemHeight = (item) => {
-  if (item.kind === "block") return estimateBlockHeight(item.block);
-  if (item.kind === "roofImage") return 375;
-  if (item.kind === "roofDetails") {
-    return estimateRoofDetailsHeight(item.rows);
-  }
-  return 0;
-};
+  const referenceRegex =
+    /(Please see|See)\s+pages?\s+\d+(?:\s*[-–]\s*\d+)?(\.)?/i;
+  const match = referenceRegex.exec(text);
+  if (!match) return text;
 
-const paginateContentItems = (items, startPage = 4) => {
-  // Deliberately conservative so the pages read more like the original
-  // specification instead of packing every available line into the page.
-  const maximumHeight = 612;
-  const pages = [];
-  const pageStarts = {};
-  let page = [];
-  let usedHeight = 0;
+  const page = registry[targetKey] ?? pageStarts?.[targetKey];
+  // Two digits reserve approximately the same width during React PDF's first
+  // layout pass. On the final render pass the actual page number is used.
+  const pageText = page == null ? "00" : String(page);
+  const prefix = match[1];
+  const punctuation = match[2] || "";
 
-  const savePage = () => {
-    if (!page.length) return;
-    pages.push(page);
-    page = [];
-    usedHeight = 0;
-  };
-
-  items.forEach((item, index) => {
-    if (item.kind === "pageBreak") {
-      savePage();
-      return;
-    }
-
-    const itemHeight = estimateItemHeight(item);
-    const nextItem = items[index + 1];
-    const isMajorHeading =
-      item.kind === "block" && item.block.type === "majorHeading";
-    const keepWithNext =
-      item.kind === "block" &&
-      ["majorHeading", "heading", "numbered"].includes(item.block.type) &&
-      nextItem &&
-      nextItem.kind !== "pageBreak";
-
-    // Do not squeeze a major new area into the last part of a page.
-    // This gives sections visible separation while still using the page well.
-    if (page.length && isMajorHeading && usedHeight > 490) {
-      savePage();
-    }
-
-    const followingContent =
-      keepWithNext && isMajorHeading
-        ? Math.min(estimateItemHeight(nextItem), 96)
-        : keepWithNext
-          ? Math.min(estimateItemHeight(nextItem), 54)
-          : 0;
-    const requiredHeight = itemHeight + followingContent;
-
-    if (page.length && usedHeight + requiredHeight > maximumHeight) {
-      savePage();
-    }
-
-    const tocKeys = [item.tocKey, ...(item.tocKeys || [])].filter(Boolean);
-    tocKeys.forEach((tocKey) => {
-      if (pageStarts[tocKey] == null) {
-        pageStarts[tocKey] = startPage + pages.length;
-      }
-    });
-
-    page.push(item);
-    usedHeight += itemHeight;
-  });
-
-  savePage();
-  return { pages, pageStarts };
-};
-
-const replacePageReference = (text, pageNumber) => {
-  if (!pageNumber) return text;
-
-  return text.replace(
-    /(?:Please see|See) pages?\s+\d+(?:\s*[-–]\s*\d+)?\.?/gi,
-    (match) => {
-      const prefix = /^See\b/i.test(match) ? "See" : "Please see";
-      return `${prefix} page ${pageNumber}.`;
-    },
+  return (
+    text.slice(0, match.index) +
+    `${prefix} page ${pageText}${punctuation}` +
+    text.slice(match.index + match[0].length)
   );
 };
 
-const resolveInternalReferences = (items, pageStarts) =>
-  items.map((item) => {
-    if (item.kind !== "block") return item;
+const renderBlock = (block, index, prefix, registry, pageStarts) => {
+  const isMajor = block.type === "majorHeading";
+  const isHeading = block.type === "heading" || block.type === "numbered";
+  const markerKeys = getMarkerKeys(block.text);
+  const targetKey = getReferenceTargetKey(block.text);
+  const hasDynamicReference =
+    Boolean(targetKey) &&
+    /(Please see|See)\s+pages?\s+\d+(?:\s*[-–]\s*\d+)?/i.test(block.text);
 
-    let text = item.block.text;
-    let targetKey = null;
+  const minPresenceAhead = isMajor ? 52 : isHeading ? 30 : 0;
 
-    if (
-      /Safety First|Safety Measures|Safety Precautions|Safe Working|Health and Safety Legislation/i.test(
-        text,
-      )
-    ) {
-      targetKey = "safety";
-    } else if (/Preparation of Existing Details/i.test(text)) {
-      targetKey = "preparation";
-    } else if (/Applying FastCoat Waterproof Coating/i.test(text)) {
-      targetKey = "baseCoat";
-    } else if (/Clean Surface:/i.test(text)) {
-      targetKey = "cleaning";
-    } else if (/\bCleaning\b.*Please see/i.test(text)) {
-      targetKey = "cleaning";
-    }
+  const textProps = hasDynamicReference
+    ? {
+        render: () =>
+          resolveTextWithPageReference(block.text, registry, pageStarts),
+      }
+    : {};
 
-    if (targetKey && pageStarts[targetKey]) {
-      text = replacePageReference(text, pageStarts[targetKey]);
-    }
-
-    return text === item.block.text
-      ? item
-      : { ...item, block: { ...item.block, text } };
-  });
-
-const paginateWithResolvedReferences = (items, startPage = 4) => {
-  let resolvedItems = items;
-  let pagination = paginateContentItems(resolvedItems, startPage);
-
-  // Page references can alter wrapping very slightly, so resolve and paginate
-  // more than once until the page starts settle.
-  for (let pass = 0; pass < 3; pass += 1) {
-    const pageStarts = {
-      project: 3,
-      ...pagination.pageStarts,
-    };
-    const nextItems = resolveInternalReferences(items, pageStarts);
-    const nextPagination = paginateContentItems(nextItems, startPage);
-
-    const currentStarts = JSON.stringify(pagination.pageStarts);
-    const nextStarts = JSON.stringify(nextPagination.pageStarts);
-
-    resolvedItems = nextItems;
-    pagination = nextPagination;
-
-    if (currentStarts === nextStarts) break;
-  }
-
-  return {
-    ...pagination,
-    resolvedItems,
-  };
+  return (
+    <React.Fragment key={`${prefix}-${index}`}>
+      <Text
+        style={[
+          isMajor ? styles.sectionTitle : styles.paragraph,
+          isHeading && styles.subsectionTitle,
+          block.type === "bullet" && styles.bullet,
+          block.type === "nestedBullet" && styles.nestedBullet,
+        ]}
+        minPresenceAhead={minPresenceAhead}
+        orphans={2}
+        widows={2}
+        {...textProps}
+      >
+        {hasDynamicReference ? null : block.text}
+      </Text>
+      {markerKeys.length > 0 ? (
+        <SectionMarker markerKeys={markerKeys} registry={registry} />
+      ) : null}
+    </React.Fragment>
+  );
 };
 
 const getConditionalContent = ({ guarantee, isFullyPrimed, trafficCoat }) => {
@@ -819,37 +732,47 @@ const getConditionalContent = ({ guarantee, isFullyPrimed, trafficCoat }) => {
   const guaranteeIndex = lines.indexOf("Guarantee – Materials Only");
 
   return {
-    // Keep the Materials Only guarantee in the body as it appears in the
-    // original specification, and reuse its wording on the final signed
-    // Guarantee page.
+    // Keep the Materials Only guarantee in the flowing body, matching the
+    // original document structure.
     body: lines,
+    // Re-use the same source wording for the separate signed guarantee page.
     guarantee:
       guaranteeIndex === -1 ? [] : lines.slice(guaranteeIndex + 1),
   };
 };
 
-const Contents = ({ pageStarts }) => {
+const ContentsPageNumber = ({ targetKey, registry, pageStarts }) => (
+  <Text
+    style={styles.contentsPage}
+    render={() => {
+      const page = registry[targetKey] ?? pageStarts?.[targetKey];
+      return page == null ? "" : String(page);
+    }}
+  />
+);
+
+const Contents = ({ registry, pageStarts }) => {
   const rows = [
-    ["Project details", pageStarts.project],
-    ["Preliminaries & general conditions", pageStarts.preliminaries],
+    ["Project details", "project"],
+    ["Preliminaries & general conditions", "preliminaries"],
     [
       "Existing falls, change in scope of works, existing roof condition",
-      pageStarts.existingFalls,
+      "existingFalls",
     ],
     [
       "Natural growth, adhesion test, compliance with building regulations",
-      pageStarts.naturalGrowth,
+      "naturalGrowth",
     ],
-    ["Flat roof detailing guidance & CDM", pageStarts.flatRoof],
-    ["Roof specification", pageStarts.roofSpecification],
-    ["The roof build-up and preparation", pageStarts.roofBuildUp],
-    ["Cleaning, TV, satellite arrays, cables", pageStarts.cleaning],
-    ["Waterproof coverings", pageStarts.waterproof],
-    ["Additional information", pageStarts.additional],
-    ["General guidance and requirements", pageStarts.general],
-    ["Photographs", pageStarts.photographs],
-    ["Materials and guarantee", pageStarts.materials],
-    ["Guarantee", pageStarts.guarantee],
+    ["Flat roof detailing guidance & CDM", "flatRoof"],
+    ["Roof specification", "roofSpecification"],
+    ["The roof build-up and preparation", "roofBuildUp"],
+    ["Cleaning, TV, satellite arrays, cables", "cleaning"],
+    ["Waterproof coverings", "waterproof"],
+    ["Additional information", "additional"],
+    ["General guidance and requirements", "general"],
+    ["Photographs", "photographs"],
+    ["Materials and guarantee", "materials"],
+    ["Guarantee", "guarantee"],
   ];
 
   return (
@@ -858,10 +781,14 @@ const Contents = ({ pageStarts }) => {
         <Text style={styles.contentsTitle}>Contents</Text>
         <Text style={styles.contentsHeaderText}>Page</Text>
       </View>
-      {rows.map(([label, page]) => (
+      {rows.map(([label, targetKey]) => (
         <View key={label} style={styles.contentsRow}>
           <Text style={styles.contentsLabel}>{label}</Text>
-          <Text style={styles.contentsPage}>{page}</Text>
+          <ContentsPageNumber
+            targetKey={targetKey}
+            registry={registry}
+            pageStarts={pageStarts}
+          />
         </View>
       ))}
     </>
@@ -892,24 +819,82 @@ const getRoofRows = ({
   ["Ponding Water", pondingWater],
 ];
 
-const RoofDetails = (props) => {
-  const rows = getRoofRows(props);
+const RoofRow = ({ label, value }) => (
+  <View style={styles.roofRow} wrap={false}>
+    <Text style={styles.roofLabel}>{label}</Text>
+    <Text style={styles.roofValue}>{value || "TBC"}</Text>
+  </View>
+);
+
+const RoofSpecificationSection = ({ reference, image, registry }) => (
+  <>
+    <Text
+      style={styles.sectionTitle}
+      // If there is an image, do not leave the title stranded immediately
+      // before a page break. This reserves enough room to begin the visual.
+      minPresenceAhead={image ? 390 : 52}
+    >
+      Roof Specification
+    </Text>
+    <SectionMarker markerKeys={["roofSpecification"]} registry={registry} />
+
+    <Text style={styles.paragraph} orphans={2} widows={2}>
+      Roof areas covered in this specification: {reference || "TBC"}
+    </Text>
+
+    {image ? (
+      <View style={styles.roofImageFrame} wrap={false}>
+        <Image src={image} style={styles.roofImage} />
+      </View>
+    ) : null}
+  </>
+);
+
+const RoofBuildUpSection = ({ roofDetailsProps, reference, registry }) => {
+  const rows = getRoofRows(roofDetailsProps);
+  const firstRows = rows.slice(0, 2);
+  const remainingRows = rows.slice(2);
 
   return (
-    <View style={styles.roofTable} wrap={false}>
-      {rows.map(([label, value]) => (
-        <View key={label} style={styles.roofRow}>
-          <Text style={styles.roofLabel}>{label}</Text>
-          <Text style={styles.roofValue}>{value || "TBC"}</Text>
+    <>
+      {/*
+        Keep only the heading, intro and first two rows together. This is
+        enough to stop an orphan "The Roof Build Up" heading without forcing
+        the whole table onto the next page and leaving a large blank area.
+      */}
+      <View wrap={false}>
+        <Text style={styles.sectionTitle}>The Roof Build Up</Text>
+        <SectionMarker markerKeys={["roofBuildUp"]} registry={registry} />
+
+        <Text style={styles.paragraph}>
+          With the information and images provided this specification is for {reference || "TBC"}.
+        </Text>
+
+        <View style={styles.roofTable}>
+          {firstRows.map(([label, value]) => (
+            <RoofRow key={label} label={label} value={value} />
+          ))}
         </View>
-      ))}
-    </View>
+      </View>
+
+      {remainingRows.length > 0 ? (
+        <View style={styles.roofTableContinuation}>
+          {remainingRows.map(([label, value]) => (
+            <RoofRow key={label} label={label} value={value} />
+          ))}
+        </View>
+      ) : null}
+    </>
   );
 };
 
-const PhotographsAndMaterials = ({ photos }) => (
+const PhotographsAndMaterials = ({ photos, registry }) => (
   <View wrap={false}>
     <Text style={styles.photosTitle}>Photographs</Text>
+    <SectionMarker
+      markerKeys={["photographs"]}
+      registry={registry}
+    />
 
     {photos.length > 0 ? (
       <View style={styles.photosGrid}>
@@ -928,27 +913,33 @@ const PhotographsAndMaterials = ({ photos }) => (
       </View>
     ) : null}
 
-    <View style={styles.finalSection}>
+    <View style={styles.materialsArea}>
       <Text style={styles.materialsLabel}>Materials</Text>
+      <SectionMarker markerKeys={["materials"]} registry={registry} />
       <Text style={styles.paragraph}>TBC</Text>
     </View>
   </View>
 );
 
-const GuaranteeAndSignoff = ({ guaranteeBlocks, assetBase }) => (
+const GuaranteeAndSignoff = ({ guaranteeBlocks, assetBase, registry, pageStarts }) => (
   <View style={styles.guaranteeSection} wrap={false}>
     <Text style={styles.materialsLabel}>Guarantee:</Text>
+    <SectionMarker markerKeys={["guarantee"]} registry={registry} />
+
     {guaranteeBlocks.map((block, index) =>
-      renderBlock(block, index, "guarantee"),
+      renderBlock(
+        block,
+        index,
+        "guarantee",
+        registry,
+        pageStarts,
+      ),
     )}
 
     <Text style={styles.signoffTitle}>Kind Regards</Text>
     <View style={styles.signoff}>
       <View style={styles.signoffColumn}>
-        <Image
-          src={asset(assetBase, "firma.png")}
-          style={styles.signature}
-        />
+        <Image src={asset(assetBase, "firma.png")} style={styles.signature} />
         <Text style={styles.contactName}>Paul Jones</Text>
         <Text style={styles.contactText}>LRS Technical Manager</Text>
         <Text style={styles.contactText}>T: 01948 841 877</Text>
@@ -957,10 +948,7 @@ const GuaranteeAndSignoff = ({ guaranteeBlocks, assetBase }) => (
       </View>
 
       <View style={styles.signoffColumn}>
-        <Image
-          src={asset(assetBase, "firmat.png")}
-          style={styles.signature}
-        />
+        <Image src={asset(assetBase, "firmat.png")} style={styles.signature} />
         <Text style={styles.contactName}>Tom Shone</Text>
         <Text style={styles.contactText}>Managing Director</Text>
         <Text style={styles.contactText}>T: 07415 116280</Text>
@@ -972,7 +960,7 @@ const GuaranteeAndSignoff = ({ guaranteeBlocks, assetBase }) => (
 );
 
 const BackCover = ({ assetBase }) => (
-  <Page size="A4" style={styles.backCoverPage}>
+  <Page size="A4" style={styles.backCoverPage} wrap={false}>
     <Image src={asset(assetBase, "2F.png")} style={styles.backCoverImage} />
     <View style={styles.backCoverContent}>
       <View>
@@ -984,10 +972,7 @@ const BackCover = ({ assetBase }) => (
         <Text style={styles.backCoverText}>enquiries@lrs-systems.co.uk</Text>
         <Text style={styles.backCoverWebsite}>www.lrs-systems.co.uk</Text>
       </View>
-      <Image
-        src={asset(assetBase, "1lrs.png")}
-        style={styles.backCoverLogo}
-      />
+      <Image src={asset(assetBase, "1lrs.png")} style={styles.backCoverLogo} />
     </View>
   </Page>
 );
@@ -1017,8 +1002,15 @@ const PdfDocumentFastCoatTop = ({
   photos = [],
   roofBuildUp,
   assetBase = "",
-  pageStarts,
+  // Optional fallback/override values. The document normally discovers page
+  // numbers during layout, but these remain useful if the parent already has
+  // known page starts from a previous render.
+  pageStarts = {},
 }) => {
+  // Mutable for this one PDF render. SectionMarker fills it with the actual
+  // page numbers during React PDF's layout pass.
+  const pageRegistry = {};
+
   const isFullyPrimed = FULLY_PRIMED_SURFACES.includes(surface);
   const selectedTrafficCoat = trafficCoat || antiSkid || "No";
   const selectedContent = getConditionalContent({
@@ -1026,6 +1018,7 @@ const PdfDocumentFastCoatTop = ({
     isFullyPrimed,
     trafficCoat: selectedTrafficCoat,
   });
+
   const contentBlocks = toBlocks(COMMON_BEFORE_ROOF);
   const afterRoofBlocks = toBlocks(selectedContent.body);
   const guaranteeBlocks = toBlocks(selectedContent.guarantee);
@@ -1034,6 +1027,7 @@ const PdfDocumentFastCoatTop = ({
   const safePhotos = Array.isArray(photos)
     ? photos.filter(Boolean).slice(0, 4)
     : [];
+
   const roofDetailsProps = {
     reference,
     roofSize,
@@ -1046,68 +1040,18 @@ const PdfDocumentFastCoatTop = ({
     existingCoatings,
     pondingWater,
   };
-  const roofRows = getRoofRows(roofDetailsProps);
-  const blockItem = (block) => ({
-    kind: "block",
-    block,
-    tocKey: TOC_KEYS[block.text],
-    tocKeys: [INTERNAL_PAGE_KEYS[block.text]].filter(Boolean),
-  });
-  const contentItems = [
-    blockItem({
-      type: "majorHeading",
-      text: "Preliminaries and General Conditions",
-    }),
-    ...contentBlocks.map(blockItem),
-    blockItem({ type: "majorHeading", text: "Roof Specification" }),
-    blockItem({
-      type: "paragraph",
-      text: `Roof areas covered in this specification: ${reference || "TBC"}`,
-    }),
-    ...(image ? [{ kind: "roofImage", source: image }] : []),
-    blockItem({ type: "majorHeading", text: "The Roof Build Up" }),
-    ...(image ? [{ kind: "pageBreak" }] : []),
-    blockItem({
-      type: "paragraph",
-      text: `With the information and images provided this specification is for ${reference || "TBC"}.`,
-    }),
-    {
-      kind: "roofDetails",
-      rows: roofRows,
-      props: roofDetailsProps,
-    },
-    ...afterRoofBlocks.map(blockItem),
-  ];
-  const pagination = paginateWithResolvedReferences(contentItems);
-  const photographsMaterialsPage = 4 + pagination.pages.length;
-  const guaranteePage = photographsMaterialsPage + 1;
-  const computedPageStarts = {
-    project: 3,
-    ...pagination.pageStarts,
-    photographs: photographsMaterialsPage,
-    materials: photographsMaterialsPage,
-    guarantee: guaranteePage,
-  };
-  const resolvedPageStarts = {
-    ...computedPageStarts,
-    ...(pageStarts || {}),
-  };
 
   return (
     <Document
       title={`FastCoat TopCoat - ${reference || "Installation Specification"}`}
       author="Liquid Roofing Systems Ltd"
     >
-      <Page size="A4" style={styles.coverPage}>
-        <Image
-          src={asset(assetBase, "1F.png")}
-          style={styles.coverTopImage}
-        />
+      {/* COVER — always A4 and intentionally has no footer */}
+      <Page size="A4" style={styles.coverPage} wrap={false}>
+        <Image src={asset(assetBase, "1F.png")} style={styles.coverTopImage} />
         <View style={styles.coverContent}>
-          <Image
-            src={asset(assetBase, "fastcoat-pro-footer.png")}
-            style={styles.coverLogo}
-          />
+          {/* Requested cover logo, directly above INSTALLATION SPECIFICATION */}
+          <Image src={asset(assetBase, "fasttop1.jpg")} style={styles.coverLogo} />
           <Text style={styles.coverTitle}>INSTALLATION SPECIFICATION</Text>
           <Text style={styles.coverReference}>
             {(reference || "PROJECT REFERENCE").toUpperCase()}
@@ -1115,20 +1059,23 @@ const PdfDocumentFastCoatTop = ({
         </View>
       </Page>
 
-      <Page size="A4" style={styles.page}>
+      {/* CONTENTS */}
+      <Page size="A4" style={styles.page} wrap={false}>
         <Header surface={surface} />
-        <Contents pageStarts={resolvedPageStarts} />
+        <Contents registry={pageRegistry} pageStarts={pageStarts} />
         <Text style={[styles.paragraph, { marginTop: 12 }]}>
           FastCoat Pro {guaranteeYears} Specification Ref: {lrsReference || "LRS – TBC"}
         </Text>
-        <Footer assetBase={assetBase} pageNumber={2} />
+        <Footer assetBase={assetBase} />
       </Page>
 
-      <Page size="A4" style={styles.page}>
+      {/* PROJECT DETAILS */}
+      <Page size="A4" style={styles.page} wrap={false}>
         <Header surface={surface} />
         <Text style={styles.specificationTitle}>
           FastCoat Pro {guaranteeYears} Specification Ref: {lrsReference || "LRS – TBC"}
         </Text>
+        <SectionMarker markerKeys={["project"]} registry={pageRegistry} />
 
         <View style={styles.detailRow}>
           <Text style={styles.detailLabel}>Date</Text>
@@ -1155,79 +1102,81 @@ const PdfDocumentFastCoatTop = ({
             <Text>{preparedByEmail}</Text>
           </View>
         </View>
-        <Footer assetBase={assetBase} pageNumber={3} />
+        <Footer assetBase={assetBase} />
       </Page>
 
-      {pagination.pages.map((items, pageIndex) => {
-        const currentPageNumber = 4 + pageIndex;
-
-        return (
-          <Page
-            key={`content-page-${currentPageNumber}`}
-            size="A4"
-            style={styles.page}
-          >
-            <Header surface={surface} />
-
-            {items.map((item, itemIndex) => {
-              if (item.kind === "block") {
-                return renderBlock(
-                  item.block,
-                  itemIndex,
-                  `page-${currentPageNumber}`,
-                );
-              }
-
-              if (item.kind === "roofImage") {
-                return (
-                  <View
-                    key={`roof-image-${currentPageNumber}-${itemIndex}`}
-                    style={styles.roofImageFrame}
-                    wrap={false}
-                  >
-                    <Image src={item.source} style={styles.roofImage} />
-                  </View>
-                );
-              }
-
-              if (item.kind === "roofDetails") {
-                return (
-                  <RoofDetails
-                    key={`roof-details-${currentPageNumber}-${itemIndex}`}
-                    {...item.props}
-                  />
-                );
-              }
-
-              return null;
-            })}
-
-            <Footer
-              assetBase={assetBase}
-              pageNumber={currentPageNumber}
-            />
-          </Page>
-        );
-      })}
-
-      <Page size="A4" style={styles.page}>
+      {/*
+        FLOWING TECHNICAL CONTENT
+        One A4 Page component with wrap enabled is allowed to create as many
+        A4 continuation pages as React PDF needs. This removes the old manual
+        height estimation that was creating large unused gaps.
+      */}
+      <Page size="A4" style={styles.page} wrap>
         <Header surface={surface} />
-        <PhotographsAndMaterials photos={safePhotos} />
-        <Footer
-          assetBase={assetBase}
-          pageNumber={photographsMaterialsPage}
+
+        <Text style={styles.sectionTitle} minPresenceAhead={52}>
+          Preliminaries and General Conditions
+        </Text>
+        <SectionMarker markerKeys={["preliminaries"]} registry={pageRegistry} />
+
+        {contentBlocks.map((block, index) =>
+          renderBlock(
+            block,
+            index,
+            "common",
+            pageRegistry,
+            pageStarts,
+          ),
+        )}
+
+        <RoofSpecificationSection
+          reference={reference}
+          image={image}
+          registry={pageRegistry}
         />
+
+        <RoofBuildUpSection
+          roofDetailsProps={roofDetailsProps}
+          reference={reference}
+          registry={pageRegistry}
+        />
+
+        {afterRoofBlocks.map((block, index) =>
+          renderBlock(
+            block,
+            index,
+            "after-roof",
+            pageRegistry,
+            pageStarts,
+          ),
+        )}
+
+        <Footer assetBase={assetBase} />
       </Page>
 
-      <Page size="A4" style={styles.page}>
+      {/* PHOTOGRAPHS + MATERIALS — always one dedicated A4 page */}
+      <Page size="A4" style={styles.page} wrap={false}>
+        <Header surface={surface} />
+        <PhotographsAndMaterials
+          photos={safePhotos}
+          registry={pageRegistry}
+        />
+        <Footer assetBase={assetBase} />
+      </Page>
+
+      {/* GUARANTEE + SIGNATURES — always one dedicated A4 page */}
+      <Page size="A4" style={styles.page} wrap={false}>
         <Header surface={surface} />
         <GuaranteeAndSignoff
           guaranteeBlocks={finalGuaranteeBlocks}
           assetBase={assetBase}
+          registry={pageRegistry}
+          pageStarts={pageStarts}
         />
-        <Footer assetBase={assetBase} pageNumber={guaranteePage} />
+        <Footer assetBase={assetBase} />
       </Page>
 
+      {/* BACK COVER — always A4 and intentionally has no footer */}
       <BackCover assetBase={assetBase} />
     </Document>
   );
