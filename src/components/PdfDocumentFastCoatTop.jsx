@@ -1,4 +1,4 @@
-// VERSION: 2026-09-01-a4-flow-layout-fixed-v6
+// VERSION: 2026-09-01-a4-flow-layout-fixed-v7
 import React from "react";
 import {
   Document,
@@ -383,15 +383,15 @@ const styles = StyleSheet.create({
     objectFit: "contain",
   },
 
-  // Essentially invisible, but it remains in normal document flow so React
-  // PDF reports the page on which that section actually starts.
+  // Invisible but deliberately non-zero. Some React PDF versions can produce
+  // invalid transform coordinates when an empty Text node has zero dimensions.
   sectionMarker: {
-    fontSize: 0.1,
-    lineHeight: 0.1,
-    height: 0.1,
+    fontSize: 1,
+    lineHeight: 1,
+    height: 1,
     margin: 0,
     padding: 0,
-    color: "#ffffff",
+    opacity: 0,
   },
 });
 
@@ -638,7 +638,9 @@ const SectionMarker = ({ markerKeys, registry }) => {
         keys.forEach((key) => {
           registry[key] = pageNumber;
         });
-        return "";
+        // Never return an empty string here. Older React PDF versions can
+        // calculate an invalid text transform for a zero-size rendered value.
+        return ".";
       }}
     />
   );
@@ -695,8 +697,6 @@ const renderBlock = (block, index, prefix, registry, pageStarts) => {
     Boolean(targetKey) &&
     /(Please see|See)\s+pages?\s+\d+(?:\s*[-–]\s*\d+)?/i.test(block.text);
 
-  const minPresenceAhead = isMajor ? 32 : isHeading ? 18 : 0;
-
   const textProps = hasDynamicReference
     ? {
         render: () =>
@@ -713,7 +713,6 @@ const renderBlock = (block, index, prefix, registry, pageStarts) => {
           block.type === "bullet" && styles.bullet,
           block.type === "nestedBullet" && styles.nestedBullet,
         ]}
-        minPresenceAhead={minPresenceAhead}
         orphans={2}
         widows={2}
         {...textProps}
@@ -772,7 +771,9 @@ const ContentsPageNumber = ({ targetKey, registry, pageStarts }) => (
     style={styles.contentsPage}
     render={() => {
       const page = registry[targetKey] ?? pageStarts?.[targetKey];
-      return page == null ? "" : String(page);
+      // Reserve stable, non-empty text during the first layout pass. Returning
+      // an empty string can produce invalid PDF transform coordinates.
+      return page == null ? "00" : String(page);
     }}
   />
 );
@@ -932,7 +933,7 @@ const MaterialsSection = ({ registry, compact = false }) => (
 
 const PhotographsAndMaterials = ({ photos, registry }) => (
   <>
-    <View wrap={false} minPresenceAhead={80}>
+    <View wrap={false}>
       <Text style={styles.photosTitle}>Photographs</Text>
       <SectionMarker
         markerKeys={["photographs"]}
@@ -964,7 +965,7 @@ const PhotographsAndMaterials = ({ photos, registry }) => (
 
 const GuaranteeAndSignoff = ({ guaranteeBlocks, assetBase, registry, pageStarts }) => (
   <View style={styles.guaranteeSection}>
-    <View wrap={false} minPresenceAhead={72}>
+    <View wrap={false}>
       <Text style={styles.materialsLabel}>Guarantee:</Text>
       <SectionMarker markerKeys={["guarantee"]} registry={registry} />
     </View>
@@ -1186,7 +1187,7 @@ const PdfDocumentFastCoatTop = ({
       >
         <Header surface={surface} />
 
-        <Text style={styles.sectionTitle} minPresenceAhead={32}>
+        <Text style={styles.sectionTitle}>
           Preliminaries and General Conditions
         </Text>
         <SectionMarker markerKeys={["preliminaries"]} registry={pageRegistry} />
