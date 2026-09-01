@@ -9,11 +9,37 @@ import {
   Paper,
   Grid,
 } from "@mui/material";
-import { PDFDownloadLink } from "@react-pdf/renderer";
 import PdfDocument from "../components/PdfDocumentFastCoatTop";
 import { pdf } from '@react-pdf/renderer';
-import emailjs from '@emailjs/browser';
-import axios from 'axios';
+import {
+  PDFDocument as PDFLibDocument,
+  StandardFonts,
+  rgb,
+} from "pdf-lib";
+
+const addPhysicalPageNumbers = async (sourceBlob) => {
+  const sourceBytes = await sourceBlob.arrayBuffer();
+  const pdfDocument = await PDFLibDocument.load(sourceBytes);
+  const font = await pdfDocument.embedFont(StandardFonts.HelveticaBold);
+  const pages = pdfDocument.getPages();
+  const fontSize = 8.5;
+
+  pages.forEach((page, index) => {
+    const label = `Page ${index + 1} of ${pages.length}`;
+    const labelWidth = font.widthOfTextAtSize(label, fontSize);
+
+    page.drawText(label, {
+      x: (page.getWidth() - labelWidth) / 2,
+      y: 30,
+      size: fontSize,
+      font,
+      color: rgb(0.27, 0.27, 0.27),
+    });
+  });
+
+  const numberedBytes = await pdfDocument.save();
+  return new Blob([numberedBytes], { type: "application/pdf" });
+};
 
 
 
@@ -36,6 +62,8 @@ const FastCoatTop = () => {
 
 
   const [submitted, setSubmitted] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [downloadUrl, setDownloadUrl] = useState("");
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -55,28 +83,27 @@ const FastCoatTop = () => {
   
 // handleSubmit: genera + sube PDF y luego envía la notificación al portal
 const handleSubmit = async () => {
-  setSubmitted(false);                // evita montar PDFDownloadLink ahora
+  if (isGenerating) return;
+
+  setSubmitted(false);
   if (!validateForm()) return;
 
+  setIsGenerating(true);
+
   try {
-    const { emailOk } = await uploadPdfToBackend(); // hace upload y luego intentará email
+    const { emailOk, blob } = await uploadPdfToBackend();
     if (!emailOk) throw new Error("Email notification failed");
 
     console.log("✅ Notificación enviada");
-    setSubmitted(true);               // AHORA sí montas PDFDownloadLink
+    setDownloadUrl(URL.createObjectURL(blob));
+    setSubmitted(true);
   } catch (err) {
     console.error("❌ Error en envío:", err);
     alert("Hubo un problema al generar/subir el PDF o enviar la notificación.");
+  } finally {
+    setIsGenerating(false);
   }
 };
-
-
-  const handleDownload = () => {
-    // Esperar un poco para que el PDF comience a generarse
-    setTimeout(() => {
-      window.location.reload();
-    }, 1000);
-  };
 
 
 
@@ -115,15 +142,19 @@ const sendEmail = async () => {
 
 // SUBE el PDF y luego ENVÍA el email
 const uploadPdfToBackend = async () => {
-  console.log("⏳ [upload] Generando PDF y subiendo al backend...");
+  console.log("⏳ [pdf] Generando PDF...");
 
-  const blob = await pdf(<PdfDocument {...formData} />).toBlob();
+  const renderedBlob = await pdf(<PdfDocument {...formData} />).toBlob();
+  const blob = await addPhysicalPageNumbers(renderedBlob);
+  console.log(`✅ [pdf] PDF generado (${Math.round(blob.size / 1024)} KB)`);
+
   const filename = `${formData.reference || "project"}.pdf`;
   const file = new File([blob], filename, { type: "application/pdf" });
 
   const formDataUpload = new FormData();
   formDataUpload.append("file", file);
 
+  console.log("⏳ [upload] Subiendo PDF al backend...");
   const response = await fetch("https://api.liquidwaterproofingacademy.com/api/upload", {
     method: "POST",
     body: formDataUpload,
@@ -141,7 +172,7 @@ console.log("👉 [upload] Enviando notificación por email...");
 const emailOk = await sendEmail(); // <- sin argumentos
 console.log("📧 [upload] Resultado notificación:", emailOk);
 
-  return { emailOk };
+  return { emailOk, blob };
 };
 
 
@@ -155,6 +186,12 @@ console.log("📧 [upload] Resultado notificación:", emailOk);
       }));
     }
   }, []);
+
+  useEffect(() => {
+    return () => {
+      if (downloadUrl) URL.revokeObjectURL(downloadUrl);
+    };
+  }, [downloadUrl]);
 
 
 
@@ -713,8 +750,10 @@ console.log("📧 [upload] Resultado notificación:", emailOk);
 
           {/* Botón generar PDF */}
           <Button
+            type="button"
             fullWidth
             variant="contained"
+            disabled={isGenerating}
             sx={{
               mt: 2,
               backgroundColor: "#231f20",
@@ -725,34 +764,26 @@ console.log("📧 [upload] Resultado notificación:", emailOk);
               handleSubmit();
             }}
           >
-            Generate PDF
+            {isGenerating ? "Generating PDF..." : "Generate PDF"}
           </Button>
 
           {/* Botón descargar PDF */}
-          {submitted && (
+          {submitted && downloadUrl && (
             <Box sx={{ mt: 2 }}>
-              <PDFDownloadLink
-                document={<PdfDocument {...formData} />}
-                fileName={`${formData.reference || "project"}-specification.pdf`}
-                style={{ textDecoration: "none" }}
+              <Button
+                component="a"
+                href={downloadUrl}
+                download={`${formData.reference || "project"}-specification.pdf`}
+                variant="contained"
+                fullWidth
+                sx={{
+                  mt: 2,
+                  backgroundColor: "#0072ce",
+                  "&:hover": { backgroundColor: "#005bb5" },
+                }}
               >
-                {({ loading }) => (
-                 <Button
-                 variant="contained"
-                 fullWidth
-                 disabled={loading}
-                 onClick={handleDownload}
-                 sx={{
-                   mt: 2,
-                   backgroundColor: "#0072ce",
-                   "&:hover": { backgroundColor: "#005bb5" },
-                 }}
-               >
-                 {loading ? "Generating PDF..." : "Download PDF"}
-               </Button>
-               
-                )}
-              </PDFDownloadLink>
+                Download PDF
+              </Button>
             </Box>
           )}
         </Box>
