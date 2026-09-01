@@ -1,4 +1,4 @@
-// VERSION: 2026-09-01-flow-pagination-v2
+// VERSION: 2026-09-01-a4-flow-pagination-v3
 import React from "react";
 import {
   Document,
@@ -18,8 +18,13 @@ import {
 } from "./fastCoatTopContent";
 
 
+// IMPORTANT: all physical pages remain true A4.
+// Do not change these dimensions to solve pagination/spacing problems.
+// Pagination must be solved by text flow, wrapping and keep-with-next rules.
 const styles = StyleSheet.create({
   page: {
+    width: 595.28,
+    height: 841.89,
     paddingTop: 88,
     paddingRight: 42,
     paddingBottom: 82,
@@ -30,6 +35,8 @@ const styles = StyleSheet.create({
     lineHeight: 1.32,
   },
   coverPage: {
+    width: 595.28,
+    height: 841.89,
     padding: 0,
     backgroundColor: "#ffffff",
   },
@@ -340,6 +347,8 @@ const styles = StyleSheet.create({
   },
 
   backCoverPage: {
+    width: 595.28,
+    height: 841.89,
     padding: 0,
     backgroundColor: "#ffffff",
   },
@@ -669,7 +678,7 @@ const renderBlock = (block, index, prefix, registry, pageStarts) => {
     Boolean(targetKey) &&
     /(Please see|See)\s+pages?\s+\d+(?:\s*[-–]\s*\d+)?/i.test(block.text);
 
-  const minPresenceAhead = isMajor ? 52 : isHeading ? 30 : 0;
+  const minPresenceAhead = isMajor ? 32 : isHeading ? 18 : 0;
 
   const textProps = hasDynamicReference
     ? {
@@ -688,8 +697,8 @@ const renderBlock = (block, index, prefix, registry, pageStarts) => {
           block.type === "nestedBullet" && styles.nestedBullet,
         ]}
         minPresenceAhead={minPresenceAhead}
-        orphans={2}
-        widows={2}
+        orphans={1}
+        widows={1}
         {...textProps}
       >
         {hasDynamicReference ? null : block.text}
@@ -828,19 +837,21 @@ const RoofRow = ({ label, value }) => (
 
 const RoofSpecificationSection = ({ reference, image, registry }) => (
   <>
-    <Text
-      style={styles.sectionTitle}
-      // If there is an image, do not leave the title stranded immediately
-      // before a page break. This reserves enough room to begin the visual.
-      minPresenceAhead={image ? 390 : 52}
-    >
-      Roof Specification
-    </Text>
-    <SectionMarker markerKeys={["roofSpecification"]} registry={registry} />
-
-    <Text style={styles.paragraph} orphans={2} widows={2}>
-      Roof areas covered in this specification: {reference || "TBC"}
-    </Text>
+    {/*
+      Keep only the heading and its introductory line together.
+      Do NOT reserve the height of the image here: that was the main cause
+      of the large blank areas. The image is allowed to move by itself if it
+      cannot fit in the remaining A4 content area.
+    */}
+    <View wrap={false}>
+      <Text style={styles.sectionTitle}>
+        Roof Specification
+      </Text>
+      <SectionMarker markerKeys={["roofSpecification"]} registry={registry} />
+      <Text style={styles.paragraph}>
+        Roof areas covered in this specification: {reference || "TBC"}
+      </Text>
+    </View>
 
     {image ? (
       <View style={styles.roofImageFrame} wrap={false}>
@@ -1114,7 +1125,7 @@ const PdfDocumentFastCoatTop = ({
       <Page size="A4" style={styles.page} wrap>
         <Header surface={surface} />
 
-        <Text style={styles.sectionTitle} minPresenceAhead={52}>
+        <Text style={styles.sectionTitle} minPresenceAhead={32}>
           Preliminaries and General Conditions
         </Text>
         <SectionMarker markerKeys={["preliminaries"]} registry={pageRegistry} />
