@@ -11,36 +11,49 @@ import {
 } from "@mui/material";
 import PdfDocument from "../components/PdfDocumentFastCoatTop";
 import { pdf } from '@react-pdf/renderer';
-import {
-  PDFDocument as PDFLibDocument,
-  StandardFonts,
-  rgb,
-} from "pdf-lib";
+import { addPdfFooter } from "../utils/fastCoatPdfFooter";
 
-const addPhysicalPageNumbers = async (sourceBlob) => {
-  const sourceBytes = await sourceBlob.arrayBuffer();
-  const pdfDocument = await PDFLibDocument.load(sourceBytes);
-  const font = await pdfDocument.embedFont(StandardFonts.HelveticaBold);
-  const pages = pdfDocument.getPages();
-  const fontSize = 8.5;
+const compressImageForPdf = (file) =>
+  new Promise((resolve, reject) => {
+    const objectUrl = URL.createObjectURL(file);
+    const sourceImage = new window.Image();
 
-  pages.forEach((page, index) => {
-    const label = `Page ${index + 1} of ${pages.length}`;
-    const labelWidth = font.widthOfTextAtSize(label, fontSize);
+    sourceImage.onload = () => {
+      try {
+        const maxWidth = 1600;
+        const maxHeight = 1200;
+        const scale = Math.min(
+          1,
+          maxWidth / sourceImage.naturalWidth,
+          maxHeight / sourceImage.naturalHeight
+        );
+        const width = Math.max(1, Math.round(sourceImage.naturalWidth * scale));
+        const height = Math.max(1, Math.round(sourceImage.naturalHeight * scale));
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
 
-    page.drawText(label, {
-      x: (page.getWidth() - labelWidth) / 2,
-      y: 30,
-      size: fontSize,
-      font,
-      color: rgb(0.27, 0.27, 0.27),
-    });
+        if (!context) throw new Error("Canvas is not available");
+
+        canvas.width = width;
+        canvas.height = height;
+        context.fillStyle = "#ffffff";
+        context.fillRect(0, 0, width, height);
+        context.drawImage(sourceImage, 0, 0, width, height);
+        resolve(canvas.toDataURL("image/jpeg", 0.78));
+      } catch (error) {
+        reject(error);
+      } finally {
+        URL.revokeObjectURL(objectUrl);
+      }
+    };
+
+    sourceImage.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      reject(new Error(`Unsupported image: ${file.name}`));
+    };
+
+    sourceImage.src = objectUrl;
   });
-
-  const numberedBytes = await pdfDocument.save();
-  return new Blob([numberedBytes], { type: "application/pdf" });
-};
-
 
 
 const FastCoatTop = () => {
@@ -91,15 +104,12 @@ const handleSubmit = async () => {
   setIsGenerating(true);
 
   try {
-    const { emailOk, blob } = await uploadPdfToBackend();
-    if (!emailOk) throw new Error("Email notification failed");
-
-    console.log("✅ Notificación enviada");
+    const { blob } = await uploadPdfToBackend();
     setDownloadUrl(URL.createObjectURL(blob));
     setSubmitted(true);
   } catch (err) {
     console.error("❌ Error en envío:", err);
-    alert("Hubo un problema al generar/subir el PDF o enviar la notificación.");
+    alert("Hubo un problema al generar o subir el PDF.");
   } finally {
     setIsGenerating(false);
   }
@@ -109,6 +119,7 @@ const handleSubmit = async () => {
 
 // Enviar NOTIFICACIÓN por EmailJS
 // Enviar NOTIFICACIÓN por EmailJS
+// eslint-disable-next-line no-unused-vars
 const sendEmail = async () => {
   try {
     const payload = {
@@ -145,7 +156,7 @@ const uploadPdfToBackend = async () => {
   console.log("⏳ [pdf] Generando PDF...");
 
   const renderedBlob = await pdf(<PdfDocument {...formData} />).toBlob();
-  const blob = await addPhysicalPageNumbers(renderedBlob);
+  const blob = await addPdfFooter(renderedBlob);
   console.log(`✅ [pdf] PDF generado (${Math.round(blob.size / 1024)} KB)`);
 
   const filename = `${formData.reference || "project"}.pdf`;
@@ -167,12 +178,13 @@ const uploadPdfToBackend = async () => {
 
   console.log("✅ [upload] Archivo subido correctamente");
 
-  // Enviar email de notificación
-console.log("👉 [upload] Enviando notificación por email...");
-const emailOk = await sendEmail(); // <- sin argumentos
-console.log("📧 [upload] Resultado notificación:", emailOk);
+  // EMAIL DESACTIVADO DURANTE LAS PRUEBAS.
+  // Para reactivarlo, descomenta estas tres líneas:
+  // console.log("👉 [upload] Enviando notificación por email...");
+  // const emailOk = await sendEmail();
+  // console.log("📧 [upload] Resultado notificación:", emailOk);
 
-  return { emailOk, blob };
+  return { blob };
 };
 
 
@@ -393,19 +405,22 @@ console.log("📧 [upload] Resultado notificación:", emailOk);
       <input
         type="file"
         hidden
-        accept="image/*"
-        onChange={(e) => {
+        accept="image/jpeg,image/png,image/webp"
+        onChange={async (e) => {
           const file = e.target.files[0];
           if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
+            try {
+              const compressedImage = await compressImageForPdf(file);
               setFormData((prev) => ({
                 ...prev,
-                image: reader.result,
+                image: compressedImage,
               }));
-            };
-            reader.readAsDataURL(file);
+            } catch (error) {
+              console.error("Unable to prepare roof image:", error);
+              alert("Use a JPG, PNG or WebP image.");
+            }
           }
+          e.target.value = "";
         }}
       />
     </Button>
@@ -668,25 +683,23 @@ console.log("📧 [upload] Resultado notificación:", emailOk);
       <input
         type="file"
         hidden
-        accept="image/*"
+        accept="image/jpeg,image/png,image/webp"
         multiple
-        onChange={(e) => {
+        onChange={async (e) => {
           const newFiles = Array.from(e.target.files);
           const existing = formData.photos || [];
 
-          const readers = newFiles.map(
-            (file) =>
-              new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.onloadend = () => resolve(reader.result);
-                reader.readAsDataURL(file);
-              })
-          );
-
-          Promise.all(readers).then((newImages) => {
+          try {
+            const newImages = await Promise.all(
+              newFiles.map(compressImageForPdf)
+            );
             const combined = [...existing, ...newImages].slice(0, 4);
             setFormData((prev) => ({ ...prev, photos: combined }));
-          });
+          } catch (error) {
+            console.error("Unable to prepare photographs:", error);
+            alert("Use JPG, PNG or WebP photographs.");
+          }
+          e.target.value = "";
         }}
       />
     </Button>
