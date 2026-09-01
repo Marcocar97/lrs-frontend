@@ -26,8 +26,8 @@ const styles = StyleSheet.create({
     paddingLeft: 42,
     color: "#000000",
     fontFamily: "Helvetica",
-    fontSize: 9.2,
-    lineHeight: 1.28,
+    fontSize: 9.8,
+    lineHeight: 1.32,
   },
   coverPage: {
     width: 595.28,
@@ -142,31 +142,31 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontFamily: "Helvetica-Bold",
-    fontSize: 14,
-    lineHeight: 1.2,
-    marginTop: 7,
-    marginBottom: 7,
+    fontSize: 14.6,
+    lineHeight: 1.22,
+    marginTop: 11,
+    marginBottom: 8.5,
     color: "#231f20",
   },
   subsectionTitle: {
     fontFamily: "Helvetica-Bold",
-    fontSize: 9.6,
-    lineHeight: 1.25,
-    marginTop: 3.5,
-    marginBottom: 2,
+    fontSize: 10.2,
+    lineHeight: 1.28,
+    marginTop: 6,
+    marginBottom: 3.5,
   },
   paragraph: {
-    fontSize: 9.2,
-    lineHeight: 1.28,
-    marginBottom: 3.2,
+    fontSize: 9.8,
+    lineHeight: 1.32,
+    marginBottom: 4.5,
     textAlign: "left",
   },
   bullet: {
-    marginLeft: 13,
+    marginLeft: 14,
     paddingRight: 4,
   },
   nestedBullet: {
-    marginLeft: 27,
+    marginLeft: 28,
     paddingRight: 4,
   },
   contentsTitle: {
@@ -222,15 +222,15 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
   roofIntro: {
-    fontSize: 9.2,
-    lineHeight: 1.28,
-    marginBottom: 8,
+    fontSize: 9.8,
+    lineHeight: 1.32,
+    marginBottom: 9,
   },
   roofImageFrame: {
     width: "100%",
-    height: 255,
-    marginTop: 6,
-    marginBottom: 10,
+    height: 355,
+    marginTop: 8,
+    marginBottom: 12,
     padding: 4,
     borderWidth: 0.6,
     borderColor: "#bdbdbd",
@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
   },
   roofRow: {
     flexDirection: "row",
-    paddingVertical: 3,
+    paddingVertical: 3.8,
     borderBottomWidth: 0.35,
     borderBottomColor: "#d0d0d0",
   },
@@ -263,8 +263,8 @@ const styles = StyleSheet.create({
   },
   photosTitle: {
     fontFamily: "Helvetica-Bold",
-    fontSize: 15,
-    marginBottom: 9,
+    fontSize: 15.5,
+    marginBottom: 12,
   },
   photosGrid: {
     flexDirection: "row",
@@ -273,8 +273,8 @@ const styles = StyleSheet.create({
   },
   photoBox: {
     width: "48.5%",
-    height: 145,
-    marginBottom: 7,
+    height: 165,
+    marginBottom: 10,
     padding: 4,
     borderWidth: 0.6,
     borderColor: "#bdbdbd",
@@ -283,7 +283,10 @@ const styles = StyleSheet.create({
   },
   singlePhotoBox: {
     width: "100%",
-    height: 250,
+    height: 360,
+  },
+  twoPhotoBox: {
+    height: 245,
   },
   photo: {
     width: "100%",
@@ -292,17 +295,20 @@ const styles = StyleSheet.create({
   },
   materialsLabel: {
     fontFamily: "Helvetica-Bold",
-    fontSize: 12,
-    marginBottom: 4,
+    fontSize: 13,
+    marginBottom: 5,
   },
   finalSection: {
-    marginTop: 8,
+    marginTop: 16,
+  },
+  guaranteeSection: {
+    marginTop: 4,
   },
   signoffTitle: {
     fontFamily: "Helvetica-Bold",
-    fontSize: 9,
-    marginTop: 8,
-    marginBottom: 6,
+    fontSize: 10.2,
+    marginTop: 18,
+    marginBottom: 10,
   },
   signoff: {
     flexDirection: "row",
@@ -313,19 +319,19 @@ const styles = StyleSheet.create({
     width: "47%",
   },
   signature: {
-    width: 115,
-    height: 30,
+    width: 125,
+    height: 34,
     objectFit: "contain",
-    marginBottom: 4,
+    marginBottom: 6,
   },
   contactName: {
     fontFamily: "Helvetica-Bold",
-    fontSize: 8.5,
-    marginBottom: 1,
+    fontSize: 9.2,
+    marginBottom: 2,
   },
   contactText: {
-    fontSize: 7.8,
-    marginBottom: 1,
+    fontSize: 8.6,
+    marginBottom: 1.5,
   },
   backCoverPage: {
     width: 595.28,
@@ -399,6 +405,7 @@ const SECTION_HEADINGS = new Set([
   "General Guidance and Requirements",
   "General Guidance - requirements",
   "Maintenance After Installation",
+  "Guarantee – Materials Only",
 ]);
 
 const MAJOR_HEADINGS = new Set([
@@ -435,6 +442,26 @@ const TOC_KEYS = {
   "General Guidance and Requirements": "general",
 };
 
+const INTERNAL_PAGE_KEYS = {
+  Preparation: "preparation",
+  "Safety Precautions": "safety",
+  Cleaning: "cleaning",
+  "MS 2-Part Primer:": "primer",
+  "Existing Details, Terminations and Upstands:": "details",
+  "FastCoat Waterproof as a Base Coat:": "baseCoat",
+  "FastCoat Waterproof as a BaseCoat:": "baseCoat",
+  "FastCoat Base Coat – Inspect:": "baseCoatInspect",
+  "FastCoat MidCoat:": "midCoat",
+  "FastCoat Waterproof as a MidCoat:": "midCoat",
+  "FastCoat Waterproof as a TopCoat:": "topCoat",
+  "Completed Roof Surface": "completedRoof",
+  "Guide to Visual Inspection of the Completed Roof Surface": "visualInspection",
+  "Traffic Coat Previsions for walkways, maintenance routes etc.": "trafficCoat",
+  "Traffic Coat Previsions for walkways, maintenance routes etc.:": "trafficCoat",
+  "General Guidance and Requirements": "generalGuidance",
+  "Maintenance After Installation": "maintenance",
+};
+
 const asset = (assetBase, filename) =>
   assetBase ? assetBase.replace(/\/$/, "") + "/" + filename : "/" + filename;
 
@@ -467,7 +494,7 @@ const formatDate = (value) => {
 const Header = ({ surface }) => (
   <View style={styles.header} fixed>
     <View style={styles.headerRow}>
-      <Text style={styles.headerTitle}>FastCoat onto {surface}</Text>
+      <Text style={styles.headerTitle}>FastCoat Pro onto {surface}</Text>
       <View style={styles.colourBars}>
         <View style={styles.redBar} />
         <View style={styles.orangeBar} />
@@ -485,7 +512,7 @@ const Footer = ({ assetBase, pageNumber }) => (
       <Image src={asset(assetBase, "1lrs.png")} style={styles.footerLrsLogo} />
       <Text style={styles.pageNumber}>Page {pageNumber}</Text>
       <Image
-        src={asset(assetBase, "fastcoat-pro-footer.png")}
+        src={asset(assetBase, "fasttop.jpg")}
         style={styles.footerFastCoatLogo}
       />
     </View>
@@ -539,6 +566,20 @@ const toBlocks = (lines) => {
   return blocks;
 };
 
+const toFinalGuaranteeBlocks = (blocks) =>
+  blocks.map((block) => ({
+    ...block,
+    text: block.text
+      .replace(
+        "The following guarantee specification",
+        "The following guarantee-specification",
+      )
+      .replace(
+        "Only Waterproofing products supplied by LRS",
+        "Only products supplied by LRS",
+      ),
+  }));
+
 const renderBlock = (block, index, prefix) => {
   const isHeading = block.type === "heading" || block.type === "numbered";
 
@@ -582,43 +623,37 @@ const estimateWrappedLines = (text, maxCharacters) => {
 
 const estimateBlockHeight = (block) => {
   if (block.type === "majorHeading") {
-    return estimateWrappedLines(block.text, 68) * 17 + 14;
+    return estimateWrappedLines(block.text, 64) * 18.5 + 17;
   }
   if (block.type === "heading" || block.type === "numbered") {
-    return estimateWrappedLines(block.text, 92) * 12.2 + 6;
+    return estimateWrappedLines(block.text, 84) * 13.8 + 9;
   }
 
   const maxCharacters =
-    block.type === "nestedBullet" ? 92 : block.type === "bullet" ? 98 : 106;
-  return estimateWrappedLines(block.text, maxCharacters) * 11.8 + 3.5;
+    block.type === "nestedBullet" ? 84 : block.type === "bullet" ? 90 : 98;
+  return estimateWrappedLines(block.text, maxCharacters) * 13 + 4.5;
 };
 
 const estimateRoofDetailsHeight = (rows) =>
   rows.reduce((height, [label, value]) => {
-    const labelLines = estimateWrappedLines(label, 30);
-    const valueLines = estimateWrappedLines(value || "TBC", 66);
-    return height + Math.max(labelLines, valueLines) * 11.8 + 6;
-  }, 14);
+    const labelLines = estimateWrappedLines(label, 28);
+    const valueLines = estimateWrappedLines(value || "TBC", 60);
+    return height + Math.max(labelLines, valueLines) * 12.8 + 7.6;
+  }, 16);
 
 const estimateItemHeight = (item) => {
   if (item.kind === "block") return estimateBlockHeight(item.block);
-  if (item.kind === "roofImage") return 271;
+  if (item.kind === "roofImage") return 375;
   if (item.kind === "roofDetails") {
     return estimateRoofDetailsHeight(item.rows);
-  }
-  if (item.kind === "finalSections") {
-    const photoCount = item.photos.length;
-    const photoHeight =
-      photoCount === 0
-        ? 0
-        : 29 + (photoCount === 1 ? 257 : photoCount === 2 ? 152 : 304);
-    return photoHeight + 172;
   }
   return 0;
 };
 
 const paginateContentItems = (items, startPage = 4) => {
-  const maximumHeight = 638;
+  // Deliberately conservative so the pages read more like the original
+  // specification instead of packing every available line into the page.
+  const maximumHeight = 612;
   const pages = [];
   const pageStarts = {};
   let page = [];
@@ -632,15 +667,34 @@ const paginateContentItems = (items, startPage = 4) => {
   };
 
   items.forEach((item, index) => {
+    if (item.kind === "pageBreak") {
+      savePage();
+      return;
+    }
+
     const itemHeight = estimateItemHeight(item);
     const nextItem = items[index + 1];
+    const isMajorHeading =
+      item.kind === "block" && item.block.type === "majorHeading";
     const keepWithNext =
       item.kind === "block" &&
       ["majorHeading", "heading", "numbered"].includes(item.block.type) &&
-      nextItem;
-    const requiredHeight = keepWithNext
-      ? itemHeight + Math.min(estimateItemHeight(nextItem), 72) + 36
-      : itemHeight;
+      nextItem &&
+      nextItem.kind !== "pageBreak";
+
+    // Do not squeeze a major new area into the last part of a page.
+    // This gives sections visible separation while still using the page well.
+    if (page.length && isMajorHeading && usedHeight > 490) {
+      savePage();
+    }
+
+    const followingContent =
+      keepWithNext && isMajorHeading
+        ? Math.min(estimateItemHeight(nextItem), 96)
+        : keepWithNext
+          ? Math.min(estimateItemHeight(nextItem), 54)
+          : 0;
+    const requiredHeight = itemHeight + followingContent;
 
     if (page.length && usedHeight + requiredHeight > maximumHeight) {
       savePage();
@@ -659,6 +713,79 @@ const paginateContentItems = (items, startPage = 4) => {
 
   savePage();
   return { pages, pageStarts };
+};
+
+const replacePageReference = (text, pageNumber) => {
+  if (!pageNumber) return text;
+
+  return text.replace(
+    /(?:Please see|See) pages?\s+\d+(?:\s*[-–]\s*\d+)?\.?/gi,
+    (match) => {
+      const prefix = /^See\b/i.test(match) ? "See" : "Please see";
+      return `${prefix} page ${pageNumber}.`;
+    },
+  );
+};
+
+const resolveInternalReferences = (items, pageStarts) =>
+  items.map((item) => {
+    if (item.kind !== "block") return item;
+
+    let text = item.block.text;
+    let targetKey = null;
+
+    if (
+      /Safety First|Safety Measures|Safety Precautions|Safe Working|Health and Safety Legislation/i.test(
+        text,
+      )
+    ) {
+      targetKey = "safety";
+    } else if (/Preparation of Existing Details/i.test(text)) {
+      targetKey = "preparation";
+    } else if (/Applying FastCoat Waterproof Coating/i.test(text)) {
+      targetKey = "baseCoat";
+    } else if (/Clean Surface:/i.test(text)) {
+      targetKey = "cleaning";
+    } else if (/\bCleaning\b.*Please see/i.test(text)) {
+      targetKey = "cleaning";
+    }
+
+    if (targetKey && pageStarts[targetKey]) {
+      text = replacePageReference(text, pageStarts[targetKey]);
+    }
+
+    return text === item.block.text
+      ? item
+      : { ...item, block: { ...item.block, text } };
+  });
+
+const paginateWithResolvedReferences = (items, startPage = 4) => {
+  let resolvedItems = items;
+  let pagination = paginateContentItems(resolvedItems, startPage);
+
+  // Page references can alter wrapping very slightly, so resolve and paginate
+  // more than once until the page starts settle.
+  for (let pass = 0; pass < 3; pass += 1) {
+    const pageStarts = {
+      project: 3,
+      ...pagination.pageStarts,
+    };
+    const nextItems = resolveInternalReferences(items, pageStarts);
+    const nextPagination = paginateContentItems(nextItems, startPage);
+
+    const currentStarts = JSON.stringify(pagination.pageStarts);
+    const nextStarts = JSON.stringify(nextPagination.pageStarts);
+
+    resolvedItems = nextItems;
+    pagination = nextPagination;
+
+    if (currentStarts === nextStarts) break;
+  }
+
+  return {
+    ...pagination,
+    resolvedItems,
+  };
 };
 
 const getConditionalContent = ({ guarantee, isFullyPrimed, trafficCoat }) => {
@@ -692,14 +819,16 @@ const getConditionalContent = ({ guarantee, isFullyPrimed, trafficCoat }) => {
   const guaranteeIndex = lines.indexOf("Guarantee – Materials Only");
 
   return {
-    body:
-      guaranteeIndex === -1 ? lines : lines.slice(0, guaranteeIndex),
+    // Keep the Materials Only guarantee in the body as it appears in the
+    // original specification, and reuse its wording on the final signed
+    // Guarantee page.
+    body: lines,
     guarantee:
       guaranteeIndex === -1 ? [] : lines.slice(guaranteeIndex + 1),
   };
 };
 
-const Contents = ({ pageStarts, showPhotographs }) => {
+const Contents = ({ pageStarts }) => {
   const rows = [
     ["Project details", pageStarts.project],
     ["Preliminaries & general conditions", pageStarts.preliminaries],
@@ -718,11 +847,9 @@ const Contents = ({ pageStarts, showPhotographs }) => {
     ["Waterproof coverings", pageStarts.waterproof],
     ["Additional information", pageStarts.additional],
     ["General guidance and requirements", pageStarts.general],
-    ...(showPhotographs
-      ? [["Photographs", pageStarts.photographs]]
-      : []),
+    ["Photographs", pageStarts.photographs],
     ["Materials and guarantee", pageStarts.materials],
-    ["Guarantee", pageStarts.materials],
+    ["Guarantee", pageStarts.guarantee],
   ];
 
   return (
@@ -780,11 +907,36 @@ const RoofDetails = (props) => {
   );
 };
 
-const MaterialsAndGuarantee = ({ guaranteeBlocks, assetBase }) => (
-  <View style={styles.finalSection} wrap={false}>
-    <Text style={styles.materialsLabel}>Materials</Text>
-    <Text style={[styles.paragraph, { marginBottom: 8 }]}>TBC</Text>
+const PhotographsAndMaterials = ({ photos }) => (
+  <View wrap={false}>
+    <Text style={styles.photosTitle}>Photographs</Text>
 
+    {photos.length > 0 ? (
+      <View style={styles.photosGrid}>
+        {photos.map((photo, index) => (
+          <View
+            key={`photograph-${index}`}
+            style={[
+              styles.photoBox,
+              photos.length === 1 && styles.singlePhotoBox,
+              photos.length === 2 && styles.twoPhotoBox,
+            ]}
+          >
+            <Image src={photo} style={styles.photo} />
+          </View>
+        ))}
+      </View>
+    ) : null}
+
+    <View style={styles.finalSection}>
+      <Text style={styles.materialsLabel}>Materials</Text>
+      <Text style={styles.paragraph}>TBC</Text>
+    </View>
+  </View>
+);
+
+const GuaranteeAndSignoff = ({ guaranteeBlocks, assetBase }) => (
+  <View style={styles.guaranteeSection} wrap={false}>
     <Text style={styles.materialsLabel}>Guarantee:</Text>
     {guaranteeBlocks.map((block, index) =>
       renderBlock(block, index, "guarantee"),
@@ -816,34 +968,6 @@ const MaterialsAndGuarantee = ({ guaranteeBlocks, assetBase }) => (
         <Text style={styles.contactText}>W: www.lrs-systems.co.uk</Text>
       </View>
     </View>
-  </View>
-);
-
-const FinalSections = ({ photos, guaranteeBlocks, assetBase }) => (
-  <View wrap={false}>
-    {photos.length > 0 ? (
-      <>
-        <Text style={styles.photosTitle}>Photographs</Text>
-        <View style={styles.photosGrid}>
-          {photos.map((photo, index) => (
-            <View
-              key={`photograph-${index}`}
-              style={[
-                styles.photoBox,
-                photos.length === 1 && styles.singlePhotoBox,
-              ]}
-            >
-              <Image src={photo} style={styles.photo} />
-            </View>
-          ))}
-        </View>
-      </>
-    ) : null}
-
-    <MaterialsAndGuarantee
-      guaranteeBlocks={guaranteeBlocks}
-      assetBase={assetBase}
-    />
   </View>
 );
 
@@ -905,6 +1029,7 @@ const PdfDocumentFastCoatTop = ({
   const contentBlocks = toBlocks(COMMON_BEFORE_ROOF);
   const afterRoofBlocks = toBlocks(selectedContent.body);
   const guaranteeBlocks = toBlocks(selectedContent.guarantee);
+  const finalGuaranteeBlocks = toFinalGuaranteeBlocks(guaranteeBlocks);
   const guaranteeYears = guarantee === "25-year" ? "25" : "20";
   const safePhotos = Array.isArray(photos)
     ? photos.filter(Boolean).slice(0, 4)
@@ -926,6 +1051,7 @@ const PdfDocumentFastCoatTop = ({
     kind: "block",
     block,
     tocKey: TOC_KEYS[block.text],
+    tocKeys: [INTERNAL_PAGE_KEYS[block.text]].filter(Boolean),
   });
   const contentItems = [
     blockItem({
@@ -940,6 +1066,7 @@ const PdfDocumentFastCoatTop = ({
     }),
     ...(image ? [{ kind: "roofImage", source: image }] : []),
     blockItem({ type: "majorHeading", text: "The Roof Build Up" }),
+    ...(image ? [{ kind: "pageBreak" }] : []),
     blockItem({
       type: "paragraph",
       text: `With the information and images provided this specification is for ${reference || "TBC"}.`,
@@ -950,19 +1077,16 @@ const PdfDocumentFastCoatTop = ({
       props: roofDetailsProps,
     },
     ...afterRoofBlocks.map(blockItem),
-    {
-      kind: "finalSections",
-      photos: safePhotos,
-      tocKeys: [
-        ...(safePhotos.length > 0 ? ["photographs"] : []),
-        "materials",
-      ],
-    },
   ];
-  const pagination = paginateContentItems(contentItems);
+  const pagination = paginateWithResolvedReferences(contentItems);
+  const photographsMaterialsPage = 4 + pagination.pages.length;
+  const guaranteePage = photographsMaterialsPage + 1;
   const computedPageStarts = {
     project: 3,
     ...pagination.pageStarts,
+    photographs: photographsMaterialsPage,
+    materials: photographsMaterialsPage,
+    guarantee: guaranteePage,
   };
   const resolvedPageStarts = {
     ...computedPageStarts,
@@ -993,10 +1117,7 @@ const PdfDocumentFastCoatTop = ({
 
       <Page size="A4" style={styles.page}>
         <Header surface={surface} />
-        <Contents
-          pageStarts={resolvedPageStarts}
-          showPhotographs={safePhotos.length > 0}
-        />
+        <Contents pageStarts={resolvedPageStarts} />
         <Text style={[styles.paragraph, { marginTop: 12 }]}>
           FastCoat Pro {guaranteeYears} Specification Ref: {lrsReference || "LRS – TBC"}
         </Text>
@@ -1078,17 +1199,6 @@ const PdfDocumentFastCoatTop = ({
                 );
               }
 
-              if (item.kind === "finalSections") {
-                return (
-                  <FinalSections
-                    key={`final-sections-${currentPageNumber}-${itemIndex}`}
-                    photos={item.photos}
-                    guaranteeBlocks={guaranteeBlocks}
-                    assetBase={assetBase}
-                  />
-                );
-              }
-
               return null;
             })}
 
@@ -1099,6 +1209,24 @@ const PdfDocumentFastCoatTop = ({
           </Page>
         );
       })}
+
+      <Page size="A4" style={styles.page}>
+        <Header surface={surface} />
+        <PhotographsAndMaterials photos={safePhotos} />
+        <Footer
+          assetBase={assetBase}
+          pageNumber={photographsMaterialsPage}
+        />
+      </Page>
+
+      <Page size="A4" style={styles.page}>
+        <Header surface={surface} />
+        <GuaranteeAndSignoff
+          guaranteeBlocks={finalGuaranteeBlocks}
+          assetBase={assetBase}
+        />
+        <Footer assetBase={assetBase} pageNumber={guaranteePage} />
+      </Page>
 
       <BackCover assetBase={assetBase} />
     </Document>
