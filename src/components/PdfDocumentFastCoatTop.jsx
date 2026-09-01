@@ -18,224 +18,350 @@ import {
 
 const styles = StyleSheet.create({
   page: {
-    paddingTop: 62,
-    paddingRight: 54,
-    paddingBottom: 58,
-    paddingLeft: 54,
-    color: "#111111",
-    fontFamily: "Times-Roman",
-    fontSize: 9.4,
-  },
-  cover: {
-    padding: 0,
-    position: "relative",
-  },
-  coverImage: {
-    width: 595.2,
+    width: 595.28,
     height: 841.89,
-    objectFit: "fill",
+    paddingTop: 88,
+    paddingRight: 42,
+    paddingBottom: 82,
+    paddingLeft: 42,
+    color: "#000000",
+    fontFamily: "Helvetica",
+    fontSize: 9.2,
+    lineHeight: 1.28,
+  },
+  coverPage: {
+    width: 595.28,
+    height: 841.89,
+    padding: 0,
+    backgroundColor: "#ffffff",
+  },
+  coverTopImage: {
+    width: "100%",
+  },
+  coverContent: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 28,
+    paddingHorizontal: 48,
+    textAlign: "center",
+  },
+  coverLogo: {
+    width: 285,
+    height: 82,
+    objectFit: "contain",
+    marginBottom: 24,
+  },
+  coverTitle: {
+    fontFamily: "Helvetica-Bold",
+    fontSize: 25,
+    lineHeight: 1.15,
+    color: "#231f20",
+    marginBottom: 16,
+    textAlign: "center",
+  },
+  coverReference: {
+    fontFamily: "Helvetica-Bold",
+    fontSize: 15,
+    color: "#666666",
+    textAlign: "center",
   },
   header: {
     position: "absolute",
-    top: 27,
-    left: 54,
-    right: 54,
+    top: 28,
+    left: 42,
+    right: 42,
+  },
+  headerRow: {
     flexDirection: "row",
-    alignItems: "center",
     justifyContent: "space-between",
+    alignItems: "center",
   },
   headerTitle: {
-    fontFamily: "Times-Roman",
-    fontSize: 10.5,
+    fontSize: 11.5,
+    color: "#666666",
   },
   colourBars: {
     flexDirection: "row",
   },
-  redBar: { width: 56, height: 4, backgroundColor: "#ef4136", marginLeft: 5 },
-  orangeBar: { width: 56, height: 4, backgroundColor: "#f7931e", marginLeft: 5 },
-  greenBar: { width: 56, height: 4, backgroundColor: "#39b54a", marginLeft: 5 },
+  redBar: {
+    width: 42,
+    height: 4,
+    marginLeft: 5,
+    backgroundColor: "#ef4136",
+  },
+  orangeBar: {
+    width: 42,
+    height: 4,
+    marginLeft: 5,
+    backgroundColor: "#f7931e",
+  },
+  greenBar: {
+    width: 42,
+    height: 4,
+    marginLeft: 5,
+    backgroundColor: "#39b54a",
+  },
+  headerDivider: {
+    height: 0.7,
+    marginTop: 10,
+    backgroundColor: "#3b3b3b",
+  },
   footer: {
     position: "absolute",
-    bottom: 7,
-    left: 54,
-    right: 54,
-    height: 47,
-    fontFamily: "Helvetica",
-    fontSize: 7.5,
+    bottom: 12,
+    left: 42,
+    right: 42,
+    height: 54,
   },
   footerDivider: {
     height: 0.6,
-    backgroundColor: "#c9c9c9",
-    marginBottom: 4,
+    marginBottom: 5,
+    backgroundColor: "#bcbcbc",
   },
   footerRow: {
     flexDirection: "row",
-    alignItems: "center",
     justifyContent: "space-between",
+    alignItems: "center",
   },
   footerLrsLogo: {
-    width: 50,
-    height: 34,
+    width: 86,
+    height: 35,
     objectFit: "contain",
   },
-  footerPageNumber: {
+  pageNumber: {
     width: 100,
+    fontFamily: "Helvetica-Bold",
+    fontSize: 8.5,
     textAlign: "center",
-    fontFamily: "Helvetica-Bold",
-    fontSize: 8,
+    color: "#333333",
   },
-  footerProduct: {
-    width: 118,
-    alignItems: "flex-end",
-  },
-  footerProductLogo: {
-    width: 112,
-    height: 27,
+  footerFastCoatLogo: {
+    width: 142,
+    height: 35,
     objectFit: "contain",
-  },
-  footerGuarantee: {
-    marginTop: -1,
-    marginRight: 3,
-    fontFamily: "Helvetica-Bold",
-    fontSize: 6.5,
-    color: "#289838",
   },
   sectionTitle: {
-    fontFamily: "Times-Bold",
-    fontSize: 15,
-    marginTop: 5,
-    marginBottom: 11,
+    fontFamily: "Helvetica-Bold",
+    fontSize: 14,
+    lineHeight: 1.2,
+    marginTop: 7,
+    marginBottom: 7,
+    color: "#231f20",
   },
-  subsection: {
-    fontFamily: "Times-Bold",
-    fontSize: 9.8,
-    marginTop: 5,
+  subsectionTitle: {
+    fontFamily: "Helvetica-Bold",
+    fontSize: 9.6,
+    lineHeight: 1.25,
+    marginTop: 3.5,
     marginBottom: 2,
   },
-  line: {
-    fontSize: 9.3,
-    lineHeight: 1.12,
-    marginBottom: 0.25,
+  paragraph: {
+    fontSize: 9.2,
+    lineHeight: 1.28,
+    marginBottom: 3.2,
+    textAlign: "left",
   },
   bullet: {
-    marginLeft: 14,
+    marginLeft: 13,
+    paddingRight: 4,
   },
   nestedBullet: {
-    marginLeft: 28,
+    marginLeft: 27,
+    paddingRight: 4,
   },
-  pageGap: {
-    height: 2,
+  contentsTitle: {
+    fontFamily: "Helvetica-Bold",
+    fontSize: 18,
+    color: "#231f20",
+  },
+  contentsHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingBottom: 5,
+    marginBottom: 6,
+    borderBottomWidth: 0.7,
+    borderBottomColor: "#555555",
+  },
+  contentsHeaderText: {
+    fontFamily: "Helvetica-Bold",
+    fontSize: 9.5,
   },
   contentsRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 9,
-  },
-  contentsTitle: {
-    fontFamily: "Times-Bold",
-    fontSize: 14,
-    marginBottom: 17,
+    alignItems: "flex-start",
+    marginBottom: 8,
   },
   contentsLabel: {
-    width: "87%",
-    fontSize: 9.5,
+    width: "88%",
+    fontSize: 9.2,
   },
   contentsPage: {
-    width: "13%",
+    width: "12%",
+    fontSize: 9.2,
     textAlign: "right",
-    fontSize: 9.5,
   },
-  specTitle: {
-    fontFamily: "Times-Bold",
-    fontSize: 13,
-    marginBottom: 20,
+  specificationTitle: {
+    fontFamily: "Helvetica-Bold",
+    fontSize: 16,
+    lineHeight: 1.2,
+    marginBottom: 24,
+    color: "#231f20",
   },
   detailRow: {
     flexDirection: "row",
-    marginBottom: 7,
+    marginBottom: 9,
   },
   detailLabel: {
-    width: "37%",
-    fontFamily: "Times-Bold",
+    width: "34%",
+    fontFamily: "Helvetica-Bold",
+    fontSize: 10,
   },
   detailValue: {
-    width: "63%",
+    width: "66%",
+    fontSize: 10,
   },
   roofIntro: {
+    fontSize: 9.2,
+    lineHeight: 1.28,
+    marginBottom: 8,
+  },
+  roofImageFrame: {
+    width: "100%",
+    height: 255,
+    marginTop: 6,
     marginBottom: 10,
-    lineHeight: 1.25,
+    padding: 4,
+    borderWidth: 0.6,
+    borderColor: "#bdbdbd",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  roofImage: {
+    width: "100%",
+    height: "100%",
+    objectFit: "contain",
   },
   roofTable: {
+    marginTop: 4,
+    marginBottom: 9,
     borderTopWidth: 0.6,
     borderTopColor: "#777777",
-    marginBottom: 9,
   },
   roofRow: {
     flexDirection: "row",
-    borderBottomWidth: 0.35,
-    borderBottomColor: "#cccccc",
     paddingVertical: 3,
+    borderBottomWidth: 0.35,
+    borderBottomColor: "#d0d0d0",
   },
   roofLabel: {
-    width: "36%",
-    fontFamily: "Times-Bold",
+    width: "34%",
+    fontFamily: "Helvetica-Bold",
   },
   roofValue: {
-    width: "64%",
+    width: "66%",
   },
-  contentsImage: {
-    width: "100%",
-    height: 245,
-    objectFit: "cover",
-    marginTop: 20,
-  },
-  projectDetailsImage: {
-    width: "100%",
-    height: 390,
-    objectFit: "cover",
-    marginTop: 18,
+  photosTitle: {
+    fontFamily: "Helvetica-Bold",
+    fontSize: 15,
+    marginBottom: 9,
   },
   photosGrid: {
     flexDirection: "row",
+    flexWrap: "wrap",
     justifyContent: "space-between",
-    marginBottom: 10,
   },
   photoBox: {
-    width: "48%",
-    height: 235,
-    borderWidth: 0.5,
-    borderColor: "#aaaaaa",
+    width: "48.5%",
+    height: 145,
+    marginBottom: 7,
     padding: 4,
+    borderWidth: 0.6,
+    borderColor: "#bdbdbd",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  singlePhotoBox: {
+    width: "100%",
+    height: 250,
   },
   photo: {
     width: "100%",
     height: "100%",
     objectFit: "contain",
   },
+  materialsLabel: {
+    fontFamily: "Helvetica-Bold",
+    fontSize: 12,
+    marginBottom: 4,
+  },
+  finalSection: {
+    marginTop: 8,
+  },
+  signoffTitle: {
+    fontFamily: "Helvetica-Bold",
+    fontSize: 9,
+    marginTop: 8,
+    marginBottom: 6,
+  },
   signoff: {
     flexDirection: "row",
-    marginTop: 16,
+    justifyContent: "space-between",
+    marginTop: 2,
   },
   signoffColumn: {
-    width: "50%",
-    paddingRight: 15,
+    width: "47%",
   },
   signature: {
-    width: 135,
-    height: 44,
+    width: 115,
+    height: 30,
     objectFit: "contain",
     marginBottom: 4,
   },
-  closingImage: {
-    position: "absolute",
-    left: 54,
-    bottom: 50,
-    width: 487.2,
-    height: 300,
-    objectFit: "cover",
+  contactName: {
+    fontFamily: "Helvetica-Bold",
+    fontSize: 8.5,
+    marginBottom: 1,
   },
-  bold: {
-    fontFamily: "Times-Bold",
+  contactText: {
+    fontSize: 7.8,
+    marginBottom: 1,
+  },
+  backCoverPage: {
+    width: 595.28,
+    height: 841.89,
+    padding: 0,
+    backgroundColor: "#ffffff",
+  },
+  backCoverImage: {
+    width: "100%",
+  },
+  backCoverContent: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    paddingTop: 28,
+    paddingRight: 58,
+    paddingLeft: 58,
+  },
+  backCoverHeading: {
+    fontFamily: "Helvetica-Bold",
+    fontSize: 13,
+    color: "#f5a623",
+    marginBottom: 8,
+  },
+  backCoverText: {
+    fontSize: 10.5,
+    marginBottom: 3,
+  },
+  backCoverWebsite: {
+    fontSize: 10.5,
+    color: "#f5a623",
+  },
+  backCoverLogo: {
+    width: 105,
+    height: 58,
+    objectFit: "contain",
   },
 });
 
@@ -252,10 +378,11 @@ const SECTION_HEADINGS = new Set([
   "Flat Roof Detailing Guidance",
   "CDM",
   "Safety Precautions",
-  "Roof Specification",
-  "The Roof Build Up",
   "Preparation",
   "Cleaning",
+  "799 Wash N Prep",
+  "TV Aerials and Satellite Dish Arrays",
+  "Cables",
   "Waterproofing Coverings",
   "MS 2-Part Primer:",
   "Existing Details, Terminations and Upstands:",
@@ -272,16 +399,51 @@ const SECTION_HEADINGS = new Set([
   "General Guidance and Requirements",
   "General Guidance - requirements",
   "Maintenance After Installation",
-  "Guarantee – Materials Only",
 ]);
+
+const MAJOR_HEADINGS = new Set([
+  "Preliminaries and General Conditions",
+  "Preparation",
+  "Cleaning",
+  "Waterproofing Coverings",
+  "MS 2-Part Primer:",
+  "Existing Details, Terminations and Upstands:",
+  "FastCoat Waterproof as a Base Coat:",
+  "FastCoat Waterproof as a BaseCoat:",
+  "FastCoat Base Coat – Inspect:",
+  "FastCoat MidCoat:",
+  "FastCoat Waterproof as a MidCoat:",
+  "FastCoat Waterproof as a TopCoat:",
+  "Completed Roof Surface",
+  "Guide to Visual Inspection of the Completed Roof Surface",
+  "Traffic Coat Previsions for walkways, maintenance routes etc.:",
+  "General Guidance and Requirements",
+  "General Guidance - requirements",
+  "Maintenance After Installation",
+]);
+
+const TOC_KEYS = {
+  "Preliminaries and General Conditions": "preliminaries",
+  "Existing Falls": "existingFalls",
+  "Natural Growth/Vegetation": "naturalGrowth",
+  "Flat Roof Detailing Guidance": "flatRoof",
+  "Roof Specification": "roofSpecification",
+  "The Roof Build Up": "roofBuildUp",
+  Cleaning: "cleaning",
+  "Waterproofing Coverings": "waterproof",
+  "Completed Roof Surface": "additional",
+  "General Guidance and Requirements": "general",
+};
 
 const asset = (assetBase, filename) =>
   assetBase ? assetBase.replace(/\/$/, "") + "/" + filename : "/" + filename;
 
 const formatDate = (value) => {
   if (!value) return "";
+
   const date = new Date(value + "T00:00:00");
   if (Number.isNaN(date.getTime())) return value;
+
   const day = date.getDate();
   const suffix =
     day % 100 >= 11 && day % 100 <= 13
@@ -293,6 +455,7 @@ const formatDate = (value) => {
           : day % 10 === 3
             ? "rd"
             : "th";
+
   return (
     day +
     suffix +
@@ -301,164 +464,253 @@ const formatDate = (value) => {
   );
 };
 
-const Header = ({ surface, fixed = true }) => (
-  <View style={styles.header} fixed={fixed}>
-    <Text style={styles.headerTitle}>FastCoat onto {surface}</Text>
-    <View style={styles.colourBars}>
-      <View style={styles.redBar} />
-      <View style={styles.orangeBar} />
-      <View style={styles.greenBar} />
+const Header = ({ surface }) => (
+  <View style={styles.header} fixed>
+    <View style={styles.headerRow}>
+      <Text style={styles.headerTitle}>FastCoat onto {surface}</Text>
+      <View style={styles.colourBars}>
+        <View style={styles.redBar} />
+        <View style={styles.orangeBar} />
+        <View style={styles.greenBar} />
+      </View>
     </View>
+    <View style={styles.headerDivider} />
   </View>
 );
 
-const Footer = ({ assetBase, guarantee, fixed = true }) => (
-  <View style={styles.footer} fixed={fixed}>
+const Footer = ({ assetBase, pageNumber }) => (
+  <View style={styles.footer} fixed>
     <View style={styles.footerDivider} />
     <View style={styles.footerRow}>
       <Image src={asset(assetBase, "1lrs.png")} style={styles.footerLrsLogo} />
-      <Text
-        style={styles.footerPageNumber}
-        render={({ pageNumber, totalPages }) =>
-          "Page " + pageNumber + " of " + totalPages
-        }
+      <Text style={styles.pageNumber}>Page {pageNumber}</Text>
+      <Image
+        src={asset(assetBase, "fastcoat-pro-footer.png")}
+        style={styles.footerFastCoatLogo}
       />
-      <View style={styles.footerProduct}>
-        <Image
-          src={asset(assetBase, "fastcoat-pro-footer.png")}
-          style={styles.footerProductLogo}
-        />
-        <Text style={styles.footerGuarantee}>
-          {guarantee === "25-year" ? "25-YEAR SYSTEM" : "20-YEAR SYSTEM"}
-        </Text>
-      </View>
     </View>
   </View>
 );
 
-const isSubheading = (line) =>
-  SECTION_HEADINGS.has(line) ||
-  /^\d+\.\s+/.test(line) ||
-  (/^[^•o].{0,72}:$/.test(line) && !line.startsWith("http"));
+const joinText = (left, right) =>
+  left.endsWith("-") ? left + right : left + " " + right;
 
-const renderLine = (line, index, prefix) => {
-  if (line === "[[PAGE_GAP]]") {
-    return <View key={prefix + "-gap-" + index} style={styles.pageGap} />;
+const classifyLine = (line) => {
+  if (SECTION_HEADINGS.has(line)) {
+    return MAJOR_HEADINGS.has(line) ? "majorHeading" : "heading";
+  }
+  if (/^\d+\.\s+/.test(line)) return "numbered";
+  if (line.startsWith("•")) return "bullet";
+  if (/^o\s/.test(line)) return "nestedBullet";
+  if (/^[^•o].{0,90}:$/.test(line) && !line.startsWith("http")) {
+    return "heading";
+  }
+  return "paragraph";
+};
+
+const shouldJoin = (previous, lineType, line) => {
+  if (!previous || lineType !== "paragraph") return false;
+  if (!["paragraph", "bullet", "nestedBullet", "numbered"].includes(previous.type)) {
+    return false;
   }
 
-  const heading = SECTION_HEADINGS.has(line);
-  const subheading = !heading && isSubheading(line);
-  const bullet = line.startsWith("•");
-  const nestedBullet = /^o\s/.test(line);
+  const previousEndsSentence = /[.!?]$/.test(previous.text.trim());
+  const beginsLowerCase = /^[a-z]/.test(line);
+  return !previousEndsSentence || beginsLowerCase;
+};
+
+const toBlocks = (lines) => {
+  const blocks = [];
+
+  lines.forEach((line) => {
+    if (!line || line === "[[PAGE_GAP]]") return;
+
+    const type = classifyLine(line);
+    const previous = blocks[blocks.length - 1];
+
+    if (shouldJoin(previous, type, line)) {
+      previous.text = joinText(previous.text, line);
+      return;
+    }
+
+    blocks.push({ type, text: line });
+  });
+
+  return blocks;
+};
+
+const renderBlock = (block, index, prefix) => {
+  const isHeading = block.type === "heading" || block.type === "numbered";
 
   return (
     <Text
-      key={prefix + "-line-" + index}
+      key={`${prefix}-${index}`}
       style={[
-        styles.line,
-        heading && styles.subsection,
-        subheading && styles.bold,
-        bullet && styles.bullet,
-        nestedBullet && styles.nestedBullet,
+        block.type === "majorHeading" ? styles.sectionTitle : styles.paragraph,
+        isHeading && styles.subsectionTitle,
+        block.type === "bullet" && styles.bullet,
+        block.type === "nestedBullet" && styles.nestedBullet,
       ]}
-      minPresenceAhead={heading || subheading ? 24 : 0}
+      minPresenceAhead={
+        block.type === "majorHeading" ? 42 : isHeading ? 22 : 0
+      }
     >
-      {line}
+      {block.text}
     </Text>
   );
 };
 
-const withConditionalContent = ({ guarantee, isFullyPrimed, trafficCoat }) => {
-  const afterRoof =
+const estimateWrappedLines = (text, maxCharacters) => {
+  const words = String(text || "").split(/\s+/).filter(Boolean);
+  if (!words.length) return 1;
+
+  let lines = 1;
+  let currentLength = 0;
+
+  words.forEach((word) => {
+    const nextLength = currentLength ? currentLength + 1 + word.length : word.length;
+    if (nextLength > maxCharacters && currentLength > 0) {
+      lines += 1;
+      currentLength = word.length;
+    } else {
+      currentLength = nextLength;
+    }
+  });
+
+  return lines;
+};
+
+const estimateBlockHeight = (block) => {
+  if (block.type === "majorHeading") {
+    return estimateWrappedLines(block.text, 68) * 17 + 14;
+  }
+  if (block.type === "heading" || block.type === "numbered") {
+    return estimateWrappedLines(block.text, 92) * 12.2 + 6;
+  }
+
+  const maxCharacters =
+    block.type === "nestedBullet" ? 92 : block.type === "bullet" ? 98 : 106;
+  return estimateWrappedLines(block.text, maxCharacters) * 11.8 + 3.5;
+};
+
+const estimateRoofDetailsHeight = (rows) =>
+  rows.reduce((height, [label, value]) => {
+    const labelLines = estimateWrappedLines(label, 30);
+    const valueLines = estimateWrappedLines(value || "TBC", 66);
+    return height + Math.max(labelLines, valueLines) * 11.8 + 6;
+  }, 14);
+
+const estimateItemHeight = (item) => {
+  if (item.kind === "block") return estimateBlockHeight(item.block);
+  if (item.kind === "roofImage") return 271;
+  if (item.kind === "roofDetails") {
+    return estimateRoofDetailsHeight(item.rows);
+  }
+  if (item.kind === "finalSections") {
+    const photoCount = item.photos.length;
+    const photoHeight =
+      photoCount === 0
+        ? 0
+        : 29 + (photoCount === 1 ? 257 : photoCount === 2 ? 152 : 304);
+    return photoHeight + 172;
+  }
+  return 0;
+};
+
+const paginateContentItems = (items, startPage = 4) => {
+  const maximumHeight = 638;
+  const pages = [];
+  const pageStarts = {};
+  let page = [];
+  let usedHeight = 0;
+
+  const savePage = () => {
+    if (!page.length) return;
+    pages.push(page);
+    page = [];
+    usedHeight = 0;
+  };
+
+  items.forEach((item, index) => {
+    const itemHeight = estimateItemHeight(item);
+    const nextItem = items[index + 1];
+    const keepWithNext =
+      item.kind === "block" &&
+      ["majorHeading", "heading", "numbered"].includes(item.block.type) &&
+      nextItem;
+    const requiredHeight = keepWithNext
+      ? itemHeight + Math.min(estimateItemHeight(nextItem), 72) + 36
+      : itemHeight;
+
+    if (page.length && usedHeight + requiredHeight > maximumHeight) {
+      savePage();
+    }
+
+    const tocKeys = [item.tocKey, ...(item.tocKeys || [])].filter(Boolean);
+    tocKeys.forEach((tocKey) => {
+      if (pageStarts[tocKey] == null) {
+        pageStarts[tocKey] = startPage + pages.length;
+      }
+    });
+
+    page.push(item);
+    usedHeight += itemHeight;
+  });
+
+  savePage();
+  return { pages, pageStarts };
+};
+
+const getConditionalContent = ({ guarantee, isFullyPrimed, trafficCoat }) => {
+  const source =
     guarantee === "25-year"
       ? TWENTY_FIVE_YEAR_AFTER_ROOF
       : TWENTY_YEAR_AFTER_ROOF;
   const primer =
     guarantee === "25-year" ? TWENTY_FIVE_YEAR_PRIMER : TWENTY_YEAR_PRIMER;
-  const result = [];
-  let insideTraffic = false;
+  const lines = [];
+  let insideTrafficSection = false;
 
-  afterRoof.forEach((line) => {
+  source.forEach((line) => {
     if (line === "[[TRAFFIC_START]]") {
-      insideTraffic = true;
+      insideTrafficSection = true;
       return;
     }
     if (line === "[[TRAFFIC_END]]") {
-      insideTraffic = false;
+      insideTrafficSection = false;
       return;
     }
-    if (insideTraffic && trafficCoat !== "Yes") return;
+    if (insideTrafficSection && trafficCoat !== "Yes") return;
 
-    result.push(line);
+    lines.push(line);
+
     if (line === "Waterproofing Coverings" && isFullyPrimed) {
-      result.push(...primer);
+      lines.push(...primer);
     }
   });
 
-  return result;
-};
+  const guaranteeIndex = lines.indexOf("Guarantee – Materials Only");
 
-const DEFAULT_PAGE_STARTS = {
-  project: 3,
-  preliminaries: 4,
-  existingFalls: 4,
-  naturalGrowth: 4,
-  flatRoof: 5,
-  roofSpecification: 6,
-  roofBuildUp: 6,
-  cleaning: 7,
-  waterproof: 7,
-};
-
-const getPageStarts = ({
-  guarantee,
-  isFullyPrimed,
-  trafficCoat,
-  photoCount,
-}) => {
-  let ending;
-  if (guarantee === "25-year") {
-    ending = isFullyPrimed
-      ? { general: 13, materials: 14 }
-      : { general: 12, materials: 13 };
-  } else if (isFullyPrimed) {
-    ending = {
-      general: trafficCoat === "Yes" ? 12 : 11,
-      materials: 13,
-    };
-  } else {
-    ending = { general: 11, materials: 12 };
-  }
-
-  const hasPhotographs = photoCount > 0;
-  const photographsPage =
-    guarantee === "20-year" && isFullyPrimed
-      ? ending.materials - 1
-      : ending.materials;
-  const photographsMoveMaterials =
-    hasPhotographs &&
-    (photoCount >= 3 ||
-      (guarantee === "25-year" && !isFullyPrimed) ||
-      (guarantee === "20-year" &&
-        !isFullyPrimed &&
-        trafficCoat === "Yes"));
-  const materialPagesAdded = photographsMoveMaterials ? 1 : 0;
   return {
-    ...DEFAULT_PAGE_STARTS,
-    ...ending,
-    additional: ending.general,
-    photographs: photographsPage,
-    materials: ending.materials + materialPagesAdded,
-    guarantee: ending.materials + materialPagesAdded,
+    body:
+      guaranteeIndex === -1 ? lines : lines.slice(0, guaranteeIndex),
+    guarantee:
+      guaranteeIndex === -1 ? [] : lines.slice(guaranteeIndex + 1),
   };
 };
 
-const Contents = ({ pageStarts = DEFAULT_PAGE_STARTS, showPhotographs }) => {
+const Contents = ({ pageStarts, showPhotographs }) => {
   const rows = [
     ["Project details", pageStarts.project],
     ["Preliminaries & general conditions", pageStarts.preliminaries],
-    ["Existing falls, change in scope of works, existing roof condition", pageStarts.existingFalls],
-    ["Natural growth, adhesion test, compliance with building regulations", pageStarts.naturalGrowth],
+    [
+      "Existing falls, change in scope of works, existing roof condition",
+      pageStarts.existingFalls,
+    ],
+    [
+      "Natural growth, adhesion test, compliance with building regulations",
+      pageStarts.naturalGrowth,
+    ],
     ["Flat roof detailing guidance & CDM", pageStarts.flatRoof],
     ["Roof specification", pageStarts.roofSpecification],
     ["The roof build-up and preparation", pageStarts.roofBuildUp],
@@ -466,14 +718,19 @@ const Contents = ({ pageStarts = DEFAULT_PAGE_STARTS, showPhotographs }) => {
     ["Waterproof coverings", pageStarts.waterproof],
     ["Additional information", pageStarts.additional],
     ["General guidance and requirements", pageStarts.general],
-    ...(showPhotographs ? [["Photographs", pageStarts.photographs]] : []),
+    ...(showPhotographs
+      ? [["Photographs", pageStarts.photographs]]
+      : []),
     ["Materials and guarantee", pageStarts.materials],
-    ["Guarantee", pageStarts.guarantee],
+    ["Guarantee", pageStarts.materials],
   ];
 
   return (
     <>
-      <Text style={styles.contentsTitle}>Contents</Text>
+      <View style={styles.contentsHeader}>
+        <Text style={styles.contentsTitle}>Contents</Text>
+        <Text style={styles.contentsHeaderText}>Page</Text>
+      </View>
       {rows.map(([label, page]) => (
         <View key={label} style={styles.contentsRow}>
           <Text style={styles.contentsLabel}>{label}</Text>
@@ -484,7 +741,7 @@ const Contents = ({ pageStarts = DEFAULT_PAGE_STARTS, showPhotographs }) => {
   );
 };
 
-const RoofDetails = ({
+const getRoofRows = ({
   reference,
   roofSize,
   roofType,
@@ -495,19 +752,21 @@ const RoofDetails = ({
   acUnits,
   existingCoatings,
   pondingWater,
-}) => {
-  const rows = [
-    ["Project Reference", reference],
-    ["Roof Size", roofSize],
-    ["Roof Type", roofType],
-    ["Roof Build Up", roofBuildUp],
-    ...(roofType === "Warm Roof" ? [["U Value Needed", uValue]] : []),
-    ["Outlets", outlets],
-    ["Skylights", skylights],
-    ["AC Units", acUnits],
-    ["Existing Coatings", existingCoatings],
-    ["Ponding Water", pondingWater],
-  ];
+}) => [
+  ["Project Reference", reference],
+  ["Roof Size", roofSize],
+  ["Roof Type", roofType],
+  ["Roof Build Up", roofBuildUp],
+  ...(roofType === "Warm Roof" ? [["U Value Needed", uValue]] : []),
+  ["Outlets", outlets],
+  ["Skylights", skylights],
+  ["AC Units", acUnits],
+  ["Existing Coatings", existingCoatings],
+  ["Ponding Water", pondingWater],
+];
+
+const RoofDetails = (props) => {
+  const rows = getRoofRows(props);
 
   return (
     <View style={styles.roofTable} wrap={false}>
@@ -521,7 +780,95 @@ const RoofDetails = ({
   );
 };
 
-const PdfDocumentFasCoatTop = ({
+const MaterialsAndGuarantee = ({ guaranteeBlocks, assetBase }) => (
+  <View style={styles.finalSection} wrap={false}>
+    <Text style={styles.materialsLabel}>Materials</Text>
+    <Text style={[styles.paragraph, { marginBottom: 8 }]}>TBC</Text>
+
+    <Text style={styles.materialsLabel}>Guarantee:</Text>
+    {guaranteeBlocks.map((block, index) =>
+      renderBlock(block, index, "guarantee"),
+    )}
+
+    <Text style={styles.signoffTitle}>Kind Regards</Text>
+    <View style={styles.signoff}>
+      <View style={styles.signoffColumn}>
+        <Image
+          src={asset(assetBase, "firma.png")}
+          style={styles.signature}
+        />
+        <Text style={styles.contactName}>Paul Jones</Text>
+        <Text style={styles.contactText}>LRS Technical Manager</Text>
+        <Text style={styles.contactText}>T: 01948 841 877</Text>
+        <Text style={styles.contactText}>E: paul.jones@lrs-systems.co.uk</Text>
+        <Text style={styles.contactText}>W: www.lrs-systems.co.uk</Text>
+      </View>
+
+      <View style={styles.signoffColumn}>
+        <Image
+          src={asset(assetBase, "firmat.png")}
+          style={styles.signature}
+        />
+        <Text style={styles.contactName}>Tom Shone</Text>
+        <Text style={styles.contactText}>Managing Director</Text>
+        <Text style={styles.contactText}>T: 07415 116280</Text>
+        <Text style={styles.contactText}>E: tomshone@lrs-systems.co.uk</Text>
+        <Text style={styles.contactText}>W: www.lrs-systems.co.uk</Text>
+      </View>
+    </View>
+  </View>
+);
+
+const FinalSections = ({ photos, guaranteeBlocks, assetBase }) => (
+  <View wrap={false}>
+    {photos.length > 0 ? (
+      <>
+        <Text style={styles.photosTitle}>Photographs</Text>
+        <View style={styles.photosGrid}>
+          {photos.map((photo, index) => (
+            <View
+              key={`photograph-${index}`}
+              style={[
+                styles.photoBox,
+                photos.length === 1 && styles.singlePhotoBox,
+              ]}
+            >
+              <Image src={photo} style={styles.photo} />
+            </View>
+          ))}
+        </View>
+      </>
+    ) : null}
+
+    <MaterialsAndGuarantee
+      guaranteeBlocks={guaranteeBlocks}
+      assetBase={assetBase}
+    />
+  </View>
+);
+
+const BackCover = ({ assetBase }) => (
+  <Page size="A4" style={styles.backCoverPage}>
+    <Image src={asset(assetBase, "2F.png")} style={styles.backCoverImage} />
+    <View style={styles.backCoverContent}>
+      <View>
+        <Text style={styles.backCoverHeading}>LIQUID ROOFING SYSTEMS LTD</Text>
+        <Text style={styles.backCoverText}>
+          Roofing House, Prees Green, Whitchurch, SY13 2BN
+        </Text>
+        <Text style={styles.backCoverText}>01948 841 877</Text>
+        <Text style={styles.backCoverText}>enquiries@lrs-systems.co.uk</Text>
+        <Text style={styles.backCoverWebsite}>www.lrs-systems.co.uk</Text>
+      </View>
+      <Image
+        src={asset(assetBase, "1lrs.png")}
+        style={styles.backCoverLogo}
+      />
+    </View>
+  </Page>
+);
+
+const PdfDocumentFastCoatTop = ({
   reference,
   date,
   roofSize,
@@ -550,45 +897,98 @@ const PdfDocumentFasCoatTop = ({
 }) => {
   const isFullyPrimed = FULLY_PRIMED_SURFACES.includes(surface);
   const selectedTrafficCoat = trafficCoat || antiSkid || "No";
-  const afterRoof = withConditionalContent({
+  const selectedContent = getConditionalContent({
     guarantee,
     isFullyPrimed,
     trafficCoat: selectedTrafficCoat,
   });
+  const contentBlocks = toBlocks(COMMON_BEFORE_ROOF);
+  const afterRoofBlocks = toBlocks(selectedContent.body);
+  const guaranteeBlocks = toBlocks(selectedContent.guarantee);
   const guaranteeYears = guarantee === "25-year" ? "25" : "20";
-  const safePhotos = Array.isArray(photos) ? photos.filter(Boolean).slice(0, 4) : [];
-  const photographsShareMaterialsPage =
-    safePhotos.length > 0 &&
-    safePhotos.length <= 2 &&
-    ((guarantee === "20-year" &&
-      !isFullyPrimed &&
-      selectedTrafficCoat !== "Yes") ||
-      (guarantee === "25-year" && isFullyPrimed));
-  const photoRows = [];
-  for (let index = 0; index < safePhotos.length; index += 2) {
-    photoRows.push(safePhotos.slice(index, index + 2));
-  }
-  const resolvedPageStarts =
-    pageStarts ||
-    getPageStarts({
-      guarantee,
-      isFullyPrimed,
-      trafficCoat: selectedTrafficCoat,
-      photoCount: safePhotos.length,
-    });
+  const safePhotos = Array.isArray(photos)
+    ? photos.filter(Boolean).slice(0, 4)
+    : [];
+  const roofDetailsProps = {
+    reference,
+    roofSize,
+    roofType,
+    roofBuildUp,
+    uValue,
+    outlets,
+    skylights,
+    acUnits,
+    existingCoatings,
+    pondingWater,
+  };
+  const roofRows = getRoofRows(roofDetailsProps);
+  const blockItem = (block) => ({
+    kind: "block",
+    block,
+    tocKey: TOC_KEYS[block.text],
+  });
+  const contentItems = [
+    blockItem({
+      type: "majorHeading",
+      text: "Preliminaries and General Conditions",
+    }),
+    ...contentBlocks.map(blockItem),
+    blockItem({ type: "majorHeading", text: "Roof Specification" }),
+    blockItem({
+      type: "paragraph",
+      text: `Roof areas covered in this specification: ${reference || "TBC"}`,
+    }),
+    ...(image ? [{ kind: "roofImage", source: image }] : []),
+    blockItem({ type: "majorHeading", text: "The Roof Build Up" }),
+    blockItem({
+      type: "paragraph",
+      text: `With the information and images provided this specification is for ${reference || "TBC"}.`,
+    }),
+    {
+      kind: "roofDetails",
+      rows: roofRows,
+      props: roofDetailsProps,
+    },
+    ...afterRoofBlocks.map(blockItem),
+    {
+      kind: "finalSections",
+      photos: safePhotos,
+      tocKeys: [
+        ...(safePhotos.length > 0 ? ["photographs"] : []),
+        "materials",
+      ],
+    },
+  ];
+  const pagination = paginateContentItems(contentItems);
+  const computedPageStarts = {
+    project: 3,
+    ...pagination.pageStarts,
+  };
+  const resolvedPageStarts = {
+    ...computedPageStarts,
+    ...(pageStarts || {}),
+  };
 
   return (
     <Document
-      title={"FastCoat TopCoat - " + (reference || "Installation Specification")}
+      title={`FastCoat TopCoat - ${reference || "Installation Specification"}`}
       author="Liquid Roofing Systems Ltd"
     >
-      <Page size="A4" style={styles.cover} wrap={false}>
+      <Page size="A4" style={styles.coverPage}>
         <Image
-          src={asset(assetBase, "fastcoat-top-cover.jpg")}
-          style={styles.coverImage}
+          src={asset(assetBase, "1F.png")}
+          style={styles.coverTopImage}
         />
-        <Header surface={surface} fixed={false} />
-        <Footer assetBase={assetBase} guarantee={guarantee} fixed={false} />
+        <View style={styles.coverContent}>
+          <Image
+            src={asset(assetBase, "fastcoat-pro-footer.png")}
+            style={styles.coverLogo}
+          />
+          <Text style={styles.coverTitle}>INSTALLATION SPECIFICATION</Text>
+          <Text style={styles.coverReference}>
+            {(reference || "PROJECT REFERENCE").toUpperCase()}
+          </Text>
+        </View>
       </Page>
 
       <Page size="A4" style={styles.page}>
@@ -597,22 +997,18 @@ const PdfDocumentFasCoatTop = ({
           pageStarts={resolvedPageStarts}
           showPhotographs={safePhotos.length > 0}
         />
-        <Text style={[styles.line, { marginTop: 10 }]}>
+        <Text style={[styles.paragraph, { marginTop: 12 }]}>
           FastCoat Pro {guaranteeYears} Specification Ref: {lrsReference || "LRS – TBC"}
         </Text>
-        <Image
-          src={asset(assetBase, "2F.png")}
-          style={styles.contentsImage}
-          wrap={false}
-        />
-        <Footer assetBase={assetBase} guarantee={guarantee} />
+        <Footer assetBase={assetBase} pageNumber={2} />
       </Page>
 
       <Page size="A4" style={styles.page}>
         <Header surface={surface} />
-        <Text style={styles.specTitle}>
+        <Text style={styles.specificationTitle}>
           FastCoat Pro {guaranteeYears} Specification Ref: {lrsReference || "LRS – TBC"}
         </Text>
+
         <View style={styles.detailRow}>
           <Text style={styles.detailLabel}>Date</Text>
           <Text style={styles.detailValue}>{formatDate(date) || "TBC"}</Text>
@@ -638,123 +1034,75 @@ const PdfDocumentFasCoatTop = ({
             <Text>{preparedByEmail}</Text>
           </View>
         </View>
-        <Image
-          src={image || asset(assetBase, "2F.png")}
-          style={styles.projectDetailsImage}
-          wrap={false}
-        />
-        <Footer assetBase={assetBase} guarantee={guarantee} />
+        <Footer assetBase={assetBase} pageNumber={3} />
       </Page>
 
-      <Page size="A4" style={styles.page} wrap>
-        <Header surface={surface} />
-        <Text style={styles.sectionTitle}>Preliminaries and General Conditions</Text>
-        {COMMON_BEFORE_ROOF.map((line, index) =>
-          renderLine(line, index, "common"),
-        )}
+      {pagination.pages.map((items, pageIndex) => {
+        const currentPageNumber = 4 + pageIndex;
 
-        <Text style={styles.sectionTitle}>Roof Specification</Text>
-        <Text style={styles.roofIntro}>
-          Roof areas covered in this specification: {reference || "TBC"}
-        </Text>
+        return (
+          <Page
+            key={`content-page-${currentPageNumber}`}
+            size="A4"
+            style={styles.page}
+          >
+            <Header surface={surface} />
 
-        <Text style={styles.sectionTitle}>The Roof Build Up</Text>
-        <Text style={styles.roofIntro}>
-          With the information and images provided this specification is for {reference || "TBC"}.
-        </Text>
-        <RoofDetails
-          reference={reference}
-          roofSize={roofSize}
-          roofType={roofType}
-          roofBuildUp={roofBuildUp}
-          uValue={uValue}
-          outlets={outlets}
-          skylights={skylights}
-          acUnits={acUnits}
-          existingCoatings={existingCoatings}
-          pondingWater={pondingWater}
-        />
+            {items.map((item, itemIndex) => {
+              if (item.kind === "block") {
+                return renderBlock(
+                  item.block,
+                  itemIndex,
+                  `page-${currentPageNumber}`,
+                );
+              }
 
-        {afterRoof.map((line, index) => renderLine(line, index, "after"))}
-
-        {safePhotos.length > 0 ? (
-          <>
-          <Text style={styles.sectionTitle}>Photographs</Text>
-            {photoRows.map((row, rowIndex) => (
-              <View key={"photo-row-" + rowIndex} style={styles.photosGrid} wrap={false}>
-                {row.map((src, photoIndex) => (
+              if (item.kind === "roofImage") {
+                return (
                   <View
-                    key={"photo-" + rowIndex + "-" + photoIndex}
-                    style={[
-                      styles.photoBox,
-                      row.length === 1 && { width: "100%" },
-                    ]}
+                    key={`roof-image-${currentPageNumber}-${itemIndex}`}
+                    style={styles.roofImageFrame}
+                    wrap={false}
                   >
-                    <Image src={src} style={styles.photo} />
+                    <Image src={item.source} style={styles.roofImage} />
                   </View>
-                ))}
-              </View>
-            ))}
-          </>
-        ) : null}
+                );
+              }
 
-        <View wrap={false}>
-          <Text style={styles.sectionTitle}>Materials</Text>
-          <Text style={[styles.line, { marginBottom: 15 }]}>TBC</Text>
-          <Text style={styles.sectionTitle}>Guarantee:</Text>
-          <Text style={[styles.line, { marginBottom: 8 }]}>
-            Materials only. The following guarantee-specification is covered by LRS product guarantee for the period of {guaranteeYears}-years from the date of practical completion.
-          </Text>
-          <Text style={[styles.line, { marginBottom: 14 }]}>
-            Please Note: Only products supplied by LRS will be covered in this guarantee.
-          </Text>
-          <Text style={[styles.line, styles.bold]}>Kind Regards</Text>
-          <View style={styles.signoff}>
-            <View style={styles.signoffColumn}>
-              <Image src={asset(assetBase, "firma.png")} style={styles.signature} />
-              <Text style={[styles.line, styles.bold]}>Paul Jones</Text>
-              <Text style={styles.line}>LRS Technical Manager</Text>
-              <Text style={styles.line}>T: 01948 841 877</Text>
-              <Text style={styles.line}>E: paul.jones@lrs-systems.co.uk</Text>
-              <Text style={styles.line}>W: www.lrs-systems.co.uk</Text>
-            </View>
-            <View style={styles.signoffColumn}>
-              <Image src={asset(assetBase, "firmat.png")} style={styles.signature} />
-              <Text style={[styles.line, styles.bold]}>Tom Shone</Text>
-              <Text style={styles.line}>Managing Director</Text>
-              <Text style={styles.line}>T: 07415 116280</Text>
-              <Text style={styles.line}>E: tomshone@lrs-systems.co.uk</Text>
-              <Text style={styles.line}>W: www.lrs-systems.co.uk</Text>
-            </View>
-          </View>
-        </View>
-        {photographsShareMaterialsPage ? null : (
-          <Image
-            src={asset(assetBase, "2F.png")}
-            style={[
-              styles.closingImage,
-              guarantee === "20-year" &&
-                !isFullyPrimed &&
-                { height: selectedTrafficCoat === "Yes" ? 340 : 220 },
-              guarantee === "20-year" &&
-                isFullyPrimed &&
-                selectedTrafficCoat === "Yes" &&
-                { height: 320 },
-              guarantee === "25-year" &&
-                isFullyPrimed &&
-                selectedTrafficCoat === "Yes" &&
-                { height: 220 },
-              guarantee === "25-year" &&
-                !isFullyPrimed &&
-                { height: selectedTrafficCoat === "Yes" ? 60 : 170 },
-              safePhotos.length > 0 && { height: 340 },
-            ]}
-          />
-        )}
-        <Footer assetBase={assetBase} guarantee={guarantee} />
-      </Page>
+              if (item.kind === "roofDetails") {
+                return (
+                  <RoofDetails
+                    key={`roof-details-${currentPageNumber}-${itemIndex}`}
+                    {...item.props}
+                  />
+                );
+              }
+
+              if (item.kind === "finalSections") {
+                return (
+                  <FinalSections
+                    key={`final-sections-${currentPageNumber}-${itemIndex}`}
+                    photos={item.photos}
+                    guaranteeBlocks={guaranteeBlocks}
+                    assetBase={assetBase}
+                  />
+                );
+              }
+
+              return null;
+            })}
+
+            <Footer
+              assetBase={assetBase}
+              pageNumber={currentPageNumber}
+            />
+          </Page>
+        );
+      })}
+
+      <BackCover assetBase={assetBase} />
     </Document>
   );
 };
 
-export default PdfDocumentFasCoatTop;
+export default PdfDocumentFastCoatTop;
