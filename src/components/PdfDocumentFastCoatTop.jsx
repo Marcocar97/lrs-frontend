@@ -1,4 +1,4 @@
-// VERSION: 2026-09-01-a4-flow-layout-fixed-v7
+// VERSION: 2026-09-01-a4-flow-layout-fixed-v8
 import React from "react";
 import {
   Document,
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
 
   footer: {
     position: "absolute",
-    bottom: 12,
+    top: 776,
     left: 42,
     right: 42,
     height: 54,
@@ -136,11 +136,13 @@ const styles = StyleSheet.create({
   },
   pageNumberOverlay: {
     position: "absolute",
-    bottom: 35,
+    top: 792,
     left: 42,
     right: 42,
+    height: 12,
     fontFamily: "Helvetica-Bold",
     fontSize: 8.5,
+    lineHeight: 1,
     textAlign: "center",
     color: "#333333",
   },
@@ -1120,7 +1122,7 @@ const PdfDocumentFastCoatTop = ({
       <Page
         size="A4"
         style={styles.page}
-        wrap
+        wrap={false}
       >
         <Header surface={surface} />
         <Contents
@@ -1138,7 +1140,7 @@ const PdfDocumentFastCoatTop = ({
       <Page
         size="A4"
         style={styles.page}
-        wrap
+        wrap={false}
       >
         <Header surface={surface} />
         <Text style={styles.specificationTitle}>
@@ -1227,34 +1229,27 @@ const PdfDocumentFastCoatTop = ({
         <Footer assetBase={assetBase} />
       </Page>
 
-      {/* Do not create an almost-empty photographs page when no photographs
-          were supplied. Materials then starts the guarantee page below. */}
-      {hasPhotos ? (
-        <Page
-          size="A4"
-          style={styles.page}
-          wrap
-        >
-          <Header surface={surface} />
-          <PhotographsAndMaterials
-            photos={safePhotos}
-            registry={pageRegistry}
-          />
-          <Footer assetBase={assetBase} />
-        </Page>
-      ) : null}
-
-      {/* GUARANTEE + SIGNATURES — starts on a dedicated A4 page and can create
-          A4 continuation pages if the selected guarantee wording needs them. */}
+      {/* PHOTOGRAPHS + MATERIALS — dedicated A4 page */}
       <Page
         size="A4"
         style={styles.page}
-        wrap
+        wrap={false}
       >
         <Header surface={surface} />
-        {!hasPhotos ? (
-          <MaterialsSection registry={pageRegistry} compact />
-        ) : null}
+        <PhotographsAndMaterials
+          photos={safePhotos}
+          registry={pageRegistry}
+        />
+        <Footer assetBase={assetBase} />
+      </Page>
+
+      {/* GUARANTEE + SIGNATURES — dedicated A4 page */}
+      <Page
+        size="A4"
+        style={styles.page}
+        wrap={false}
+      >
+        <Header surface={surface} />
         <GuaranteeAndSignoff
           guaranteeBlocks={finalGuaranteeBlocks}
           assetBase={assetBase}
