@@ -343,6 +343,8 @@ const styles = StyleSheet.create({
   },
 
   backCoverPage: {
+    width: 595.28,
+    height: 841.89,
     padding: 0,
     backgroundColor: "#ffffff",
   },
@@ -529,9 +531,10 @@ const Footer = ({ assetBase }) => (
     <View style={styles.footerRow}>
       <Image src={asset(assetBase, "1lrs.png")} style={styles.footerLrsLogo} />
       <Text
-        style={styles.pageNumber}
-        render={({ pageNumber }) => `Page ${pageNumber}`}
-      />
+  fixed
+  style={styles.pageNumber}
+  render={({ pageNumber }) => `Page ${pageNumber}`}
+/>
       <Image
         src={asset(assetBase, "fasttop1.jpg")}
         style={styles.footerFastCoatLogo}
@@ -754,16 +757,15 @@ const getConditionalContent = ({ guarantee, isFullyPrimed, trafficCoat }) => {
 };
 
 const ContentsPageNumber = ({ targetKey, registry, pageStarts }) => (
-  <Text
-    style={styles.contentsPage}
-    render={() => {
-      const page = registry[targetKey] ?? pageStarts?.[targetKey];
-      // Reserve stable, non-empty text during the first layout pass. Returning
-      // an empty string can produce invalid PDF transform coordinates.
-      return page == null ? "00" : String(page);
-    }}
-  />
-);
+    <Text
+      fixed
+      style={styles.contentsPage}
+      render={() => {
+        const page = registry[targetKey] ?? pageStarts?.[targetKey];
+        return page == null ? "00" : String(page);
+      }}
+    />
+  );
 
 const Contents = ({ registry, pageStarts, hasPhotos }) => {
   const rows = [
