@@ -1121,7 +1121,7 @@ const PdfDocumentFastCoatTop = ({
         style={styles.page}
         wrap
       >
-        <Header surface={surface} />
+        <Header reference={reference} />
         <Contents
           registry={pageRegistry}
           pageStarts={pageStarts}
@@ -1139,7 +1139,7 @@ const PdfDocumentFastCoatTop = ({
         style={styles.page}
         wrap
       >
-        <Header surface={surface} />
+        <Header reference={reference} />
         <Text style={styles.specificationTitle}>
           FastCoat Pro {guaranteeYears} Specification Ref: {lrsReference || "LRS – TBC"}
         </Text>
@@ -1184,7 +1184,7 @@ const PdfDocumentFastCoatTop = ({
         style={styles.page}
         wrap
       >
-        <Header surface={surface} />
+        <Header reference={reference} />
 
         <Text style={styles.sectionTitle}>
           Preliminaries and General Conditions
@@ -1234,7 +1234,7 @@ const PdfDocumentFastCoatTop = ({
           style={styles.page}
           wrap
         >
-          <Header surface={surface} />
+          <Header reference={reference} />
           <PhotographsAndMaterials
             photos={safePhotos}
             registry={pageRegistry}
@@ -1250,7 +1250,7 @@ const PdfDocumentFastCoatTop = ({
         style={styles.page}
         wrap
       >
-        <Header surface={surface} />
+        <Header reference={reference} />
         {!hasPhotos ? (
           <MaterialsSection registry={pageRegistry} compact />
         ) : null}
