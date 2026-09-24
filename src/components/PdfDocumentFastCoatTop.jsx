@@ -709,19 +709,20 @@ const renderBlock = (block, index, prefix, registry, pageStarts) => {
 
   return (
     <React.Fragment key={`${prefix}-${index}`}>
-      <Text
-        style={[
-          isMajor ? styles.sectionTitle : styles.paragraph,
-          isHeading && styles.subsectionTitle,
-          block.type === "bullet" && styles.bullet,
-          block.type === "nestedBullet" && styles.nestedBullet,
-        ]}
-        orphans={2}
-        widows={2}
-        {...textProps}
-      >
-        {hasDynamicReference ? null : block.text}
-      </Text>
+     <Text
+  style={[
+    isMajor ? styles.sectionTitle : styles.paragraph,
+    isHeading && styles.subsectionTitle,
+    block.type === "bullet" && styles.bullet,
+    block.type === "nestedBullet" && styles.nestedBullet,
+  ]}
+  minPresenceAhead={isMajor ? 90 : undefined}
+  orphans={2}
+  widows={2}
+  {...textProps}
+>
+  {hasDynamicReference ? null : block.text}
+</Text>
       {markerKeys.length > 0 ? (
         <SectionMarker markerKeys={markerKeys} registry={registry} />
       ) : null}
