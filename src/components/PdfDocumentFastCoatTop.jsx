@@ -1019,7 +1019,7 @@ const BackCover = ({ assetBase }) => (
     size="A4"
     style={styles.backCoverPage}
   >
-    <Image src={asset(assetBase, "pdf-assets/2F.png")} style={styles.backCoverImage} />
+    <Image src={asset(assetBase, "pdf-assets/2F.jpg")} style={styles.backCoverImage} />
     <View style={styles.backCoverContent}>
       <View>
         <Text style={styles.backCoverHeading}>LIQUID ROOFING SYSTEMS LTD</Text>
@@ -1110,7 +1110,7 @@ const PdfDocumentFastCoatTop = ({
         size="A4"
         style={styles.coverPage}
       >
-        <Image src={asset(assetBase, "pdf-assets/1F.png")} style={styles.coverTopImage} />
+        <Image src={asset(assetBase, "pdf-assets/1F.jpg")} style={styles.coverTopImage} />
         <View style={styles.coverContent}>
           {/* Requested cover logo, directly above INSTALLATION SPECIFICATION */}
           <Image src={asset(assetBase, "pdf-assets/fasttop1.jpg")} style={styles.coverLogo} />
