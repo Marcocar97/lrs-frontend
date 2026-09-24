@@ -857,17 +857,19 @@ const RoofRow = ({ label, value }) => (
 
 const RoofSpecificationSection = ({ reference, image, registry }) => (
   <>
-    {/*
-      Keep only the heading and its introductory line together.
-      Do NOT reserve the height of the image here: that was the main cause
-      of the large blank areas. The image is allowed to move by itself if it
-      cannot fit in the remaining A4 content area.
-    */}
-    <View wrap={false}>
+    <View
+      wrap={false}
+      minPresenceAhead={image ? 300 : 90}
+    >
       <Text style={styles.sectionTitle}>
         Roof Specification
       </Text>
-      <SectionMarker markerKeys={["roofSpecification"]} registry={registry} />
+
+      <SectionMarker
+        markerKeys={["roofSpecification"]}
+        registry={registry}
+      />
+
       <Text style={styles.paragraph}>
         Roof areas covered in this specification: {reference || "TBC"}
       </Text>
@@ -875,7 +877,10 @@ const RoofSpecificationSection = ({ reference, image, registry }) => (
 
     {image ? (
       <View style={styles.roofImageFrame} wrap={false}>
-        <Image src={image} style={styles.roofImage} />
+        <Image
+          src={image}
+          style={styles.roofImage}
+        />
       </View>
     ) : null}
   </>
