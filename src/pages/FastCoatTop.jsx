@@ -12,6 +12,8 @@ import {
 import { PDFDownloadLink, pdf } from "@react-pdf/renderer";
 import PdfDocumentFastCoatTop from "../components/PdfDocumentFastCoatTop";
 import { FULLY_PRIMED_SURFACES } from "../components/fastCoatTopContent";
+import { optimizeImageForPdf } from "../utils/optimizeImageForPdf";
+
 
 const SURFACES = [
   "Fibre Cement",
@@ -84,13 +86,7 @@ const REQUIRED_FIELDS = [
   "trafficCoat",
 ];
 
-const readFileAsDataUrl = (file) =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
+
 
 const FastCoatTop = () => {
   const [formData, setFormData] = useState(INITIAL_FORM_DATA);
@@ -207,23 +203,61 @@ const FastCoatTop = () => {
 
   const handleRoofImage = async (event) => {
     const file = event.target.files?.[0];
+  
     if (!file) return;
-
-    setField("image", await readFileAsDataUrl(file));
-    event.target.value = "";
+  
+    try {
+      const optimizedImage = await optimizeImageForPdf(file, {
+        maxWidth: 1600,
+        maxHeight: 1600,
+        quality: 0.82,
+      });
+  
+      setField("image", optimizedImage);
+    } catch (error) {
+      console.error("Error optimising roof image:", error);
+      alert("There was a problem processing the roof image.");
+    } finally {
+      event.target.value = "";
+    }
   };
 
   const handlePhotos = async (event) => {
-    const selected = Array.from(event.target.files || []);
-    if (!selected.length) return;
-
-    const newPhotos = await Promise.all(selected.map(readFileAsDataUrl));
-    setReady(false);
-    setFormData((current) => ({
-      ...current,
-      photos: [...current.photos, ...newPhotos].slice(0, 4),
-    }));
-    event.target.value = "";
+    const remainingSlots = Math.max(0, 4 - formData.photos.length);
+  
+    const selected = Array.from(event.target.files || []).slice(
+      0,
+      remainingSlots,
+    );
+  
+    if (!selected.length) {
+      event.target.value = "";
+      return;
+    }
+  
+    try {
+      const newPhotos = await Promise.all(
+        selected.map((file) =>
+          optimizeImageForPdf(file, {
+            maxWidth: 1200,
+            maxHeight: 1200,
+            quality: 0.8,
+          }),
+        ),
+      );
+  
+      setReady(false);
+  
+      setFormData((current) => ({
+        ...current,
+        photos: [...current.photos, ...newPhotos].slice(0, 4),
+      }));
+    } catch (error) {
+      console.error("Error optimising photographs:", error);
+      alert("There was a problem processing one or more photographs.");
+    } finally {
+      event.target.value = "";
+    }
   };
 
   const removePhoto = (indexToRemove) => {
