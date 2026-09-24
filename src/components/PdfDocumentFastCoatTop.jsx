@@ -540,10 +540,10 @@ const Footer = ({ assetBase }) => (
     <View style={styles.footer} fixed>
       <View style={styles.footerDivider} />
       <View style={styles.footerRow}>
-        <Image src={asset(assetBase, "1lrs.png")} style={styles.footerLrsLogo} />
+        <Image src={asset(assetBase, "pdf-assets/1lrs.png")} style={styles.footerLrsLogo} />
         <View style={styles.pageNumberSlot} />
         <Image
-          src={asset(assetBase, "fasttop1.jpg")}
+          src={asset(assetBase, "pdf-assets/fasttop1.jpg")}
           style={styles.footerFastCoatLogo}
         />
       </View>
@@ -993,7 +993,7 @@ const GuaranteeAndSignoff = ({ guaranteeBlocks, assetBase, registry, pageStarts 
       <Text style={styles.signoffTitle}>Kind Regards</Text>
       <View style={styles.signoff}>
         <View style={styles.signoffColumn}>
-          <Image src={asset(assetBase, "firma.png")} style={styles.signature} />
+          <Image src={asset(assetBase, "pdf-assets/firma.png")} style={styles.signature} />
           <Text style={styles.contactName}>Paul Jones</Text>
           <Text style={styles.contactText}>LRS Technical Manager</Text>
           <Text style={styles.contactText}>T: 01948 841 877</Text>
@@ -1002,7 +1002,7 @@ const GuaranteeAndSignoff = ({ guaranteeBlocks, assetBase, registry, pageStarts 
         </View>
 
         <View style={styles.signoffColumn}>
-          <Image src={asset(assetBase, "firmat.png")} style={styles.signature} />
+          <Image src={asset(assetBase, "pdf-assets/firmat.png")} style={styles.signature} />
           <Text style={styles.contactName}>Tom Shone</Text>
           <Text style={styles.contactText}>Managing Director</Text>
           <Text style={styles.contactText}>T: 07415 116280</Text>
@@ -1019,7 +1019,7 @@ const BackCover = ({ assetBase }) => (
     size="A4"
     style={styles.backCoverPage}
   >
-    <Image src={asset(assetBase, "2F.png")} style={styles.backCoverImage} />
+    <Image src={asset(assetBase, "pdf-assets/2F.png")} style={styles.backCoverImage} />
     <View style={styles.backCoverContent}>
       <View>
         <Text style={styles.backCoverHeading}>LIQUID ROOFING SYSTEMS LTD</Text>
@@ -1030,7 +1030,7 @@ const BackCover = ({ assetBase }) => (
         <Text style={styles.backCoverText}>enquiries@lrs-systems.co.uk</Text>
         <Text style={styles.backCoverWebsite}>www.lrs-systems.co.uk</Text>
       </View>
-      <Image src={asset(assetBase, "1lrs.png")} style={styles.backCoverLogo} />
+      <Image src={asset(assetBase, "pdf-assets/1lrs.png")} style={styles.backCoverLogo} />
     </View>
   </Page>
 );
@@ -1110,10 +1110,10 @@ const PdfDocumentFastCoatTop = ({
         size="A4"
         style={styles.coverPage}
       >
-        <Image src={asset(assetBase, "1F.png")} style={styles.coverTopImage} />
+        <Image src={asset(assetBase, "pdf-assets/1F.png")} style={styles.coverTopImage} />
         <View style={styles.coverContent}>
           {/* Requested cover logo, directly above INSTALLATION SPECIFICATION */}
-          <Image src={asset(assetBase, "fasttop1.jpg")} style={styles.coverLogo} />
+          <Image src={asset(assetBase, "pdf-assets/fasttop1.jpg")} style={styles.coverLogo} />
           <Text style={styles.coverTitle}>INSTALLATION SPECIFICATION</Text>
           <Text style={styles.coverReference}>
             {(reference || "PROJECT REFERENCE").toUpperCase()}
