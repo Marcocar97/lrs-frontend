@@ -10,7 +10,7 @@ const products = [
   },
   {
     name: 'FastCoat',
-    path: '/fascoat',
+    path: '/fastcoattop',
     comingSoon: false,
   },
   {
